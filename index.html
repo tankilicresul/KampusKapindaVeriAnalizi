@@ -311,8 +311,8 @@
           </div>
         </div>
 
-        <!-- Featured Reklam Alanı: 4:5 Aspect Ratio (Poster Boyutu) -->
-        <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group aspect-[4/5] w-full" onclick="openEventsModule()">
+        <!-- Featured Reklam Alanı: 3:5 Aspect Ratio (İstenen Özel Poster Boyutu) -->
+        <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group aspect-[3/5] w-full" onclick="openEventsModule()">
           <img id="featuredEventBannerImg" src="assets/screenshots/sudans_festival_banner.png" onerror="this.src='https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'" alt="17 Ekim Sudans Festivali" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
             <span class="text-xs font-black text-white/95 tracking-wide">17 EKİM · SUDANS FESTİVALİ</span>
@@ -558,14 +558,117 @@
             </div>
             <i class="fa-solid fa-chevron-right text-gray-300 text-[10px]"></i>
           </a>
-          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50 text-red-600">
+          <div onclick="handleLogout()" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-red-50/50 text-red-600 transition tap-effect">
             <div class="flex items-center gap-3">
               <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
               <span>Çıkış Yap</span>
             </div>
+            <i class="fa-solid fa-chevron-right text-red-400 text-[10px]"></i>
           </div>
         </div>
 
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 7: WEB TANITIM EKRANI (ÇIKIŞ YAPILINCA GELEN WEB SİTESİ) -->
+      <!-- ======================================================== -->
+      <section id="screen-landing" class="view-screen bg-white">
+        <!-- Top Sticky Return / Login bar -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-brand-red text-white flex items-center justify-center text-xs shadow-sm">
+              <i class="fa-solid fa-motorcycle"></i>
+            </div>
+            <span class="font-black text-xs text-gray-900">kampuskapinda.com</span>
+          </div>
+          <button onclick="handleLoginBack()" class="tap-effect bg-brand-red text-white text-[11px] font-black px-3 py-1.5 rounded-full shadow-sm hover:bg-brand-redHover transition flex items-center gap-1">
+            <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
+            <span>Giriş Yap</span>
+          </button>
+        </div>
+
+        <!-- Landing Page Content (Matches kampuskapinda.com exactly) -->
+        <div class="p-5 space-y-6 overflow-y-auto">
+          
+          <!-- Hero Banner Section -->
+          <div class="text-center space-y-3 pt-2">
+            <div class="inline-flex items-center gap-2 bg-red-50 text-brand-red px-3 py-1 rounded-full text-[11px] font-bold border border-red-100">
+              <span>🚀</span>
+              <span>Yeni Nesil Kampüs Deneyimi</span>
+            </div>
+            <h1 class="text-2xl font-black text-gray-900 leading-tight">
+              Üniversitelinin Tüm İhtiyaçları Tek Platformda! 🎓
+            </h1>
+            <p class="text-xs text-gray-600 leading-relaxed max-w-xs mx-auto">
+              Kampüsteki etkinlikler, partiler ve en sevdiğin lezzetler tek bir uygulamada kapında.
+            </p>
+            <div class="pt-2 flex flex-col gap-2">
+              <button onclick="handleLoginBack()" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-black text-xs shadow-md hover:bg-brand-redHover transition">
+                Kampüsünü Keşfet →
+              </button>
+              <button onclick="handleLoginBack()" class="tap-effect w-full py-3 rounded-2xl bg-gray-50 border border-gray-200 text-gray-800 font-black text-xs hover:bg-gray-100 transition">
+                Zaten hesabım var · Giriş Yap
+              </button>
+            </div>
+          </div>
+
+          <!-- Feature 1: Açlık Krizlerine Son -->
+          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-red-100 text-brand-red flex items-center justify-center text-xl">
+              🍔
+            </div>
+            <h3 class="font-black text-sm text-gray-900">Açlık Krizlerine Son</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Dersten çıktın veya yurtta finallere çalışıyorsun... Favori kampüs lezzetlerin sıra beklemeden kapında.
+            </p>
+          </div>
+
+          <!-- Feature 2: Etkinlikleri Kaçırma -->
+          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
+              🎟️
+            </div>
+            <h3 class="font-black text-sm text-gray-900">Etkinlikleri Kaçırma</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Kampüsteki partiler, konserler ve biletler tek yerde. Üstelik hesap açmadan bile anında biletini alabilirsin.
+            </p>
+          </div>
+
+          <!-- Active Universities Showcase -->
+          <div class="space-y-3 pt-2">
+            <h3 class="font-black text-xs text-gray-900 uppercase tracking-wider text-center">Önde Gelen Üniversitelerde</h3>
+            <div class="grid grid-cols-2 gap-2 text-center text-xs font-bold text-gray-700">
+              <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
+                <img src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Ko%C3%A7_University_logo.png" class="w-5 h-5 object-contain">
+                <span>Koç Üni</span>
+              </div>
+              <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
+                <img src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" class="w-5 h-5 object-contain">
+                <span>Sabancı Üni</span>
+              </div>
+              <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
+                <img src="https://s3-ankara.yok.gov.tr/yokmedia/universiteler/163888.png" class="w-5 h-5 object-contain">
+                <span>Medipol Üni</span>
+              </div>
+              <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
+                <img src="https://s3-ankara.yok.gov.tr/yokmedia/universiteler/360777.png" class="w-5 h-5 object-contain">
+                <span>Okan Üni</span>
+              </div>
+            </div>
+            <p class="text-[10px] text-gray-400 text-center font-medium">ve İstanbul genelinde 50'den fazla üniversite</p>
+          </div>
+
+          <!-- Web Site Footer & Contact -->
+          <div class="pt-4 border-t border-gray-100 text-center space-y-2 text-xs text-gray-500 pb-12">
+            <p class="font-bold text-gray-800">Kampüs Kapında · 2026</p>
+            <p class="text-[11px]">support@kampuskapinda.com</p>
+            <a href="https://wa.me/905537305100" target="_blank" class="inline-flex items-center gap-1.5 text-brand-red font-bold text-[11px]">
+              <i class="fa-brands fa-whatsapp text-emerald-500"></i>
+              <span>+90 553 730 51 00</span>
+            </a>
+          </div>
+
+        </div>
       </section>
 
     </main>
@@ -684,12 +787,15 @@
 
   </div> <!-- End .iphone-shell -->
 
+  <!-- Dynamic Excel Data (17 Restaurants & Exact Sales Menus) -->
+  <script src="assets/app_data.js"></script>
+
   <!-- ======================================================== -->
   <!-- JAVASCRIPT APPLICATION CORE                              -->
   <!-- ======================================================== -->
   <script>
     // ----------------------------------------------------
-    // 1. DATA MODEL (Üniversiteler, İşletmeler, Menüler)
+    // 1. DATA MODEL (Üniversiteler)
     // ----------------------------------------------------
     const universitiesData = [
       {
@@ -729,334 +835,7 @@
       }
     ];
 
-    // RESTAURANTS DATABASE BY UNIVERSITY & SCOPE
-    const storesData = {
-      sabanci: {
-        cevresi: [
-          {
-            id: 'pizza-bulls',
-            name: 'Pizza Bulls',
-            cover: 'assets/screenshots/pizzabulls_store.jpeg',
-            isOpen: true,
-            minOrder: '200 ₺',
-            rating: '5.0',
-            reviewsCount: 1,
-            deliveryHours: '09:00 - 03:00',
-            zones: ['Ana Kampüs (Tuzla)'],
-            tag: 'YEMEK',
-            menuType: 'pizza'
-          },
-          {
-            id: 'kuzey-doner',
-            name: 'Kuzey Döner',
-            cover: 'assets/screenshots/kuzeydoner_store.jpeg',
-            isOpen: true,
-            minOrder: '250 ₺',
-            rating: '4.9',
-            reviewsCount: 12,
-            deliveryHours: '11:00 - 22:00',
-            zones: ['Ana Kampüs (Tuzla)'],
-            tag: 'YEMEK',
-            menuType: 'doner'
-          }
-        ],
-        ici: [
-          {
-            id: 'sabanci-yemekhane-kantin',
-            name: 'Kampüs Merkez Kantini',
-            cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '100 ₺',
-            rating: '4.8',
-            reviewsCount: 34,
-            deliveryHours: '08:30 - 21:00',
-            zones: ['Fakülteler & Yurtlar'],
-            tag: 'KAMPÜS İÇİ',
-            menuType: 'breakfast'
-          }
-        ]
-      },
-      medipol: {
-        cevresi: [
-          {
-            id: 'piazza-cafe',
-            name: 'Piazza Cafe (Yurtlara Teslimat)',
-            cover: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '250 ₺',
-            rating: '5.0',
-            reviewsCount: 8,
-            deliveryHours: '10:00 - 01:00',
-            zones: ['Kavacık Güney Kampüs', 'Kuzey Kampüs'],
-            tag: 'YEMEK',
-            menuType: 'pizza'
-          }
-        ],
-        ici: [
-          {
-            id: 'medipol-kahve-duragi',
-            name: 'Kahve Durağı Medipol',
-            cover: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '120 ₺',
-            rating: '4.7',
-            reviewsCount: 19,
-            deliveryHours: '08:30 - 20:00',
-            zones: ['Güney Kampüs İçi'],
-            tag: 'KAHVE & TATLI',
-            menuType: 'breakfast'
-          }
-        ]
-      },
-      koc: {
-        cevresi: [
-          {
-            id: 'mezesell',
-            name: 'Mezesell',
-            cover: 'assets/screenshots/mezesell_store.jpeg',
-            isOpen: true,
-            minOrder: '300 ₺',
-            rating: '5.0',
-            reviewsCount: 6,
-            deliveryHours: '12:00 - 00:00',
-            zones: ['Ana Kampüs (Rumelifeneri)', 'Batı Kampüsü'],
-            tag: 'YEMEK',
-            menuType: 'breakfast'
-          },
-          {
-            id: 'zekeriyakoy-firini',
-            name: 'Zekeriyaköy Fırını',
-            cover: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '350 ₺',
-            rating: '4.8',
-            reviewsCount: 14,
-            deliveryHours: '08:00 - 22:00',
-            zones: ['Ana Kampüs (Rumelifeneri)'],
-            tag: 'FIRIN & PASTA',
-            menuType: 'breakfast'
-          }
-        ],
-        ici: [
-          {
-            id: 'koc-student-center',
-            name: 'Öğrenci Merkezi Kafe',
-            cover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '150 ₺',
-            rating: '4.9',
-            reviewsCount: 22,
-            deliveryHours: '09:00 - 23:00',
-            zones: ['Ana Kampüs İçi'],
-            tag: 'KAMPÜS İÇİ',
-            menuType: 'breakfast'
-          }
-        ]
-      },
-      okan: {
-        cevresi: [
-          {
-            id: 'okan-lezzet-duragi',
-            name: 'Lezzet Durağı Okan',
-            cover: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '200 ₺',
-            rating: '4.8',
-            reviewsCount: 9,
-            deliveryHours: '10:00 - 22:30',
-            zones: ['Tuzla Kampüsü'],
-            tag: 'YEMEK',
-            menuType: 'pizza'
-          }
-        ],
-        ici: [
-          {
-            id: 'okan-merkez-kafe',
-            name: 'Okan Merkez Kafeterya',
-            cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '100 ₺',
-            rating: '4.6',
-            reviewsCount: 15,
-            deliveryHours: '08:30 - 20:00',
-            zones: ['Fakülte Binaları'],
-            tag: 'KAMPÜS İÇİ',
-            menuType: 'breakfast'
-          }
-        ]
-      },
-      omer_halisdemir: {
-        cevresi: [
-          {
-            id: 'nigde-lezzet-sofrasi',
-            name: 'Kampüs Sofrası',
-            cover: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '150 ₺',
-            rating: '4.9',
-            reviewsCount: 27,
-            deliveryHours: '09:00 - 23:00',
-            zones: ['Merkez Kampüs'],
-            tag: 'YEMEK',
-            menuType: 'doner'
-          }
-        ],
-        ici: [
-          {
-            id: 'halisdemir-kantin',
-            name: 'Üniversite Merkez Kantini',
-            cover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
-            isOpen: true,
-            minOrder: '80 ₺',
-            rating: '4.7',
-            reviewsCount: 30,
-            deliveryHours: '08:00 - 20:00',
-            zones: ['Ana Kampüs'],
-            tag: 'KAMPÜS İÇİ',
-            menuType: 'breakfast'
-          }
-        ]
-      }
-    };
-
-    // PRODUCTS CATALOG (Exact items from WhatsApp screenshot reference & actual menus)
-    const storeMenus = {
-      pizza: {
-        categories: ['TÜMÜ', 'COCA-COLA FIRSAT MENÜLERİ', 'PİZZALAR', 'İÇECEKLER'],
-        products: [
-          {
-            id: 'p-coca1',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 1',
-            desc: 'Büyük Boy Pizza + Çıtır Tavuk + Elma Dilim Patates + Kutu İçecek',
-            price: 1040.00,
-            image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'p-coca2',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 2',
-            desc: 'Orta Boy Pizza + Çıtır Tavuk (200 gr.) + Patates + Kutu İçecek',
-            price: 830.00,
-            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'p-coca3',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 3',
-            desc: 'Orta Boy Pizza + Çıtır Tavuk + Sos + Kutu İçecek',
-            price: 735.00,
-            image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'p-coca4',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 4',
-            desc: 'Büyük Boy Pizza + 6 Tavuk But + Elma Dilim Patates + 1L İçecek',
-            price: 1135.00,
-            image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'p-coca5',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 5',
-            desc: 'Büyük Boy Pizza + 2 Adet Sos + 1L Coca-Cola',
-            price: 700.00,
-            image: 'https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'p-coca6',
-            cat: 'COCA-COLA FIRSAT MENÜLERİ',
-            title: 'Coca-Cola Fırsatı 6',
-            desc: '2 Adet Büyük Boy Pizza + Çıtır Tavuk + 1L İçecek',
-            price: 1600.00,
-            image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80'
-          }
-        ]
-      },
-      breakfast: {
-        categories: ['TÜMÜ', 'MENEMEN & OMLET ÇEŞİTLERİ', 'BÖREKLER', 'KAHVALTI'],
-        products: [
-          {
-            id: 'b-m1',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Menemen',
-            desc: 'Biber, domates, yumurta, taze tereyağı',
-            price: 250.00,
-            image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'b-m2',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Karışık Menemen',
-            desc: 'Biber, domates, yumurta, sucuk, kaşar peyniri',
-            price: 260.00,
-            image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'b-m3',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Sucuklu Menemen',
-            desc: 'Kayseri sucuğu, taze köy domatesi, biber',
-            price: 270.00,
-            image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'b-m4',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Omlet',
-            desc: '2 adet çırpılmış yumurta, tereyağlı',
-            price: 250.00,
-            image: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'b-m5',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Kavurmalı Kaşarlı Omlet',
-            desc: 'Rize kavurması, erimiş kaşar, 2 yumurta',
-            price: 450.00,
-            image: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'b-m6',
-            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
-            title: 'Maydanozlu Peynirli Omlet',
-            desc: 'Beyaz peynir, kıyılmış taze maydanoz',
-            price: 265.00,
-            image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
-          }
-        ]
-      },
-      doner: {
-        categories: ['TÜMÜ', 'DÜRÜM ÇEŞİTLERİ', 'PORSIYON LEZZETLER', 'İÇECEK'],
-        products: [
-          {
-            id: 'd-1',
-            cat: 'DÜRÜM ÇEŞİTLERİ',
-            title: 'Özel Soslu Et Döner Dürüm',
-            desc: '120 gr Yaprak Et Döner, patates, domates, özel sos',
-            price: 290.00,
-            image: 'https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'd-2',
-            cat: 'DÜRÜM ÇEŞİTLERİ',
-            title: 'Kaşarlı Tavuk Döner Dürüm',
-            desc: '130 gr Tavuk Döner, erimiş kaşar, turşu, patates',
-            price: 240.00,
-            image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80'
-          },
-          {
-            id: 'd-3',
-            cat: 'PORSIYON LEZZETLER',
-            title: 'İskender Et Döner',
-            desc: 'Tereyağlı pide üzerinde yaprak döner, yoğurt ve domates sos',
-            price: 380.00,
-            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80'
-          }
-        ]
-      }
-    };
+    // (storesData ve storeMenus assets/app_data.js dosyasından dinamik olarak yüklenmektedir)
 
     // EVENTS DATABASE (Direct from live API: kampuskapinda.com)
     const eventsData = [
@@ -1384,7 +1163,7 @@
       `).join('');
 
       // Populate Menu Categories & Products
-      const menuCatalog = storeMenus[found.menuType] || storeMenus.pizza;
+      const menuCatalog = storeMenus[found.menuKey] || storeMenus[found.name] || Object.values(storeMenus)[0];
       selectedMenuCategory = 'TÜMÜ';
       renderMenuCategories(menuCatalog.categories);
       renderProductsGrid(menuCatalog.products);
@@ -1403,7 +1182,7 @@
 
     function filterMenuByCategory(category) {
       selectedMenuCategory = category;
-      const menuCatalog = storeMenus[currentActiveStore ? currentActiveStore.menuType : 'pizza'] || storeMenus.pizza;
+      const menuCatalog = storeMenus[currentActiveStore ? currentActiveStore.menuKey : ''] || storeMenus[currentActiveStore ? currentActiveStore.name : ''] || Object.values(storeMenus)[0];
       renderMenuCategories(menuCatalog.categories);
       
       const filtered = category === 'TÜMÜ' 
@@ -1411,6 +1190,19 @@
         : menuCatalog.products.filter(p => p.cat === category);
       
       renderProductsGrid(filtered);
+    }
+
+    // ----------------------------------------------------
+    // AUTH & LOGOUT NAVIGATION
+    // ----------------------------------------------------
+    function handleLogout() {
+      // Çıkış yapılınca gelen web tanıtım sayfası (kampuskapinda.com mobil görünümü)
+      navigateTo('landing');
+    }
+
+    function handleLoginBack() {
+      // Tekrar uygulamaya / ana sayfaya giriş yap
+      navigateTo('home');
     }
 
     function renderProductsGrid(products) {
