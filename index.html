@@ -269,16 +269,16 @@
           </div>
         </div>
 
-        <!-- 2 Big Action Tiles: Yemek & Eğlence (Exact Screenshot Styling) -->
+        <!-- 2 Big Action Tiles: Yemek & Eğlence (Kare / 1:1 Aspect Ratio) -->
         <div class="grid grid-cols-2 gap-3">
-          <!-- Yemek Card -->
-          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-38 relative overflow-hidden group">
+          <!-- Yemek Card (Square 1:1) -->
+          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-3xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between aspect-square relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">SİPARİŞ</span>
-              <h3 class="font-black text-brand-red text-base">Yemek</h3>
+              <h3 class="font-black text-brand-red text-base leading-tight">Yemek</h3>
               <p class="text-[10px] text-gray-400 leading-tight">Kampüsteki lezzetleri keşfet, sipariş ver</p>
             </div>
-            <div class="self-end mt-2">
+            <div class="self-end mt-1">
               <!-- Plate + Fork & Knife Graphic -->
               <div class="relative w-16 h-16 flex items-center justify-center opacity-90 group-hover:scale-105 transition-transform">
                 <div class="w-12 h-12 rounded-full border-4 border-gray-100 bg-white shadow-inner flex items-center justify-center">
@@ -290,14 +290,14 @@
             </div>
           </div>
 
-          <!-- Eğlence Card -->
-          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-38 relative overflow-hidden group">
+          <!-- Eğlence Card (Square 1:1) -->
+          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-3xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between aspect-square relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">ETKİNLİK</span>
-              <h3 class="font-black text-brand-red text-base">Eğlence</h3>
+              <h3 class="font-black text-brand-red text-base leading-tight">Eğlence</h3>
               <p class="text-[10px] text-gray-400 leading-tight">Kampüs partileri, konserler ve etkinlikler</p>
             </div>
-            <div class="self-end mt-2">
+            <div class="self-end mt-1">
               <!-- Ticket Graphic matching screenshot -->
               <div class="w-16 h-11 bg-red-100 border border-red-300 rounded-lg flex items-center justify-center relative shadow-sm group-hover:scale-105 transition-transform">
                 <div class="w-7 h-4 border-2 border-red-400 rounded-sm flex items-center justify-center gap-0.5">
@@ -311,11 +311,12 @@
           </div>
         </div>
 
-        <!-- Featured Banner: 17 EKİM SUDANS FESTİVALİ & RIDDIM (Exact Matching Screenshot) -->
-        <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group" onclick="openEventsModule()">
-          <img id="featuredEventBannerImg" src="assets/screenshots/sudans_festival_banner.png" onerror="this.src='https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'" alt="17 Ekim Sudans Festivali" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex flex-col justify-end p-3.5 text-white">
-            <span class="text-[10px] font-bold text-white/90">Biletler sınırlı sayıda · İncele →</span>
+        <!-- Featured Reklam Alanı: 4:5 Aspect Ratio (Poster Boyutu) -->
+        <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group aspect-[4/5] w-full" onclick="openEventsModule()">
+          <img id="featuredEventBannerImg" src="assets/screenshots/sudans_festival_banner.png" onerror="this.src='https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'" alt="17 Ekim Sudans Festivali" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+            <span class="text-xs font-black text-white/95 tracking-wide">17 EKİM · SUDANS FESTİVALİ</span>
+            <span class="text-[11px] font-semibold text-white/80">Biletler sınırlı sayıda · İncele →</span>
           </div>
         </div>
 
