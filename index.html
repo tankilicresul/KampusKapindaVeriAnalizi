@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kampüs Kapında - Mobil Uygulama Prototipi</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#D32F2F',
+              redHover: '#B71C1C',
+              darkRed: '#991B1B',
+              lightRed: '#FEE2E2',
+              bgGray: '#F8F9FA'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* iOS Style Smooth Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Device Mockup Shell */
+    .device-shell {
+      width: 100%;
+      max-width: 420px;
+      height: 880px;
+      max-height: 94vh;
+      border-radius: 46px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 0 10px #1e293b, 0 0 0 12px #475569;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    /* Fullscreen mobile override */
+    body.is-fullscreen-mobile .device-shell {
+      max-width: 100% !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+
+    /* Dynamic Island / Notch */
+    .dynamic-island {
+      width: 110px;
+      height: 24px;
+      background: #0f172a;
+      border-radius: 20px;
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+    .dynamic-island .camera {
+      width: 10px;
+      height: 10px;
+      background: #1e293b;
+      border-radius: 50%;
+    }
+    .dynamic-island .sensor {
+      width: 6px;
+      height: 6px;
+      background: #0284c7;
+      opacity: 0.7;
+      border-radius: 50%;
+    }
+
+    /* App Screen Fade Animations */
+    .view-screen {
+      display: none;
+      animation: fadeIn 0.22s ease-in-out;
+    }
+    .view-screen.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badge & Ripple Effects */
+    .tap-effect:active {
+      transform: scale(0.97);
+      transition: transform 0.1s ease;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none">
+
+  <!-- Desktop Floating Toolbar -->
+  <aside class="hidden md:flex items-center gap-4 mb-4 text-xs font-semibold text-slate-300 bg-slate-800/90 px-5 py-2.5 rounded-full border border-slate-700/80 shadow-lg backdrop-blur">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="text-white">Kampüs Kapında Mobil Sanal Kopyası</span>
+    </div>
+    <span class="text-slate-500">|</span>
+    <button onclick="toggleMobileFullView()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-700/60 px-2.5 py-1 rounded-lg">
+      <i class="fa-solid fa-expand text-slate-400"></i>
+      <span id="fullscreenToggleText">Tam Ekran Yap</span>
+    </button>
+    <button onclick="resetDemoData()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-700/60 px-2.5 py-1 rounded-lg">
+      <i class="fa-solid fa-rotate-right text-slate-400"></i>
+      <span>Sıfırla</span>
+    </button>
+  </aside>
+
+  <!-- ======================================================== -->
+  <!-- PHONE SHELL (MOBILE CONTAINER)                           -->
+  <!-- ======================================================== -->
+  <div class="device-shell" id="appShell">
+    
+    <!-- iPhone Notch / Dynamic Island -->
+    <div class="dynamic-island">
+      <div class="sensor"></div>
+      <div class="camera"></div>
+    </div>
+
+    <!-- Phone Status Bar -->
+    <div class="h-11 pt-2.5 px-6 flex items-center justify-between text-xs font-bold text-gray-900 z-40 bg-white/90 backdrop-blur sticky top-0">
+      <span id="statusClock">16:51</span>
+      <div class="flex items-center gap-1.5 text-[11px] text-gray-700">
+        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-wifi"></i>
+        <span class="border border-gray-700 rounded-[3px] px-0.5 text-[9px] font-black">94%</span>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- APP GLOBAL TOP HEADER                                    -->
+    <!-- ======================================================== -->
+    <header class="bg-white border-b border-gray-100 px-4 py-2 flex items-center justify-between z-30 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.04)]">
+      <!-- Logo -->
+      <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+        <div class="w-8 h-8 rounded-full bg-brand-red flex items-center justify-center text-white shadow-sm">
+          <i class="fa-solid fa-motorcycle text-sm"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-sm text-gray-900 block leading-none">Kampüs</span>
+          <span class="font-extrabold text-xs text-brand-red block leading-tight">Kapında</span>
+        </div>
+      </div>
+
+      <!-- Header Right: University & Module Selector -->
+      <div class="flex items-center gap-2">
+        <!-- University Badge Selector -->
+        <button onclick="openUniversityModal()" class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-brand-red px-2.5 py-1 rounded-xl text-xs font-bold text-gray-800 transition">
+          <img id="headerUniLogo" src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" alt="Uni Logo" class="w-4 h-4 object-contain">
+          <span id="headerUniShortName" class="max-w-[70px] truncate">Sabancı</span>
+          <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+        </button>
+
+        <!-- Module Pill: Yemek / Eğlence -->
+        <button id="moduleSwitcherBtn" onclick="toggleActiveModule()" class="flex items-center gap-1.5 bg-red-50 text-brand-red border border-red-200 px-2.5 py-1 rounded-xl text-xs font-bold transition">
+          <i id="moduleIcon" class="fa-solid fa-utensils text-[11px]"></i>
+          <span id="moduleName">Yemek</span>
+          <i class="fa-solid fa-chevron-down text-[8px] opacity-70"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================================================== -->
+    <!-- SCREEN VIEWS SCROLLER CONTAINER                          -->
+    <!-- ======================================================== -->
+    <main class="flex-1 overflow-y-auto bg-gray-50/60 relative hide-scrollbar" id="mainScrollArea">
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 1: ANA SAYFA (HOME / DASHBOARD)                   -->
+      <!-- ======================================================== -->
+      <section id="screen-home" class="view-screen active p-4 space-y-4">
+        
+        <!-- User Welcome & Active Campus Bar -->
+        <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-red-100 text-brand-red font-black flex items-center justify-center text-sm shadow-inner">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Üniversite</span>
+              <span id="homeUniFullName" class="text-xs font-extrabold text-gray-900 block leading-tight">Sabancı Üniversitesi</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer" onclick="navigateTo('profile')">
+            <div class="text-right">
+              <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">HESABIM</span>
+              <span id="homeUserName" class="text-xs font-extrabold text-gray-800 block">Asım Özgür</span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red font-bold text-xs flex items-center justify-center border border-red-200">
+              A
+            </div>
+          </div>
+        </div>
+
+        <!-- Red Hero Announcement Banner -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] p-4 text-white shadow-md">
+          <div class="absolute -right-3 -bottom-5 opacity-15 text-7xl font-black">🎓</div>
+          <div class="flex items-start gap-3 relative z-10">
+            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-xl shrink-0">
+              🎓
+            </div>
+            <div class="flex-1">
+              <h2 class="font-extrabold text-base leading-tight">Kampüs Kapında</h2>
+              <p class="text-xs text-red-100 mt-1 leading-snug">Üniversitelinin tüm ihtiyaçları tek platformda!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Big Action Tiles: Yemek vs Eğlence -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Yemek Card -->
+          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">SİPARİŞ</span>
+              <h3 class="font-black text-gray-900 text-base">Yemek</h3>
+              <p class="text-[11px] text-gray-500 leading-snug">Kampüsteki lezzetleri keşfet, sipariş ver</p>
+            </div>
+            <div class="self-end mt-2">
+              <div class="w-14 h-14 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                🍽️
+              </div>
+            </div>
+          </div>
+
+          <!-- Eğlence Card -->
+          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">ETKİNLİK</span>
+              <h3 class="font-black text-gray-900 text-base">Eğlence</h3>
+              <p class="text-[11px] text-gray-500 leading-snug">Kampüs partileri, konserler ve biletler</p>
+            </div>
+            <div class="self-end mt-2">
+              <div class="w-14 h-14 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                🎟️
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Yeniden Sipariş Ver (Quick Reorder Carousel) -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-gray-900">Yeniden Sipariş Ver</h3>
+            <button onclick="navigateTo('orders')" class="text-xs font-bold text-brand-red hover:underline">Tümünü Gör</button>
+          </div>
+          
+          <div class="flex gap-3 overflow-x-auto pb-1 hide-scrollbar" id="recentOrdersCarousel">
+            <!-- Dynamic Recent Order Cards -->
+          </div>
+        </div>
+
+        <!-- Featured Party / Event Banner -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-gray-900">Öne Çıkan Etkinlikler</h3>
+            <button onclick="openEventsModule()" class="text-xs font-bold text-brand-red hover:underline">Tümü →</button>
+          </div>
+          
+          <div class="relative rounded-2xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer group" onclick="openEventsModule()">
+            <img id="featuredEventBannerImg" src="https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp" alt="Welcome Party" class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3.5 text-white">
+              <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-0.5 rounded-md inline-block w-fit mb-1">17 EKİM · WELCOME PARTY</span>
+              <h4 class="font-extrabold text-sm text-white leading-tight">K. Kapında Welcome Party - RIDDIM</h4>
+              <p class="text-[11px] text-gray-200 mt-0.5">Biletler sınırlı sayıda! İncele ve bilet al →</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 2: İŞLETMELER LİSTESİ (RESTAURANTS)               -->
+      <!-- ======================================================== -->
+      <section id="screen-stores" class="view-screen p-4 space-y-4">
+        
+        <!-- Campus Selector Header -->
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 id="storesScreenTitle" class="font-extrabold text-lg text-gray-900 leading-tight">Sabancı Üniversitesi</h2>
+            <p class="text-xs text-gray-500 font-semibold">Kampüs İçi & Çevresi İşletmeler</p>
+          </div>
+          <button onclick="openUniversityModal()" class="text-xs font-bold text-brand-red bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-xl">
+            <i class="fa-solid fa-arrows-rotate mr-1"></i>Değiştir
+          </button>
+        </div>
+
+        <!-- Filter Switch: Kampüs İçi vs Kampüs Çevresi -->
+        <div class="bg-gray-200/80 p-1 rounded-2xl flex shadow-inner">
+          <button id="tabKampusIci" onclick="switchStoreScope('ici')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900">
+            <span>🏫</span>
+            <span>Kampüs İçi</span>
+          </button>
+          <button id="tabKampusCevresi" onclick="switchStoreScope('cevresi')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm">
+            <span>🛵</span>
+            <span>Kampüs Çevresi</span>
+          </button>
+        </div>
+
+        <!-- Sub Campus / Zone Indicator -->
+        <div class="flex items-center justify-between bg-white px-3.5 py-2 rounded-xl border border-gray-100 text-xs">
+          <div class="flex items-center gap-2 text-gray-800 font-bold">
+            <i class="fa-solid fa-location-crosshairs text-brand-red"></i>
+            <span id="activeZoneLabel">Ana Kampüs (Tuzla)</span>
+          </div>
+          <span class="text-[10px] text-gray-400 font-semibold" id="storesCountBadge">4 İşletme</span>
+        </div>
+
+        <!-- Restaurant Cards Feed -->
+        <div id="storesFeed" class="space-y-3.5">
+          <!-- Dynamic Restaurant Cards -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 3: İŞLETME & MENÜ DETAYI (STORE & MENU)           -->
+      <!-- ======================================================== -->
+      <section id="screen-menu" class="view-screen">
+        
+        <!-- Sticky Top Back Bar inside menu -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+          <button onclick="navigateTo('stores')" class="flex items-center gap-2 text-xs font-bold text-gray-700 hover:text-brand-red transition">
+            <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center">
+              <i class="fa-solid fa-chevron-left text-[11px]"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block leading-none">GERİ DÖN</span>
+              <span class="text-xs font-extrabold text-gray-900 leading-none">İŞLETME LİSTESİ</span>
+            </div>
+          </button>
+          <span class="text-xs font-black text-brand-red bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
+            Yemek
+          </span>
+        </div>
+
+        <!-- Store Cover & Details -->
+        <div class="p-4 space-y-3">
+          
+          <!-- Cover Photo with Status Pill -->
+          <div class="relative h-44 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+            <img id="menuStoreCover" src="assets/screenshots/pizzabulls_store.jpeg" alt="Restoran" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+            
+            <div class="absolute top-3 right-3">
+              <span id="menuStoreStatusBadge" class="bg-white/95 text-emerald-600 text-[11px] font-black px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>AÇIK</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Store Title & Meta -->
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm space-y-2.5">
+            <h1 id="menuStoreName" class="font-black text-xl text-gray-900">Pizza Bulls</h1>
+            
+            <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
+              <span class="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-lg" id="menuStoreMin">Min: 200 ₺</span>
+              <span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <i class="fa-solid fa-star text-amber-500"></i>
+                <span id="menuStoreRating">5.0 (1)</span>
+              </span>
+            </div>
+
+            <!-- Delivery Hours Banner -->
+            <div class="bg-emerald-50 text-emerald-800 text-[11px] font-bold px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-2">
+              <i class="fa-regular fa-clock text-emerald-600"></i>
+              <span id="menuStoreHours">TESLİMAT SAATLERİ: 09:00 - 03:00</span>
+            </div>
+
+            <!-- Campus Delivery Locations -->
+            <div class="pt-1">
+              <span class="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-1">TESLİMAT YAPILAN KAMPÜSLER</span>
+              <div class="flex flex-wrap gap-1.5" id="menuStoreCampuses">
+                <span class="bg-gray-100 text-gray-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">Ana Kampüs (Tuzla)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu Categories Slider Tabs -->
+          <div class="sticky top-12 z-20 bg-gray-50/90 backdrop-blur py-1">
+            <div class="flex gap-2 overflow-x-auto pb-1 hide-scrollbar" id="menuCategoriesBar">
+              <!-- Dynamic Category Buttons -->
+            </div>
+          </div>
+
+          <!-- Products 2-Column Grid -->
+          <div class="grid grid-cols-2 gap-3 pb-24" id="menuProductsGrid">
+            <!-- Dynamic Product Cards -->
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 4: ETKİNLİKLER (EVENTS & ENTERTAINMENT)           -->
+      <!-- ======================================================== -->
+      <section id="screen-events" class="view-screen p-4 space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-extrabold text-lg text-gray-900 leading-tight">Kampüs Etkinlikleri</h2>
+            <p class="text-xs text-gray-500 font-semibold">Konserler, Partiler ve Biletler</p>
+          </div>
+          <span class="bg-red-50 text-brand-red font-black text-xs px-2.5 py-1 rounded-xl border border-red-200">
+            🎟️ Eğlence
+          </span>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+          <button class="bg-brand-red text-white text-xs font-bold px-3.5 py-1.5 rounded-xl whitespace-nowrap shadow-sm">Tüm Etkinlikler</button>
+          <button class="bg-white border border-gray-200 text-gray-700 text-xs font-bold px-3.5 py-1.5 rounded-xl whitespace-nowrap">Welcome Partileri</button>
+          <button class="bg-white border border-gray-200 text-gray-700 text-xs font-bold px-3.5 py-1.5 rounded-xl whitespace-nowrap">Halloween</button>
+          <button class="bg-white border border-gray-200 text-gray-700 text-xs font-bold px-3.5 py-1.5 rounded-xl whitespace-nowrap">Online Turnuvalar</button>
+        </div>
+
+        <!-- Events List Feed -->
+        <div class="space-y-3.5 pb-20" id="eventsListFeed">
+          <!-- Dynamic Event Cards -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 5: SİPARİŞLERİM (MY ORDERS)                       -->
+      <!-- ======================================================== -->
+      <section id="screen-orders" class="view-screen p-4 space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-extrabold text-lg text-gray-900 leading-tight">Sipariş Geçmişim</h2>
+            <p class="text-xs text-gray-500 font-semibold">Aktif ve Geçmiş Siparişlerin</p>
+          </div>
+          <span class="text-xs font-bold text-gray-400">3 Kayıt</span>
+        </div>
+
+        <div class="space-y-3" id="ordersListContainer">
+          <!-- Dynamic Orders -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 6: PROFİLİM (PROFILE)                             -->
+      <!-- ======================================================== -->
+      <section id="screen-profile" class="view-screen p-4 space-y-4">
+        
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-3.5">
+          <div class="w-14 h-14 rounded-full bg-brand-red text-white font-black text-xl flex items-center justify-center shadow-md">
+            AÖ
+          </div>
+          <div class="flex-1">
+            <h3 class="font-black text-base text-gray-900">Asım Özgür Güneybaz</h3>
+            <p class="text-xs text-gray-500 font-semibold">Sabancı Üniversitesi · Öğrenci</p>
+            <p class="text-[11px] text-gray-400 mt-0.5">support@kampuskapinda.com</p>
+          </div>
+        </div>
+
+        <!-- University Selector in Profile -->
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
+          <label class="text-xs font-extrabold text-gray-700 block">KAYITLI ÜNİVERSİTE VE KAMPÜSÜN</label>
+          <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-200 cursor-pointer" onclick="openUniversityModal()">
+            <div class="flex items-center gap-2">
+              <img id="profileUniLogo" src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" class="w-6 h-6 object-contain">
+              <span id="profileUniName" class="text-xs font-bold text-gray-900">Sabancı Üniversitesi</span>
+            </div>
+            <span class="text-xs font-bold text-brand-red">Değiştir →</span>
+          </div>
+        </div>
+
+        <!-- Menu items -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100 text-xs font-bold text-gray-800">
+          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+            <div class="flex items-center gap-3">
+              <i class="fa-regular fa-bell text-gray-400 text-sm"></i>
+              <span>Bildirim Ayarları</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-gray-300 text-[10px]"></i>
+          </div>
+          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50" onclick="openCartModal()">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-cart-shopping text-gray-400 text-sm"></i>
+              <span>Mevcut Sepetim</span>
+            </div>
+            <span id="profileCartCount" class="text-brand-red">0 Ürün</span>
+          </div>
+          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+            <div class="flex items-center gap-3">
+              <i class="fa-regular fa-circle-question text-gray-400 text-sm"></i>
+              <span>Yardım & Destek (WhatsApp)</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-gray-300 text-[10px]"></i>
+          </div>
+          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50 text-red-600">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+              <span>Çıkış Yap</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- FLOATING FLOATING ACTION BUTTONS (SEPET & DESTEK)        -->
+    <!-- ======================================================== -->
+    <div class="absolute right-4 bottom-18 z-40 flex flex-col gap-2.5 items-end pointer-events-none">
+      
+      <!-- Live Support / WhatsApp Pill (matches screenshot) -->
+      <a href="https://wa.me/905537305100" target="_blank" class="pointer-events-auto tap-effect w-11 h-11 rounded-full bg-white border border-red-200 text-brand-red flex items-center justify-center shadow-lg hover:bg-red-50 transition">
+        <i class="fa-solid fa-headset text-lg"></i>
+      </a>
+
+      <!-- Floating Red Cart Button with Count Badge -->
+      <button onclick="openCartModal()" class="pointer-events-auto tap-effect w-13 h-13 rounded-full bg-brand-red text-white flex items-center justify-center shadow-xl hover:bg-brand-redHover transition relative p-3">
+        <i class="fa-solid fa-cart-shopping text-lg"></i>
+        <span id="floatingCartBadge" class="absolute -top-1 -right-1 bg-white text-brand-red font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-red shadow">0</span>
+      </button>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION DOCK (BOTTOM BAR)               -->
+    <!-- ======================================================== -->
+    <nav class="bg-white border-t border-gray-200 px-6 py-2.5 flex items-center justify-between z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+      
+      <button onclick="navigateTo('stores')" id="nav-btn-stores" class="flex flex-col items-center gap-0.5 text-brand-red transition tap-effect">
+        <i class="fa-solid fa-store text-lg"></i>
+        <span class="text-[10px] font-extrabold">İşletmeler</span>
+      </button>
+
+      <button onclick="navigateTo('orders')" id="nav-btn-orders" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-700 transition tap-effect">
+        <i class="fa-solid fa-receipt text-lg"></i>
+        <span class="text-[10px] font-extrabold">Siparişlerim</span>
+      </button>
+
+      <button onclick="navigateTo('profile')" id="nav-btn-profile" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-700 transition tap-effect">
+        <i class="fa-regular fa-user text-lg"></i>
+        <span class="text-[10px] font-extrabold">Profilim</span>
+      </button>
+
+    </nav>
+
+    <!-- iPhone Bottom Home Bar Indicator -->
+    <div class="h-4 bg-white flex items-center justify-center">
+      <div class="w-32 h-1 bg-gray-300 rounded-full"></div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 1: ÜNİVERSİTE SEÇİM MODALI                         -->
+    <!-- ======================================================== -->
+    <div id="uniModal" class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end transition-opacity">
+      <div class="bg-white rounded-t-3xl p-5 space-y-4 max-h-[85%] overflow-y-auto hide-scrollbar shadow-2xl">
+        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+          <div>
+            <h3 class="font-black text-base text-gray-900">Üniversiteni Seç</h3>
+            <p class="text-xs text-gray-500 font-semibold">Kampüsüne özel menü ve etkinlikler listelenir</p>
+          </div>
+          <button onclick="closeUniversityModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <div class="space-y-2.5" id="uniListContainer">
+          <!-- Dynamic University Radio Cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 2: SEPET VE SİPARİŞ VER MODALI                     -->
+    <!-- ======================================================== -->
+    <div id="cartModal" class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end">
+      <div class="bg-white rounded-t-3xl p-5 space-y-4 max-h-[88%] flex flex-col shadow-2xl">
+        
+        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red flex items-center justify-center">
+              <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <div>
+              <h3 class="font-black text-base text-gray-900">Sipariş Sepeti</h3>
+              <p class="text-xs text-gray-500" id="cartStoreNotice">Kampüs Kapında</p>
+            </div>
+          </div>
+          <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="flex-1 overflow-y-auto space-y-3 hide-scrollbar min-h-[140px] max-h-[300px]" id="cartItemsList">
+          <!-- Dynamic Cart Items -->
+        </div>
+
+        <!-- Totals & Checkout -->
+        <div class="pt-3 border-t border-gray-100 space-y-2.5">
+          <div class="flex justify-between text-xs text-gray-600 font-bold">
+            <span>Ara Toplam</span>
+            <span id="cartSubtotalText">0.00 ₺</span>
+          </div>
+          <div class="flex justify-between text-xs text-gray-600 font-bold">
+            <span>Kampüs Teslimat Ücreti</span>
+            <span class="text-emerald-600">Ücretsiz 🎁</span>
+          </div>
+          <div class="flex justify-between text-sm font-extrabold text-gray-900 pt-1 border-t border-dashed border-gray-200">
+            <span>Genel Toplam</span>
+            <span class="text-brand-red text-base" id="cartTotalText">0.00 ₺</span>
+          </div>
+
+          <button onclick="submitOrder()" id="btnCheckout" class="w-full py-3 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
+            <span>Siparişi Onayla & Ver</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div> <!-- End .device-shell -->
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT APPLICATION CORE                              -->
+  <!-- ======================================================== -->
+  <script>
+    // ----------------------------------------------------
+    // 1. DATA MODEL (Üniversiteler, İşletmeler, Menüler)
+    // ----------------------------------------------------
+    const universitiesData = [
+      {
+        id: 'sabanci',
+        name: 'Sabancı Üniversitesi',
+        shortName: 'Sabancı',
+        campusZone: 'Ana Kampüs (Tuzla)',
+        logo: 'https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png'
+      },
+      {
+        id: 'medipol',
+        name: 'Medipol Üniversitesi',
+        shortName: 'Medipol',
+        campusZone: 'Kavacık Güney Kampüsü',
+        logo: 'https://s3-ankara.yok.gov.tr/yokmedia/universiteler/163888.png'
+      },
+      {
+        id: 'okan',
+        name: 'Okan Üniversitesi',
+        shortName: 'Okan',
+        campusZone: 'Tuzla Kampüsü',
+        logo: 'https://s3-ankara.yok.gov.tr/yokmedia/universiteler/360777.png'
+      },
+      {
+        id: 'koc',
+        name: 'Koç Üniversitesi',
+        shortName: 'Koç',
+        campusZone: 'Ana Kampüs (Rumelifeneri)',
+        logo: 'https://kampuskapinda.s3.eu-central-1.amazonaws.com/Ko%C3%A7_University_logo.png'
+      },
+      {
+        id: 'omer_halisdemir',
+        name: 'Ömer Halisdemir Üniversitesi',
+        shortName: 'Ö. Halisdemir',
+        campusZone: 'Merkez Kampüs',
+        logo: 'https://s3-ankara.yok.gov.tr/yokmedia/universiteler/306556.png'
+      }
+    ];
+
+    // RESTAURANTS DATABASE BY UNIVERSITY & SCOPE
+    const storesData = {
+      sabanci: {
+        cevresi: [
+          {
+            id: 'pizza-bulls',
+            name: 'Pizza Bulls',
+            cover: 'assets/screenshots/pizzabulls_store.jpeg',
+            isOpen: true,
+            minOrder: '200 ₺',
+            rating: '5.0',
+            reviewsCount: 1,
+            deliveryHours: '09:00 - 03:00',
+            zones: ['Ana Kampüs (Tuzla)'],
+            tag: 'YEMEK',
+            menuType: 'pizza'
+          },
+          {
+            id: 'kuzey-doner',
+            name: 'Kuzey Döner',
+            cover: 'assets/screenshots/kuzeydoner_store.jpeg',
+            isOpen: true,
+            minOrder: '250 ₺',
+            rating: '4.9',
+            reviewsCount: 12,
+            deliveryHours: '11:00 - 22:00',
+            zones: ['Ana Kampüs (Tuzla)'],
+            tag: 'YEMEK',
+            menuType: 'doner'
+          }
+        ],
+        ici: [
+          {
+            id: 'sabanci-yemekhane-kantin',
+            name: 'Kampüs Merkez Kantini',
+            cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '100 ₺',
+            rating: '4.8',
+            reviewsCount: 34,
+            deliveryHours: '08:30 - 21:00',
+            zones: ['Fakülteler & Yurtlar'],
+            tag: 'KAMPÜS İÇİ',
+            menuType: 'breakfast'
+          }
+        ]
+      },
+      medipol: {
+        cevresi: [
+          {
+            id: 'piazza-cafe',
+            name: 'Piazza Cafe (Yurtlara Teslimat)',
+            cover: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '250 ₺',
+            rating: '5.0',
+            reviewsCount: 8,
+            deliveryHours: '10:00 - 01:00',
+            zones: ['Kavacık Güney Kampüs', 'Kuzey Kampüs'],
+            tag: 'YEMEK',
+            menuType: 'pizza'
+          }
+        ],
+        ici: [
+          {
+            id: 'medipol-kahve-duragi',
+            name: 'Kahve Durağı Medipol',
+            cover: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '120 ₺',
+            rating: '4.7',
+            reviewsCount: 19,
+            deliveryHours: '08:30 - 20:00',
+            zones: ['Güney Kampüs İçi'],
+            tag: 'KAHVE & TATLI',
+            menuType: 'breakfast'
+          }
+        ]
+      },
+      koc: {
+        cevresi: [
+          {
+            id: 'mezesell',
+            name: 'Mezesell',
+            cover: 'assets/screenshots/mezesell_store.jpeg',
+            isOpen: true,
+            minOrder: '300 ₺',
+            rating: '5.0',
+            reviewsCount: 6,
+            deliveryHours: '12:00 - 00:00',
+            zones: ['Ana Kampüs (Rumelifeneri)', 'Batı Kampüsü'],
+            tag: 'YEMEK',
+            menuType: 'breakfast'
+          },
+          {
+            id: 'zekeriyakoy-firini',
+            name: 'Zekeriyaköy Fırını',
+            cover: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '350 ₺',
+            rating: '4.8',
+            reviewsCount: 14,
+            deliveryHours: '08:00 - 22:00',
+            zones: ['Ana Kampüs (Rumelifeneri)'],
+            tag: 'FIRIN & PASTA',
+            menuType: 'breakfast'
+          }
+        ],
+        ici: [
+          {
+            id: 'koc-student-center',
+            name: 'Öğrenci Merkezi Kafe',
+            cover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '150 ₺',
+            rating: '4.9',
+            reviewsCount: 22,
+            deliveryHours: '09:00 - 23:00',
+            zones: ['Ana Kampüs İçi'],
+            tag: 'KAMPÜS İÇİ',
+            menuType: 'breakfast'
+          }
+        ]
+      },
+      okan: {
+        cevresi: [
+          {
+            id: 'okan-lezzet-duragi',
+            name: 'Lezzet Durağı Okan',
+            cover: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '200 ₺',
+            rating: '4.8',
+            reviewsCount: 9,
+            deliveryHours: '10:00 - 22:30',
+            zones: ['Tuzla Kampüsü'],
+            tag: 'YEMEK',
+            menuType: 'pizza'
+          }
+        ],
+        ici: [
+          {
+            id: 'okan-merkez-kafe',
+            name: 'Okan Merkez Kafeterya',
+            cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '100 ₺',
+            rating: '4.6',
+            reviewsCount: 15,
+            deliveryHours: '08:30 - 20:00',
+            zones: ['Fakülte Binaları'],
+            tag: 'KAMPÜS İÇİ',
+            menuType: 'breakfast'
+          }
+        ]
+      },
+      omer_halisdemir: {
+        cevresi: [
+          {
+            id: 'nigde-lezzet-sofrasi',
+            name: 'Kampüs Sofrası',
+            cover: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '150 ₺',
+            rating: '4.9',
+            reviewsCount: 27,
+            deliveryHours: '09:00 - 23:00',
+            zones: ['Merkez Kampüs'],
+            tag: 'YEMEK',
+            menuType: 'doner'
+          }
+        ],
+        ici: [
+          {
+            id: 'halisdemir-kantin',
+            name: 'Üniversite Merkez Kantini',
+            cover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
+            isOpen: true,
+            minOrder: '80 ₺',
+            rating: '4.7',
+            reviewsCount: 30,
+            deliveryHours: '08:00 - 20:00',
+            zones: ['Ana Kampüs'],
+            tag: 'KAMPÜS İÇİ',
+            menuType: 'breakfast'
+          }
+        ]
+      }
+    };
+
+    // PRODUCTS CATALOG (Exact items from WhatsApp screenshot reference & actual menus)
+    const storeMenus = {
+      pizza: {
+        categories: ['TÜMÜ', 'COCA-COLA FIRSAT MENÜLERİ', 'PİZZALAR', 'İÇECEKLER'],
+        products: [
+          {
+            id: 'p-coca1',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 1',
+            desc: 'Büyük Boy Pizza + Çıtır Tavuk + Elma Dilim Patates + Kutu İçecek',
+            price: 1040.00,
+            image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'p-coca2',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 2',
+            desc: 'Orta Boy Pizza + Çıtır Tavuk (200 gr.) + Patates + Kutu İçecek',
+            price: 830.00,
+            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'p-coca3',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 3',
+            desc: 'Orta Boy Pizza + Çıtır Tavuk + Sos + Kutu İçecek',
+            price: 735.00,
+            image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'p-coca4',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 4',
+            desc: 'Büyük Boy Pizza + 6 Tavuk But + Elma Dilim Patates + 1L İçecek',
+            price: 1135.00,
+            image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'p-coca5',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 5',
+            desc: 'Büyük Boy Pizza + 2 Adet Sos + 1L Coca-Cola',
+            price: 700.00,
+            image: 'https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'p-coca6',
+            cat: 'COCA-COLA FIRSAT MENÜLERİ',
+            title: 'Coca-Cola Fırsatı 6',
+            desc: '2 Adet Büyük Boy Pizza + Çıtır Tavuk + 1L İçecek',
+            price: 1600.00,
+            image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80'
+          }
+        ]
+      },
+      breakfast: {
+        categories: ['TÜMÜ', 'MENEMEN & OMLET ÇEŞİTLERİ', 'BÖREKLER', 'KAHVALTI'],
+        products: [
+          {
+            id: 'b-m1',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Menemen',
+            desc: 'Biber, domates, yumurta, taze tereyağı',
+            price: 250.00,
+            image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'b-m2',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Karışık Menemen',
+            desc: 'Biber, domates, yumurta, sucuk, kaşar peyniri',
+            price: 260.00,
+            image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'b-m3',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Sucuklu Menemen',
+            desc: 'Kayseri sucuğu, taze köy domatesi, biber',
+            price: 270.00,
+            image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'b-m4',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Omlet',
+            desc: '2 adet çırpılmış yumurta, tereyağlı',
+            price: 250.00,
+            image: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'b-m5',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Kavurmalı Kaşarlı Omlet',
+            desc: 'Rize kavurması, erimiş kaşar, 2 yumurta',
+            price: 450.00,
+            image: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'b-m6',
+            cat: 'MENEMEN & OMLET ÇEŞİTLERİ',
+            title: 'Maydanozlu Peynirli Omlet',
+            desc: 'Beyaz peynir, kıyılmış taze maydanoz',
+            price: 265.00,
+            image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
+          }
+        ]
+      },
+      doner: {
+        categories: ['TÜMÜ', 'DÜRÜM ÇEŞİTLERİ', 'PORSIYON LEZZETLER', 'İÇECEK'],
+        products: [
+          {
+            id: 'd-1',
+            cat: 'DÜRÜM ÇEŞİTLERİ',
+            title: 'Özel Soslu Et Döner Dürüm',
+            desc: '120 gr Yaprak Et Döner, patates, domates, özel sos',
+            price: 290.00,
+            image: 'https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'd-2',
+            cat: 'DÜRÜM ÇEŞİTLERİ',
+            title: 'Kaşarlı Tavuk Döner Dürüm',
+            desc: '130 gr Tavuk Döner, erimiş kaşar, turşu, patates',
+            price: 240.00,
+            image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'd-3',
+            cat: 'PORSIYON LEZZETLER',
+            title: 'İskender Et Döner',
+            desc: 'Tereyağlı pide üzerinde yaprak döner, yoğurt ve domates sos',
+            price: 380.00,
+            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80'
+          }
+        ]
+      }
+    };
+
+    // EVENTS DATABASE (Direct from live API: kampuskapinda.com)
+    const eventsData = [
+      {
+        id: 'ev-1',
+        title: 'K. Kapında Welcome Party - RIDDIM',
+        date: '17 Ekim Cumartesi',
+        venue: 'RIDDIM CLUB CİHANGİR · Beyoğlu',
+        price: '350 ₺',
+        badge: '+18',
+        image: 'https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'
+      },
+      {
+        id: 'ev-2',
+        title: 'Kampüs Kapında Halloween - RIDDIM',
+        date: '30 Ekim Cuma',
+        venue: 'RIDDIM CİHANGİR · Beyoğlu',
+        price: '400 ₺',
+        badge: '+18',
+        image: 'https://api.kampuskapinda.com/uploads/events/eae18ec-kampus-kapinda-halloween-muy2l7h4.webp'
+      },
+      {
+        id: 'ev-3',
+        title: 'University Halloween Party - GALIUM',
+        date: '31 Ekim Cumartesi',
+        venue: 'GALIUM KURUÇEŞME · Beşiktaş',
+        price: '450 ₺',
+        badge: '+18',
+        image: 'https://api.kampuskapinda.com/uploads/events/eae1ab5-university-halloween-party-gal-muy2moi4.webp'
+      },
+      {
+        id: 'ev-4',
+        title: 'DJ MELTEM HAYIRLI - Welcome Party',
+        date: '24 Ekim Cuma',
+        venue: 'Boaz Middle · Beşiktaş',
+        price: '350 ₺',
+        badge: '+18',
+        image: 'https://api.kampuskapinda.com/uploads/events/eae020a-university-welcome-party-dj-me-muy2zr8j.webp'
+      },
+      {
+        id: 'ev-5',
+        title: 'ORGANİZASYON DESTEK TALEBİ',
+        date: 'Sürekli Açık',
+        venue: 'www.kampuskapinda.com',
+        price: 'Ücretsiz Başvuru',
+        badge: 'KULÜPLER',
+        image: 'https://api.kampuskapinda.com/uploads/events/e196e96-organizasyon-destek-talebi-muwya5rx.webp'
+      }
+    ];
+
+    // RECENT ORDERS DEMO DATA
+    const initialOrders = [
+      {
+        id: 'ord-101',
+        storeName: 'Çiğ Köfteci Ömer Usta',
+        date: '2 Ekim',
+        amount: 520,
+        status: 'İPTAL',
+        statusColor: 'text-red-500 bg-red-50 border-red-200'
+      },
+      {
+        id: 'ord-102',
+        storeName: 'Pizza Bulls',
+        date: '10 Nisan',
+        amount: 399,
+        status: 'TAMAMLANDI',
+        statusColor: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+      },
+      {
+        id: 'ord-103',
+        storeName: 'Mezesell',
+        date: '15 Mayıs',
+        amount: 720,
+        status: 'TAMAMLANDI',
+        statusColor: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+      }
+    ];
+
+    // ----------------------------------------------------
+    // 2. STATE MANAGEMENT
+    // ----------------------------------------------------
+    let currentUniversity = universitiesData[0]; // Default: Sabancı
+    let currentStoreScope = 'cevresi';           // 'ici' | 'cevresi'
+    let currentActiveStore = null;
+    let activeModule = 'Yemek';                  // 'Yemek' | 'Eğlence'
+    let selectedMenuCategory = 'TÜMÜ';
+    let cart = [];
+    let orders = [...initialOrders];
+
+    // ----------------------------------------------------
+    // 3. NAVIGATION & VIEW SWITCHING
+    // ----------------------------------------------------
+    function navigateTo(screenName) {
+      document.querySelectorAll('.view-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + screenName);
+      if (target) {
+        target.classList.add('active');
+        document.getElementById('mainScrollArea').scrollTop = 0;
+      }
+
+      // Update bottom nav active style
+      const navButtons = {
+        stores: document.getElementById('nav-btn-stores'),
+        orders: document.getElementById('nav-btn-orders'),
+        profile: document.getElementById('nav-btn-profile')
+      };
+
+      Object.keys(navButtons).forEach(key => {
+        const btn = navButtons[key];
+        if (!btn) return;
+        if (screenName === key || (screenName === 'menu' && key === 'stores')) {
+          btn.className = "flex flex-col items-center gap-0.5 text-brand-red transition tap-effect";
+        } else {
+          btn.className = "flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-700 transition tap-effect";
+        }
+      });
+    }
+
+    function openFoodModule() {
+      activeModule = 'Yemek';
+      updateModuleHeaderUI();
+      navigateTo('stores');
+    }
+
+    function openEventsModule() {
+      activeModule = 'Eğlence';
+      updateModuleHeaderUI();
+      navigateTo('events');
+    }
+
+    function toggleActiveModule() {
+      if (activeModule === 'Yemek') {
+        openEventsModule();
+      } else {
+        openFoodModule();
+      }
+    }
+
+    function updateModuleHeaderUI() {
+      const icon = document.getElementById('moduleIcon');
+      const text = document.getElementById('moduleName');
+      if (activeModule === 'Yemek') {
+        icon.className = "fa-solid fa-utensils text-[11px]";
+        text.innerText = "Yemek";
+      } else {
+        icon.className = "fa-solid fa-ticket text-[11px]";
+        text.innerText = "Eğlence";
+      }
+    }
+
+    // ----------------------------------------------------
+    // 4. UNIVERSITY SELECTION MODAL
+    // ----------------------------------------------------
+    function openUniversityModal() {
+      const container = document.getElementById('uniListContainer');
+      container.innerHTML = universitiesData.map(uni => `
+        <div onclick="selectUniversity('${uni.id}')" class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between ${uni.id === currentUniversity.id ? 'border-brand-red bg-red-50/50' : 'border-gray-200 hover:border-gray-300 bg-white'}">
+          <div class="flex items-center gap-3">
+            <img src="${uni.logo}" alt="${uni.name}" class="w-8 h-8 object-contain">
+            <div>
+              <h4 class="font-bold text-xs text-gray-900">${uni.name}</h4>
+              <span class="text-[10px] text-gray-500 font-semibold">${uni.campusZone}</span>
+            </div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center ${uni.id === currentUniversity.id ? 'border-brand-red' : 'border-gray-300'}">
+            ${uni.id === currentUniversity.id ? '<div class="w-2.5 h-2.5 rounded-full bg-brand-red"></div>' : ''}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('uniModal').classList.remove('hidden');
+    }
+
+    function closeUniversityModal() {
+      document.getElementById('uniModal').classList.add('hidden');
+    }
+
+    function selectUniversity(uniId) {
+      const found = universitiesData.find(u => u.id === uniId);
+      if (found) {
+        currentUniversity = found;
+        applyUniversityChange();
+      }
+      closeUniversityModal();
+    }
+
+    function applyUniversityChange() {
+      // Header UI
+      document.getElementById('headerUniLogo').src = currentUniversity.logo;
+      document.getElementById('headerUniShortName').innerText = currentUniversity.shortName;
+
+      // Home Screen UI
+      document.getElementById('homeUniFullName').innerText = currentUniversity.name;
+
+      // Stores Screen Title
+      document.getElementById('storesScreenTitle').innerText = `${currentUniversity.name} İşletmeleri`;
+      document.getElementById('activeZoneLabel').innerText = currentUniversity.campusZone;
+
+      // Profile Screen UI
+      document.getElementById('profileUniLogo').src = currentUniversity.logo;
+      document.getElementById('profileUniName').innerText = currentUniversity.name;
+
+      // Render Stores
+      renderStoresFeed();
+    }
+
+    // ----------------------------------------------------
+    // 5. STORES FEED & SCOPE SWITCHING
+    // ----------------------------------------------------
+    function switchStoreScope(scope) {
+      currentStoreScope = scope;
+      const tabIci = document.getElementById('tabKampusIci');
+      const tabCevresi = document.getElementById('tabKampusCevresi');
+
+      if (scope === 'ici') {
+        tabIci.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
+        tabCevresi.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
+      } else {
+        tabCevresi.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
+        tabIci.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
+      }
+
+      renderStoresFeed();
+    }
+
+    function renderStoresFeed() {
+      const feed = document.getElementById('storesFeed');
+      const countBadge = document.getElementById('storesCountBadge');
+      const uniStores = storesData[currentUniversity.id] || storesData.sabanci;
+      const list = uniStores[currentStoreScope] || [];
+
+      countBadge.innerText = `${list.length} İşletme`;
+
+      if (list.length === 0) {
+        feed.innerHTML = `
+          <div class="bg-white rounded-2xl p-8 text-center border border-gray-100 shadow-sm space-y-2">
+            <span class="text-3xl">☕</span>
+            <h4 class="font-bold text-gray-800 text-sm">Bu alanda henüz işletme bulunmuyor</h4>
+            <p class="text-xs text-gray-400">Yakında kampüsüne yeni lezzetler eklenecek!</p>
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = list.map(store => `
+        <div onclick="openStoreMenu('${store.id}')" class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition group">
+          <!-- Cover Image with Status Pill -->
+          <div class="relative h-40 overflow-hidden bg-slate-900">
+            <img src="${store.cover}" alt="${store.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            
+            <div class="absolute top-3 right-3">
+              <span class="bg-white/95 text-emerald-600 text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>${store.isOpen ? 'AÇIK' : 'KAPALI'}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="p-3.5 space-y-2">
+            <h3 class="font-extrabold text-base text-gray-900 group-hover:text-brand-red transition-colors">${store.name}</h3>
+
+            <div class="flex items-center gap-2 text-xs font-bold">
+              <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md text-[11px]">Min. ${store.minOrder}</span>
+              <span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-md text-[11px] flex items-center gap-1">
+                <i class="fa-solid fa-star text-amber-500 text-[10px]"></i>
+                <span>${store.rating} (${store.reviewsCount})</span>
+              </span>
+            </div>
+
+            <!-- Delivery Hours -->
+            <div class="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-emerald-200 flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-emerald-600"></i>
+              <span>TESLİMAT: ${store.deliveryHours}</span>
+            </div>
+
+            <!-- Zones tags -->
+            <div class="flex items-center gap-1 text-[11px] text-gray-500 font-semibold pt-1">
+              <i class="fa-solid fa-truck text-brand-red text-[10px]"></i>
+              <span class="truncate">${store.zones.join(', ')}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ----------------------------------------------------
+    // 6. RESTAURANT MENU VIEW
+    // ----------------------------------------------------
+    function openStoreMenu(storeId) {
+      // Find store
+      let found = null;
+      Object.keys(storesData).forEach(uKey => {
+        ['cevresi', 'ici'].forEach(sScope => {
+          storesData[uKey][sScope].forEach(s => {
+            if (s.id === storeId) found = s;
+          });
+        });
+      });
+
+      if (!found) {
+        found = storesData.sabanci.cevresi[0]; // fallback
+      }
+
+      currentActiveStore = found;
+
+      // Populate Header & Details
+      document.getElementById('menuStoreCover').src = found.cover;
+      document.getElementById('menuStoreName').innerText = found.name;
+      document.getElementById('menuStoreMin').innerText = `Min: ${found.minOrder}`;
+      document.getElementById('menuStoreRating').innerText = `${found.rating} (${found.reviewsCount})`;
+      document.getElementById('menuStoreHours').innerText = `TESLİMAT SAATLERİ: ${found.deliveryHours}`;
+      document.getElementById('menuStoreCampuses').innerHTML = found.zones.map(z => `
+        <span class="bg-gray-100 text-gray-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">${z}</span>
+      `).join('');
+
+      // Populate Menu Categories & Products
+      const menuCatalog = storeMenus[found.menuType] || storeMenus.pizza;
+      selectedMenuCategory = 'TÜMÜ';
+      renderMenuCategories(menuCatalog.categories);
+      renderProductsGrid(menuCatalog.products);
+
+      navigateTo('menu');
+    }
+
+    function renderMenuCategories(categories) {
+      const container = document.getElementById('menuCategoriesBar');
+      container.innerHTML = categories.map(cat => `
+        <button onclick="filterMenuByCategory('${cat}')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition ${cat === selectedMenuCategory ? 'bg-red-100 text-brand-red border border-red-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function filterMenuByCategory(category) {
+      selectedMenuCategory = category;
+      const menuCatalog = storeMenus[currentActiveStore ? currentActiveStore.menuType : 'pizza'] || storeMenus.pizza;
+      renderMenuCategories(menuCatalog.categories);
+      
+      const filtered = category === 'TÜMÜ' 
+        ? menuCatalog.products 
+        : menuCatalog.products.filter(p => p.cat === category);
+      
+      renderProductsGrid(filtered);
+    }
+
+    function renderProductsGrid(products) {
+      const grid = document.getElementById('menuProductsGrid');
+      grid.innerHTML = products.map(prod => `
+        <div class="bg-white rounded-2xl p-2.5 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-gray-200 transition">
+          <div class="space-y-2">
+            <!-- Product Thumbnail with Plus Button -->
+            <div class="relative h-28 rounded-xl overflow-hidden bg-gray-100">
+              <img src="${prod.image}" alt="${prod.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+              
+              <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" class="tap-effect absolute top-2 right-2 w-7 h-7 rounded-full bg-white text-brand-red font-black flex items-center justify-center shadow-md hover:bg-brand-red hover:text-white transition">
+                <i class="fa-solid fa-plus text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Product Info -->
+            <div class="space-y-1">
+              <h4 class="font-extrabold text-xs text-gray-900 leading-snug line-clamp-2">${prod.title}</h4>
+              <p class="text-[10px] text-gray-500 line-clamp-2 leading-relaxed">${prod.desc}</p>
+            </div>
+          </div>
+
+          <!-- Price & Quick Add -->
+          <div class="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <span class="font-black text-xs text-brand-red">₺${prod.price.toFixed(2)}</span>
+            <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" class="text-[10px] font-bold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-brand-red px-2 py-0.5 rounded-md transition">
+              Ekle +
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ----------------------------------------------------
+    // 7. EVENTS SCREEN FEED
+    // ----------------------------------------------------
+    function renderEventsFeed() {
+      const container = document.getElementById('eventsListFeed');
+      container.innerHTML = eventsData.map(ev => `
+        <div class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition group">
+          <div class="relative h-44 overflow-hidden bg-slate-900">
+            <img src="${ev.image}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            
+            <span class="absolute bottom-3 left-3 bg-white/95 backdrop-blur text-gray-900 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+              ${ev.date}
+            </span>
+            <span class="absolute top-3 right-3 bg-black/75 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+              ${ev.badge}
+            </span>
+          </div>
+
+          <div class="p-3.5 space-y-2">
+            <h3 class="font-extrabold text-sm text-gray-900 group-hover:text-brand-red transition-colors leading-snug">${ev.title}</h3>
+            <p class="text-xs text-gray-500 font-semibold flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-brand-red text-[11px]"></i>
+              <span>${ev.venue}</span>
+            </p>
+
+            <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-gray-400 block font-bold leading-none">BİLET</span>
+                <span class="text-xs font-black text-gray-900">${ev.price}</span>
+              </div>
+              <a href="https://kampuskapinda.com/eglence" target="_blank" class="bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-brand-redHover transition flex items-center gap-1">
+                <span>İncele & Bilet Al</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ----------------------------------------------------
+    // 8. CART & ORDER SYSTEM
+    // ----------------------------------------------------
+    function addToCart(id, title, price) {
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ id, title, price, quantity: 1 });
+      }
+      updateCartUI();
+      triggerCartBounce();
+    }
+
+    function changeCartQuantity(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+
+      // Floating Badge & Profile text
+      document.getElementById('floatingCartBadge').innerText = totalCount;
+      document.getElementById('profileCartCount').innerText = `${totalCount} Ürün`;
+
+      // Modal calculations
+      document.getElementById('cartSubtotalText').innerText = `₺${subtotal.toFixed(2)}`;
+      document.getElementById('cartTotalText').innerText = `₺${subtotal.toFixed(2)}`;
+
+      // Render Modal Items
+      const list = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div class="py-8 text-center space-y-2">
+            <span class="text-4xl">🛒</span>
+            <p class="font-bold text-gray-600 text-xs">Sepetin henüz boş</p>
+            <p class="text-[11px] text-gray-400">Restorandan lezzetli ürünler ekleyebilirsin.</p>
+          </div>
+        `;
+        document.getElementById('btnCheckout').disabled = true;
+        document.getElementById('btnCheckout').classList.add('opacity-50');
+      } else {
+        document.getElementById('btnCheckout').disabled = false;
+        document.getElementById('btnCheckout').classList.remove('opacity-50');
+
+        list.innerHTML = cart.map(item => `
+          <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl border border-gray-100 text-xs">
+            <div class="flex-1 pr-2">
+              <h5 class="font-bold text-gray-900">${item.title}</h5>
+              <span class="text-brand-red font-black text-[11px]">₺${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-lg border border-gray-200">
+              <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">-</button>
+              <span class="font-extrabold text-xs w-4 text-center">${item.quantity}</span>
+              <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">+</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openCartModal() {
+      updateCartUI();
+      document.getElementById('cartModal').classList.remove('hidden');
+    }
+
+    function closeCartModal() {
+      document.getElementById('cartModal').classList.add('hidden');
+    }
+
+    function triggerCartBounce() {
+      const btn = document.querySelector('button[onclick="openCartModal()"]');
+      if (btn) {
+        btn.classList.add('scale-125');
+        setTimeout(() => btn.classList.remove('scale-125'), 180);
+      }
+    }
+
+    function submitOrder() {
+      if (cart.length === 0) return;
+
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      const storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
+
+      // Push to orders
+      orders.unshift({
+        id: 'ord-' + Math.floor(Math.random() * 900 + 100),
+        storeName: storeName,
+        date: 'Bugün',
+        amount: Math.round(subtotal),
+        status: 'HAZIRLANIYOR',
+        statusColor: 'text-amber-600 bg-amber-50 border-amber-200'
+      });
+
+      // Clear cart
+      cart = [];
+      updateCartUI();
+      closeCartModal();
+
+      // Refresh Orders Screen & Navigate
+      renderOrdersList();
+      renderHomeRecentOrders();
+      navigateTo('orders');
+
+      alert(`🎉 Harika! ${storeName} siparişiniz alındı ve hazırlanıyor.`);
+    }
+
+    // ----------------------------------------------------
+    // 9. ORDERS & RECENT ORDERS RENDERING
+    // ----------------------------------------------------
+    function renderOrdersList() {
+      const container = document.getElementById('ordersListContainer');
+      container.innerHTML = orders.map(ord => `
+        <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-extrabold text-xs text-gray-900">${ord.storeName}</h4>
+              <span class="text-[10px] text-gray-400 font-semibold">${ord.date}</span>
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-md border ${ord.statusColor}">
+              ${ord.status}
+            </span>
+          </div>
+
+          <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+            <span class="font-black text-sm text-gray-900">${ord.amount} ₺</span>
+            <button onclick="reorderStore('${ord.storeName}')" class="text-xs font-bold text-brand-red hover:underline flex items-center gap-1">
+              <span>Tekrarla</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderHomeRecentOrders() {
+      const container = document.getElementById('recentOrdersCarousel');
+      container.innerHTML = orders.slice(0, 3).map(ord => `
+        <div class="min-w-[210px] bg-white rounded-2xl p-3 border border-gray-100 shadow-sm space-y-2 shrink-0">
+          <div class="flex items-center justify-between">
+            <h4 class="font-extrabold text-xs text-gray-900 truncate max-w-[130px]">${ord.storeName}</h4>
+            <span class="text-[9px] font-black px-1.5 py-0.5 rounded border ${ord.statusColor}">
+              ${ord.status}
+            </span>
+          </div>
+          <span class="text-[10px] text-gray-400 block">${ord.date}</span>
+          <div class="flex items-center justify-between pt-1">
+            <span class="font-black text-xs text-gray-900">${ord.amount} ₺</span>
+            <button onclick="reorderStore('${ord.storeName}')" class="text-[11px] font-bold text-brand-red hover:underline">
+              Tekrarla →
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function reorderStore(name) {
+      navigateTo('stores');
+    }
+
+    // ----------------------------------------------------
+    // 10. SYSTEM HELPERS & DEMO CONTROLS
+    // ----------------------------------------------------
+    function toggleMobileFullView() {
+      document.body.classList.toggle('is-fullscreen-mobile');
+      const isFull = document.body.classList.contains('is-fullscreen-mobile');
+      document.getElementById('fullscreenToggleText').innerText = isFull ? 'Pencereye Dön' : 'Tam Ekran Yap';
+    }
+
+    function resetDemoData() {
+      cart = [];
+      orders = [...initialOrders];
+      currentUniversity = universitiesData[0];
+      applyUniversityChange();
+      updateCartUI();
+      renderOrdersList();
+      renderHomeRecentOrders();
+      navigateTo('home');
+    }
+
+    // Update real time status clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('statusClock').innerText = `${h}:${m}`;
+    }
+    setInterval(updateClock, 10000);
+
+    // ----------------------------------------------------
+    // INITIAL BOOTSTRAP
+    // ----------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      updateClock();
+      applyUniversityChange();
+      renderEventsFeed();
+      renderOrdersList();
+      renderHomeRecentOrders();
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>
