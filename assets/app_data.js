@@ -109,6 +109,70 @@ const storesData = {
     ],
     "cevresi": [
       {
+        "id": "cosmo-burger",
+        "name": "Cosmo Burger",
+        "cover": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+        "isOpen": true,
+        "minOrder": "250 ₺",
+        "rating": "5.0",
+        "reviewsCount": 3,
+        "deliveryHours": "12:00 - 02:00",
+        "zones": [
+          "Ana Kampüs (Rumelifeneri)",
+          "Batı Kampüsü"
+        ],
+        "tag": "YEMEK",
+        "menuKey": "Cosmo Burger"
+      },
+      {
+        "id": "barba-burger",
+        "name": "Barba Burger & Street Food",
+        "cover": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
+        "isOpen": true,
+        "minOrder": "600 ₺",
+        "rating": "5.0",
+        "reviewsCount": 1,
+        "deliveryHours": "12:00 - 02:00",
+        "zones": [
+          "Ana Kampüs (Rumelifeneri)",
+          "Batı Kampüsü"
+        ],
+        "tag": "YEMEK",
+        "menuKey": "Barba Burger & Street Food"
+      },
+      {
+        "id": "zekeriyakoy-firin",
+        "name": "Zekeriyaköy Fırını",
+        "cover": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+        "isOpen": true,
+        "minOrder": "350 ₺",
+        "rating": "4.8",
+        "reviewsCount": 10,
+        "deliveryHours": "08:00 - 22:00",
+        "zones": [
+          "Ana Kampüs (Rumelifeneri)",
+          "Batı Kampüsü"
+        ],
+        "tag": "YEMEK",
+        "menuKey": "Zekeriyaköy Fırın Pide & Pizza"
+      },
+      {
+        "id": "bati-lounge",
+        "name": "Batı Lounge",
+        "cover": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+        "isOpen": false,
+        "minOrder": "500 ₺",
+        "rating": "Henüz değerlendirme yok",
+        "reviewsCount": 0,
+        "deliveryHours": "00:00 - 00:00",
+        "zones": [
+          "Ana Kampüs (Rumelifeneri)",
+          "Batı Kampüsü"
+        ],
+        "tag": "YEMEK",
+        "menuKey": "Egg Bistro"
+      },
+      {
         "id": "mezesell",
         "name": "Mezesell",
         "cover": "assets/screenshots/mezesell_store.jpeg",
@@ -121,7 +185,7 @@ const storesData = {
           "Ana Kampüs (Rumelifeneri)",
           "Batı Kampüsü"
         ],
-        "tag": "KAMPÜS ÇEVRESİ",
+        "tag": "YEMEK",
         "menuKey": "Mezesell"
       },
       {
@@ -136,69 +200,8 @@ const storesData = {
         "zones": [
           "Ana Kampüs (Rumelifeneri)"
         ],
-        "tag": "TANTUNİ",
+        "tag": "YEMEK",
         "menuKey": "Lamas Tantuni"
-      },
-      {
-        "id": "zekeriyakoy-firin",
-        "name": "Zekeriyaköy Fırın Pide & Pizza",
-        "cover": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
-        "isOpen": true,
-        "minOrder": "350 ₺",
-        "rating": "4.8",
-        "reviewsCount": 10,
-        "deliveryHours": "08:00 - 22:00",
-        "zones": [
-          "Ana Kampüs",
-          "Batı Kampüsü"
-        ],
-        "tag": "PİDE & PİZZA",
-        "menuKey": "Zekeriyaköy Fırın Pide & Pizza"
-      },
-      {
-        "id": "cosmo-burger",
-        "name": "Cosmo Burger",
-        "cover": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
-        "isOpen": true,
-        "minOrder": "300 ₺",
-        "rating": "4.7",
-        "reviewsCount": 15,
-        "deliveryHours": "11:00 - 00:00",
-        "zones": [
-          "Ana Kampüs (Rumelifeneri)"
-        ],
-        "tag": "BURGER",
-        "menuKey": "Cosmo Burger"
-      },
-      {
-        "id": "barba-burger",
-        "name": "Barba Burger & Street Food",
-        "cover": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
-        "isOpen": true,
-        "minOrder": "350 ₺",
-        "rating": "4.9",
-        "reviewsCount": 8,
-        "deliveryHours": "12:00 - 01:00",
-        "zones": [
-          "Ana Kampüs (Rumelifeneri)"
-        ],
-        "tag": "STREET FOOD",
-        "menuKey": "Barba Burger & Street Food"
-      },
-      {
-        "id": "egg-bistro",
-        "name": "Egg Bistro",
-        "cover": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-        "isOpen": true,
-        "minOrder": "250 ₺",
-        "rating": "4.8",
-        "reviewsCount": 4,
-        "deliveryHours": "09:00 - 22:00",
-        "zones": [
-          "Ana Kampüs (Rumelifeneri)"
-        ],
-        "tag": "KAHVALTI & BİSTRO",
-        "menuKey": "Egg Bistro"
       }
     ]
   },
