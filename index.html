@@ -158,12 +158,41 @@
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none overflow-hidden">
 
   <!-- Desktop Pro Top Controls (Mac / Desktop Toolbar) -->
-  <aside class="hidden md:flex items-center gap-4 mb-4 text-xs font-semibold text-slate-300 bg-slate-900/90 px-5 py-2 rounded-full border border-slate-700/80 shadow-2xl backdrop-blur-xl">
-    <div class="flex items-center gap-2">
+  <aside class="hidden md:flex flex-wrap items-center justify-center gap-2 mb-4 text-xs font-semibold text-slate-300 bg-slate-900/90 px-5 py-2.5 rounded-full border border-slate-700/80 shadow-2xl backdrop-blur-xl">
+    <div class="flex items-center gap-2 pr-2 border-r border-slate-700">
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="text-white font-bold tracking-wide">Kampüs Kapında · iPhone 16 Pro (8K Retina)</span>
     </div>
-    <span class="text-slate-600">•</span>
+    
+    <!-- Quick Page Jump Pills -->
+    <div class="flex items-center gap-1.5">
+      <button onclick="navigateTo('home')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-mobile-screen text-red-400"></i>
+        <span>Ana Sayfa</span>
+      </button>
+      <button onclick="navigateTo('landing')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-globe text-blue-400"></i>
+        <span>Web Tanıtım</span>
+      </button>
+      <button onclick="navigateTo('login')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-key text-amber-400"></i>
+        <span>Giriş Yap</span>
+      </button>
+      <button onclick="navigateTo('register')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-user-plus text-emerald-400"></i>
+        <span>Kayıt Ol</span>
+      </button>
+      <button onclick="navigateTo('contact')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-headset text-purple-400"></i>
+        <span>İletişim</span>
+      </button>
+      <button onclick="openLegalModal('kvkk')" class="hover:text-white transition flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-full text-slate-200 text-[11px]">
+        <i class="fa-solid fa-scale-balanced text-teal-400"></i>
+        <span>Hukuki</span>
+      </button>
+    </div>
+
+    <span class="text-slate-600 pl-1">•</span>
     <button onclick="toggleMobileFullView()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded-full text-slate-200">
       <i class="fa-solid fa-expand text-slate-400 text-[11px]"></i>
       <span id="fullscreenToggleText">Tam Ekran</span>
@@ -570,21 +599,26 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- SCREEN 7: WEB TANITIM EKRANI (ÇIKIŞ YAPILINCA GELEN WEB SİTESİ) -->
+      <!-- SCREEN 7: WEB TANITIM EKRANI (kampuskapinda.com ANA SAYFA) -->
       <!-- ======================================================== -->
       <section id="screen-landing" class="view-screen bg-white">
         <!-- Top Sticky Return / Login bar -->
         <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 cursor-pointer tap-effect" onclick="navigateTo('landing')">
             <div class="w-7 h-7 rounded-full bg-brand-red text-white flex items-center justify-center text-xs shadow-sm">
               <i class="fa-solid fa-motorcycle"></i>
             </div>
             <span class="font-black text-xs text-gray-900">kampuskapinda.com</span>
           </div>
-          <button onclick="handleLoginBack()" class="tap-effect bg-brand-red text-white text-[11px] font-black px-3 py-1.5 rounded-full shadow-sm hover:bg-brand-redHover transition flex items-center gap-1">
-            <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
-            <span>Giriş Yap</span>
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button onclick="navigateTo('contact')" class="tap-effect text-gray-600 hover:text-gray-900 text-[11px] font-bold px-2 py-1">
+              İletişim
+            </button>
+            <button onclick="navigateTo('login')" class="tap-effect bg-brand-red text-white text-[11px] font-black px-3 py-1.5 rounded-full shadow-sm hover:bg-brand-redHover transition flex items-center gap-1">
+              <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
+              <span>Giriş Yap</span>
+            </button>
+          </div>
         </div>
 
         <!-- Landing Page Content (Matches kampuskapinda.com exactly) -->
@@ -603,12 +637,18 @@
               Kampüsteki etkinlikler, partiler ve en sevdiğin lezzetler tek bir uygulamada kapında.
             </p>
             <div class="pt-2 flex flex-col gap-2">
-              <button onclick="handleLoginBack()" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-black text-xs shadow-md hover:bg-brand-redHover transition">
-                Kampüsünü Keşfet →
+              <button onclick="navigateTo('home')" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-black text-xs shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
+                <span>Kampüsünü Keşfet</span>
+                <i class="fa-solid fa-arrow-right text-[11px]"></i>
               </button>
-              <button onclick="handleLoginBack()" class="tap-effect w-full py-3 rounded-2xl bg-gray-50 border border-gray-200 text-gray-800 font-black text-xs hover:bg-gray-100 transition">
-                Zaten hesabım var · Giriş Yap
-              </button>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="navigateTo('login')" class="tap-effect py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-800 font-bold text-xs hover:bg-gray-100 transition">
+                  Giriş Yap
+                </button>
+                <button onclick="navigateTo('register')" class="tap-effect py-2.5 rounded-xl bg-red-50 text-brand-red border border-red-200 font-bold text-xs hover:bg-red-100 transition">
+                  Kayıt Ol
+                </button>
+              </div>
             </div>
           </div>
 
@@ -624,13 +664,27 @@
           </div>
 
           <!-- Feature 2: Etkinlikleri Kaçırma -->
-          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2">
+          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2 cursor-pointer tap-effect" onclick="navigateTo('events')">
             <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
               🎟️
             </div>
-            <h3 class="font-black text-sm text-gray-900">Etkinlikleri Kaçırma</h3>
+            <div class="flex items-center justify-between">
+              <h3 class="font-black text-sm text-gray-900">Etkinlikleri Kaçırma</h3>
+              <span class="text-[10px] font-bold text-purple-600">İncele →</span>
+            </div>
             <p class="text-xs text-gray-600 leading-relaxed">
               Kampüsteki partiler, konserler ve biletler tek yerde. Üstelik hesap açmadan bile anında biletini alabilirsin.
+            </p>
+          </div>
+
+          <!-- Feature 3: Kulüp & Temsilcilik -->
+          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+              🤝
+            </div>
+            <h3 class="font-black text-sm text-gray-900">Öğrenci Kulüpleri ve Temsilcilik</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Kendi kulübünün biletlerini platform üzerinden satabilir, kampüs elçisi olarak ek gelir elde edebilirsin.
             </p>
           </div>
 
@@ -658,16 +712,347 @@
             <p class="text-[10px] text-gray-400 text-center font-medium">ve İstanbul genelinde 50'den fazla üniversite</p>
           </div>
 
-          <!-- Web Site Footer & Contact -->
-          <div class="pt-4 border-t border-gray-100 text-center space-y-2 text-xs text-gray-500 pb-12">
-            <p class="font-bold text-gray-800">Kampüs Kapında · 2026</p>
-            <p class="text-[11px]">support@kampuskapinda.com</p>
-            <a href="https://wa.me/905537305100" target="_blank" class="inline-flex items-center gap-1.5 text-brand-red font-bold text-[11px]">
-              <i class="fa-brands fa-whatsapp text-emerald-500"></i>
-              <span>+90 553 730 51 00</span>
-            </a>
+          <!-- FAQ / SSS Section -->
+          <div class="space-y-2 pt-2">
+            <h3 class="font-black text-xs text-gray-900 uppercase tracking-wider text-center pb-1">Sıkça Sorulan Sorular</h3>
+            
+            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+              <button onclick="toggleFaq('faq-1')" class="w-full p-3 text-left font-bold text-xs text-gray-800 flex items-center justify-between">
+                <span>Nasıl sipariş verebilirim?</span>
+                <i id="faq-1-icon" class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+              </button>
+              <div id="faq-1" class="hidden px-3 pb-3 text-[11px] text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/50">
+                Uygulama üzerinden üniversitenizi ve kampüs bölgenizi seçtikten sonra dilediğiniz restoranı seçip sepetinize ürün ekleyebilir ve tek tıkla siparişinizi verebilirsiniz.
+              </div>
+            </div>
+
+            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+              <button onclick="toggleFaq('faq-2')" class="w-full p-3 text-left font-bold text-xs text-gray-800 flex items-center justify-between">
+                <span>Teslimat ücreti ve süresi ne kadar?</span>
+                <i id="faq-2-icon" class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+              </button>
+              <div id="faq-2" class="hidden px-3 pb-3 text-[11px] text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/50">
+                Kampüs Kapında teslimatları anlaşmalı restoranlar ve kampüs kuryeleriyle yurt bloklarına kadar doğrudan ulaştırılır. Birçok işletmede kampüs içine teslimat tamamen ücretsizdir!
+              </div>
+            </div>
+
+            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+              <button onclick="toggleFaq('faq-3')" class="w-full p-3 text-left font-bold text-xs text-gray-800 flex items-center justify-between">
+                <span>Etkinlik biletlerimi nasıl kullanırım?</span>
+                <i id="faq-3-icon" class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+              </button>
+              <div id="faq-3" class="hidden px-3 pb-3 text-[11px] text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/50">
+                Satın aldığınız biletlerin QR kodları anında SMS ve e-posta olarak iletilir. Etkinlik kapısında QR kodunuzu okutarak sıra beklemeden hızlıca giriş yapabilirsiniz.
+              </div>
+            </div>
           </div>
 
+          <!-- Web Site Footer & Legal Links -->
+          <div class="pt-6 border-t border-gray-100 text-center space-y-3 text-xs text-gray-500 pb-10">
+            <!-- Navigation Links -->
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-gray-700">
+              <button onclick="navigateTo('login')" class="hover:text-brand-red">Giriş Yap</button>
+              <span>•</span>
+              <button onclick="navigateTo('register')" class="hover:text-brand-red">Kayıt Ol</button>
+              <span>•</span>
+              <button onclick="navigateTo('events')" class="hover:text-brand-red">Etkinlikler</button>
+              <span>•</span>
+              <button onclick="navigateTo('contact')" class="hover:text-brand-red">İletişim</button>
+            </div>
+
+            <!-- Legal Documents Links -->
+            <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] text-gray-500 font-semibold pt-1">
+              <button onclick="openLegalModal('kvkk')" class="hover:underline">KVKK Aydınlatma Metni</button>
+              <span>|</span>
+              <button onclick="openLegalModal('privacy')" class="hover:underline">Gizlilik Politikası</button>
+              <span>|</span>
+              <button onclick="openLegalModal('terms')" class="hover:underline">Üyelik Sözleşmesi</button>
+            </div>
+
+            <!-- Official Company Info -->
+            <div class="pt-2 text-[11px] text-gray-400 space-y-1">
+              <p class="font-bold text-gray-700">Kampüs Kapında · Asım Özgür Güneybaz</p>
+              <p>Başakşehir Mahallesi, Başakşehir / İstanbul</p>
+              <p>support@kampuskapinda.com</p>
+              <a href="https://wa.me/905537305100" target="_blank" class="inline-flex items-center gap-1.5 text-brand-red font-bold text-xs pt-1">
+                <i class="fa-brands fa-whatsapp text-emerald-500 text-sm"></i>
+                <span>+90 553 730 51 00 (WhatsApp Destek)</span>
+              </a>
+            </div>
+            
+            <p class="text-[10px] text-gray-400 pt-2">© 2026 Kampüs Kapında. Tüm hakları saklıdır.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 8: GİRİŞ YAP EKRANI (/login REPLİKASI)             -->
+      <!-- ======================================================== -->
+      <section id="screen-login" class="view-screen bg-white">
+        <!-- Top Navigation -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+          <button onclick="navigateTo('landing')" class="tap-effect text-xs font-bold text-gray-700 flex items-center gap-1.5 hover:text-brand-red transition">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+            <span>Web Sitesi</span>
+          </button>
+          <span class="font-black text-xs text-gray-900">Giriş Yap</span>
+          <div class="w-10"></div>
+        </div>
+
+        <div class="p-5 space-y-5 overflow-y-auto">
+          <!-- Logo & Header -->
+          <div class="text-center space-y-2 pt-2">
+            <div class="w-12 h-12 rounded-2xl bg-brand-red text-white flex items-center justify-center text-xl shadow-md mx-auto">
+              <i class="fa-solid fa-motorcycle"></i>
+            </div>
+            <h2 class="text-xl font-black text-gray-900">Tekrar Hoş Geldin! 👋</h2>
+            <p class="text-xs text-gray-500">Kampüs lezzetlerine ve etkinliklerine erişmek için giriş yap.</p>
+          </div>
+
+          <!-- Quick Demo Login Pill -->
+          <div class="p-3 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-black text-brand-red block">Hızlı Demo Girişi</span>
+              <span class="text-[10px] text-gray-600">Asım Özgür · Medipol Üniversitesi</span>
+            </div>
+            <button onclick="handleQuickDemoLogin()" class="tap-effect bg-brand-red text-white text-[11px] font-black px-3 py-1.5 rounded-xl shadow-sm hover:bg-brand-redHover transition">
+              Giriş Yap ⚡
+            </button>
+          </div>
+
+          <!-- Login Form -->
+          <form onsubmit="event.preventDefault(); handleLoginSubmit();" class="space-y-3.5">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Öğrenci E-postası veya Telefon</label>
+              <div class="relative">
+                <i class="fa-regular fa-envelope absolute left-3 top-3 text-gray-400 text-xs"></i>
+                <input id="loginEmail" type="text" value="asim.ozgur@medipol.edu.tr" placeholder="ornek@medipol.edu.tr" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-bold text-gray-700">Şifre</label>
+                <button type="button" onclick="alert('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi!')" class="text-[11px] text-brand-red font-bold hover:underline">Şifremi Unuttum?</button>
+              </div>
+              <div class="relative">
+                <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-400 text-xs"></i>
+                <input id="loginPassword" type="password" value="••••••••" placeholder="Şifreniz" class="w-full pl-9 pr-9 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+                <button type="button" onclick="togglePasswordVisibility('loginPassword')" class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+                  <i class="fa-regular fa-eye text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-1">
+              <input type="checkbox" id="rememberMe" checked class="rounded text-brand-red focus:ring-brand-red">
+              <label for="rememberMe" class="text-xs text-gray-600 font-semibold cursor-pointer">Beni hatırla</label>
+            </div>
+
+            <button type="submit" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-black text-xs shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
+              <span>Giriş Yap</span>
+              <i class="fa-solid fa-arrow-right text-[11px]"></i>
+            </button>
+          </form>
+
+          <!-- Register Prompt -->
+          <div class="text-center pt-2">
+            <p class="text-xs text-gray-500 font-semibold">
+              Henüz bir hesabın yok mu? 
+              <button onclick="navigateTo('register')" class="text-brand-red font-black hover:underline ml-1">Kayıt Ol</button>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 9: KAYIT OL EKRANI (/register REPLİKASI)           -->
+      <!-- ======================================================== -->
+      <section id="screen-register" class="view-screen bg-white">
+        <!-- Top Navigation -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+          <button onclick="navigateTo('landing')" class="tap-effect text-xs font-bold text-gray-700 flex items-center gap-1.5 hover:text-brand-red transition">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+            <span>Web Sitesi</span>
+          </button>
+          <span class="font-black text-xs text-gray-900">Kayıt Ol</span>
+          <div class="w-10"></div>
+        </div>
+
+        <div class="p-5 space-y-4 overflow-y-auto">
+          <!-- Logo & Header -->
+          <div class="text-center space-y-1 pt-1">
+            <h2 class="text-xl font-black text-gray-900">Kampüsüne Katıl! 🎉</h2>
+            <p class="text-xs text-gray-500">Öğrenci ayrıcalıkları ve hızlı teslimat seni bekliyor.</p>
+          </div>
+
+          <!-- Register Form -->
+          <form onsubmit="event.preventDefault(); handleRegisterSubmit();" class="space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Ad Soyad</label>
+              <input id="regName" type="text" placeholder="Asım Özgür" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Üniversiteniz</label>
+              <select id="regUniversity" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red bg-white">
+                <option value="medipol">İstanbul Medipol Üniversitesi</option>
+                <option value="koc">Koç Üniversitesi</option>
+                <option value="sabanci">Sabancı Üniversitesi</option>
+                <option value="okan">İstanbul Okan Üniversitesi</option>
+                <option value="nigde">Niğde Ömer Halisdemir Üniversitesi</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Öğrenci E-postası</label>
+              <input id="regEmail" type="email" placeholder="ornek@ogr.medipol.edu.tr" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Telefon Numarası</label>
+              <input id="regPhone" type="tel" placeholder="+90 5XX XXX XX XX" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Şifre</label>
+                <input id="regPassword" type="password" placeholder="••••••••" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Şifre Tekrar</label>
+                <input id="regPassword2" type="password" placeholder="••••••••" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+              </div>
+            </div>
+
+            <!-- Legal Consents Checkboxes -->
+            <div class="space-y-2 pt-1 text-[11px] text-gray-600">
+              <label class="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" id="regTermsCheck" required checked class="mt-0.5 rounded text-brand-red focus:ring-brand-red">
+                <span>
+                  <button type="button" onclick="openLegalModal('terms')" class="text-brand-red font-bold underline">Üyelik Sözleşmesi</button>'ni okudum ve kabul ediyorum.
+                </span>
+              </label>
+
+              <label class="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" id="regKvkkCheck" required checked class="mt-0.5 rounded text-brand-red focus:ring-brand-red">
+                <span>
+                  <button type="button" onclick="openLegalModal('kvkk')" class="text-brand-red font-bold underline">KVKK Aydınlatma Metni</button> ve 
+                  <button type="button" onclick="openLegalModal('privacy')" class="text-brand-red font-bold underline">Gizlilik Politikası</button>'nı onaylıyorum.
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-black text-xs shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2 mt-2">
+              <span>Kayıt Ol ve Kampüse Başla</span>
+              <i class="fa-solid fa-arrow-right text-[11px]"></i>
+            </button>
+          </form>
+
+          <!-- Login Prompt -->
+          <div class="text-center pt-2">
+            <p class="text-xs text-gray-500 font-semibold">
+              Zaten bir hesabın var mı? 
+              <button onclick="navigateTo('login')" class="text-brand-red font-black hover:underline ml-1">Giriş Yap</button>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SCREEN 10: İLETİŞİM EKRANI (/iletisim REPLİKASI)          -->
+      <!-- ======================================================== -->
+      <section id="screen-contact" class="view-screen bg-white">
+        <!-- Top Navigation -->
+        <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+          <button onclick="navigateTo('landing')" class="tap-effect text-xs font-bold text-gray-700 flex items-center gap-1.5 hover:text-brand-red transition">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+            <span>Web Sitesi</span>
+          </button>
+          <span class="font-black text-xs text-gray-900">İletişim & Destek</span>
+          <div class="w-10"></div>
+        </div>
+
+        <div class="p-5 space-y-4 overflow-y-auto">
+          <div class="text-center space-y-1 pt-1">
+            <h2 class="text-xl font-black text-gray-900">Bizimle İletişime Geçin 💬</h2>
+            <p class="text-xs text-gray-500">Sorularınız, önerileriniz veya iş birlikleriniz için buradayız.</p>
+          </div>
+
+          <!-- WhatsApp Direct Card -->
+          <a href="https://wa.me/905537305100" target="_blank" class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between tap-effect transition group">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-sm">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <h4 class="font-black text-xs text-emerald-950">WhatsApp Canlı Destek</h4>
+                <span class="text-[10px] text-emerald-700 font-semibold">+90 553 730 51 00</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square text-emerald-600 text-xs"></i>
+          </a>
+
+          <!-- Official Company Details Card -->
+          <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 space-y-2.5 text-xs">
+            <h3 class="font-black text-gray-900 flex items-center gap-2">
+              <i class="fa-solid fa-building text-brand-red"></i>
+              <span>Resmi Şirket Bilgileri</span>
+            </h3>
+            
+            <div class="space-y-1.5 text-gray-600 text-[11px] pt-1">
+              <div class="flex justify-between">
+                <span class="font-bold text-gray-800">Yetkili / Ünvan:</span>
+                <span>Asım Özgür Güneybaz</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-bold text-gray-800">Platform:</span>
+                <span>Kampüs Kapında</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-bold text-gray-800">Adres:</span>
+                <span>Başakşehir / İstanbul</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-bold text-gray-800">E-Posta:</span>
+                <span class="text-brand-red font-bold">support@kampuskapinda.com</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="bg-white rounded-2xl p-4 border border-gray-200 space-y-3">
+            <h3 class="font-black text-xs text-gray-900">Bize Mesaj Gönderin</h3>
+
+            <form onsubmit="event.preventDefault(); handleContactSubmit();" class="space-y-2.5">
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-0.5">Adınız Soyadınız</label>
+                <input id="contactName" type="text" required placeholder="Adınız Soyadınız" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-0.5">Konu</label>
+                <select id="contactSubject" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red bg-white">
+                  <option value="siparis">Sipariş & Teslimat Durumu</option>
+                  <option value="restoran">Restoran & İşletme Ortaklığı</option>
+                  <option value="etkinlik">Kulüp & Etkinlik Sponsorluğu</option>
+                  <option value="elci">Kampüs Elçisi Başvurusu</option>
+                  <option value="diger">Diğer / Öneri</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-700 mb-0.5">Mesajınız</label>
+                <textarea id="contactMessage" rows="3" required placeholder="Mesajınızı buraya yazabilirsiniz..." class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold focus:outline-none focus:border-brand-red resize-none"></textarea>
+              </div>
+
+              <button type="submit" class="tap-effect w-full py-2.5 rounded-xl bg-brand-red text-white font-bold text-xs shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-1.5">
+                <i class="fa-regular fa-paper-plane text-xs"></i>
+                <span>Mesajı Gönder</span>
+              </button>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -676,7 +1061,7 @@
     <!-- ======================================================== -->
     <!-- FLOATING ACTION BUTTONS (DOCK ÜSTÜNDE DÜZGÜN YERLEŞİM)   -->
     <!-- ======================================================== -->
-    <div class="absolute right-4 bottom-20 z-40 flex flex-col gap-3 items-end pointer-events-none">
+    <div id="globalFabDock" class="absolute right-4 bottom-20 z-40 flex flex-col gap-3 items-end pointer-events-none">
       
       <!-- Live Support / WhatsApp Pill (Fixed Bottom Right) -->
       <a href="https://wa.me/905537305100" target="_blank" title="Müşteri Temsilcisi / WhatsApp" class="pointer-events-auto tap-effect w-11 h-11 rounded-full bg-white border border-red-200 text-brand-red flex items-center justify-center shadow-lg hover:bg-red-50 transition">
@@ -694,7 +1079,7 @@
     <!-- ======================================================== -->
     <!-- iOS NATIVE BOTTOM NAVIGATION DOCK                        -->
     <!-- ======================================================== -->
-    <nav class="bg-white/95 backdrop-blur border-t border-gray-200 px-7 py-2.5 flex items-center justify-between z-40 shrink-0 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
+    <nav id="globalBottomNav" class="bg-white/95 backdrop-blur border-t border-gray-200 px-7 py-2.5 flex items-center justify-between z-40 shrink-0 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
       
       <button onclick="navigateTo('stores')" id="nav-btn-stores" class="flex flex-col items-center gap-0.5 text-brand-red transition tap-effect">
         <i class="fa-solid fa-store text-lg"></i>
@@ -781,6 +1166,115 @@
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 3: HUKUKİ BELGELER (KVKK, GİZLİLİK, SÖZLEŞME)       -->
+    <!-- ======================================================== -->
+    <div id="legalModal" class="hidden absolute inset-0 z-50 bg-black/65 backdrop-blur-sm flex flex-col justify-end transition-opacity">
+      <div class="bg-white rounded-t-3xl p-5 space-y-3.5 max-h-[88%] flex flex-col shadow-2xl">
+        
+        <!-- Header & Close -->
+        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <div>
+              <h3 class="font-black text-sm text-gray-900" id="legalModalTitle">Hukuki Belgeler</h3>
+              <p class="text-[10px] text-gray-500 font-semibold">Kampüs Kapında · Asım Özgür Güneybaz</p>
+            </div>
+          </div>
+          <button onclick="closeLegalModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <!-- Tab Selector -->
+        <div class="flex items-center gap-1.5 p-1 bg-gray-100 rounded-xl text-xs font-bold">
+          <button id="legalTab-kvkk" onclick="switchLegalTab('kvkk')" class="flex-1 py-1.5 rounded-lg text-center transition bg-white text-gray-900 shadow-sm text-[11px]">
+            KVKK Metni
+          </button>
+          <button id="legalTab-privacy" onclick="switchLegalTab('privacy')" class="flex-1 py-1.5 rounded-lg text-center transition text-gray-500 hover:text-gray-900 text-[11px]">
+            Gizlilik
+          </button>
+          <button id="legalTab-terms" onclick="switchLegalTab('terms')" class="flex-1 py-1.5 rounded-lg text-center transition text-gray-500 hover:text-gray-900 text-[11px]">
+            Üyelik Sözleşmesi
+          </button>
+        </div>
+
+        <!-- Scrollable Document Content -->
+        <div class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs text-gray-600 leading-relaxed hide-scrollbar max-h-[380px]" id="legalContentArea">
+          
+          <!-- KVKK Tab Content -->
+          <div id="legalSection-kvkk" class="space-y-3">
+            <h4 class="font-black text-xs text-gray-900 uppercase tracking-wide">6698 SAYILI KVKK AYDINLATMA METNİ</h4>
+            <p>
+              İşbu Aydınlatma Metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca, veri sorumlusu sıfatıyla hareket eden <strong>Asım Özgür Güneybaz (Kampüs Kapında)</strong> tarafından kişisel verilerinizin toplanması, işlenmesi ve aktarılması süreçleri hakkında sizleri bilgilendirmek amacıyla hazırlanmıştır.
+            </p>
+            <h5 class="font-bold text-gray-800">1. Veri Sorumlusu</h5>
+            <p>
+              Veri Sorumlusu: Asım Özgür Güneybaz<br>
+              Adres: Başakşehir Mahallesi, Başakşehir / İstanbul<br>
+              E-posta: support@kampuskapinda.com · Tel: +90 553 730 51 00
+            </p>
+            <h5 class="font-bold text-gray-800">2. İşlenen Kişisel Veriler</h5>
+            <p>
+              Kampüs Kapında platformunu kullanırken kimlik bilgileriniz (ad, soyad), iletişim bilgileriniz (telefon, e-posta, teslimat adresi/yurt odası), üniversite/kampüs bilgileriniz ve sipariş işlem geçmişiniz işlenmektedir.
+            </p>
+            <h5 class="font-bold text-gray-800">3. Verilerin İşlenme Amacı</h5>
+            <p>
+              Siparişlerinizin hazırlanması, kampüs kuryelerince teslimatının sağlanması, etkinlik biletlerinizin oluşturulması ve müşteri memnuniyeti süreçlerinin yürütülmesi amaçlarıyla KVKK'nın 5. ve 6. maddelerine uygun olarak işlenmektedir.
+            </p>
+            <h5 class="font-bold text-gray-800">4. Haklarınız</h5>
+            <p>
+              KVKK'nın 11. maddesi kapsamında verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini isteme ve silinmesini talep etme hakkına sahipsiniz. Başvurularınızı <strong>support@kampuskapinda.com</strong> adresine iletebilirsiniz.
+            </p>
+          </div>
+
+          <!-- Privacy Policy Content -->
+          <div id="legalSection-privacy" class="hidden space-y-3">
+            <h4 class="font-black text-xs text-gray-900 uppercase tracking-wide">GİZLİLİK POLİTİKASI</h4>
+            <p>
+              Kampüs Kapında olarak kullanıcılarımızın gizliliğine ve bilgi güvenliğine azami önem veriyoruz. Bu politika, web sitemizi ve mobil uygulamamızı ziyaret ettiğinizde verilerinizin nasıl korunduğunu açıklamaktadır.
+            </p>
+            <h5 class="font-bold text-gray-800">1. Bilgi Güvenliği</h5>
+            <p>
+              Kullanıcı şifreleri tek yönlü şifreleme algoritmalarıyla saklanmakta olup kredi kartı/ödeme bilgileriniz doğrudan lisanslı ödeme altyapısı (BDDK onaylı) üzerinden şifreli iletilir ve sunucularımızda asla depolanmaz.
+            </p>
+            <h5 class="font-bold text-gray-800">2. Çerezler (Cookies)</h5>
+            <p>
+              Sistemimizde oturum sürekliliği, kampüs ve sepet tercihlerinizin hatırlanması amacıyla teknik çerezler kullanılmaktadır. Tarayıcı ayarlarınızdan çerezleri dilediğiniz zaman yönetebilirsiniz.
+            </p>
+            <h5 class="font-bold text-gray-800">3. Üçüncü Taraflarla Paylaşım</h5>
+            <p>
+              Verileriniz, siparişinizin teslimi amacıyla yalnızca ilgili restoran ve kampüs kuryesiyle zorunlu olduğu ölçüde paylaşılır; pazarlama amacıyla kesinlikle üçüncü taraflara satılmaz.
+            </p>
+          </div>
+
+          <!-- Terms of Service Content -->
+          <div id="legalSection-terms" class="hidden space-y-3">
+            <h4 class="font-black text-xs text-gray-900 uppercase tracking-wide">KAMPÜS KAPINDA KULLANICI & ÜYELİK SÖZLEŞMESİ</h4>
+            <p>
+              Bu sözleşme, Kampüs Kapında platformu (web sitesi ve mobil arayüz) üzerinden sunulan sipariş ve etkinlik bileti hizmetlerinden yararlanan kullanıcılar ile platform işleticisi <strong>Asım Özgür Güneybaz</strong> arasında akdedilmiştir.
+            </p>
+            <h5 class="font-bold text-gray-800">1. Hizmetin Niteliği</h5>
+            <p>
+              Kampüs Kapında, üniversite kampüslerinde ve çevrelerinde faaliyet gösteren işletmelerin menülerini listeleyen, kullanıcıların sipariş vermesine ve etkinlik biletleri edinmesine aracılık eden bir elektronik platformdur.
+            </p>
+            <h5 class="font-bold text-gray-800">2. Kullanıcı Yükümlülükleri</h5>
+            <p>
+              Kullanıcı, platforma üye olurken doğru ve güncel iletişim/öğrenci bilgileri vermeyi, sipariş teslimatında kampüs/yurt lokasyonunda bulunmayı ve platform kurallarına uymayı taahhüt eder.
+            </p>
+            <h5 class="font-bold text-gray-800">3. Sipariş ve İptal Koşulları</h5>
+            <p>
+              Hazırlanmaya başlanan yemek siparişleri işletme politikaları gereği iptal edilemez. Etkinlik biletleri ise organizatör kuralları çerçevesinde geçerlidir ve devredilemez QR kod içerir.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Action Button -->
+        <button onclick="closeLegalModal()" class="tap-effect w-full py-2.5 rounded-xl bg-gray-900 text-white font-bold text-xs hover:bg-gray-800 transition">
+          Okudum ve Anladım
+        </button>
 
       </div>
     </div>
@@ -936,14 +1430,26 @@
         document.getElementById('mainScrollArea').scrollTop = 0;
       }
 
-      // Hide top header on home screen, show only inside modules
+      const isWebScreen = ['landing', 'login', 'register', 'contact'].includes(screenName);
+
+      // Hide top header on home screen and web screens, show only inside app modules
       const topHeader = document.getElementById('globalTopHeader');
       if (topHeader) {
-        if (screenName === 'home') {
+        if (screenName === 'home' || isWebScreen) {
           topHeader.classList.add('hidden');
         } else {
           topHeader.classList.remove('hidden');
         }
+      }
+
+      // Hide native app bottom dock & floating buttons on web screens
+      const bottomNav = document.getElementById('globalBottomNav');
+      const fabDock = document.getElementById('globalFabDock');
+      if (bottomNav) {
+        bottomNav.style.display = isWebScreen ? 'none' : 'flex';
+      }
+      if (fabDock) {
+        fabDock.style.display = isWebScreen ? 'none' : 'flex';
       }
 
       // Update bottom nav active style
@@ -1196,13 +1702,116 @@
     // AUTH & LOGOUT NAVIGATION
     // ----------------------------------------------------
     function handleLogout() {
-      // Çıkış yapılınca gelen web tanıtım sayfası (kampuskapinda.com mobil görünümü)
+      // Çıkış yapılınca gelen web tanıtım sayfası (kampuskapinda.com)
       navigateTo('landing');
     }
 
     function handleLoginBack() {
       // Tekrar uygulamaya / ana sayfaya giriş yap
       navigateTo('home');
+    }
+
+    function handleQuickDemoLogin() {
+      selectUniversity('medipol');
+      navigateTo('home');
+    }
+
+    function handleLoginSubmit() {
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email) {
+        alert('Lütfen e-posta veya telefon bilginizi giriniz.');
+        return;
+      }
+      if (email.includes('koc')) {
+        selectUniversity('koc');
+      } else if (email.includes('sabanci')) {
+        selectUniversity('sabanci');
+      } else if (email.includes('okan')) {
+        selectUniversity('okan');
+      } else if (email.includes('nigde') || email.includes('ohu')) {
+        selectUniversity('nigde');
+      } else {
+        selectUniversity('medipol');
+      }
+      navigateTo('home');
+    }
+
+    function handleRegisterSubmit() {
+      const name = document.getElementById('regName').value.trim();
+      const uniVal = document.getElementById('regUniversity').value;
+      const email = document.getElementById('regEmail').value.trim();
+      if (!name || !email) {
+        alert('Lütfen tüm zorunlu alanları doldurunuz.');
+        return;
+      }
+      selectUniversity(uniVal);
+      alert(`🎉 Tebrikler ${name}! Kampüs Kapında hesabınız oluşturuldu.`);
+      navigateTo('home');
+    }
+
+    function handleContactSubmit() {
+      const name = document.getElementById('contactName').value.trim();
+      const msg = document.getElementById('contactMessage').value.trim();
+      if (!name || !msg) {
+        alert('Lütfen adınızı ve mesajınızı yazınız.');
+        return;
+      }
+      alert(`✅ Teşekkürler ${name}! Mesajınız Kampüs Kapında (Asım Özgür Güneybaz) ekibine ulaştı. En kısa sürede dönüş sağlanacaktır.`);
+      document.getElementById('contactMessage').value = '';
+      navigateTo('landing');
+    }
+
+    function toggleFaq(faqId) {
+      const el = document.getElementById(faqId);
+      const icon = document.getElementById(faqId + '-icon');
+      if (el) {
+        const isHidden = el.classList.contains('hidden');
+        el.classList.toggle('hidden');
+        if (icon) {
+          icon.className = isHidden ? 'fa-solid fa-chevron-up text-[10px] text-brand-red' : 'fa-solid fa-chevron-down text-[10px] text-gray-400';
+        }
+      }
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.type = input.type === 'password' ? 'text' : 'password';
+      }
+    }
+
+    function openLegalModal(tab) {
+      document.getElementById('legalModal').classList.remove('hidden');
+      switchLegalTab(tab || 'kvkk');
+    }
+
+    function closeLegalModal() {
+      document.getElementById('legalModal').classList.add('hidden');
+    }
+
+    function switchLegalTab(tab) {
+      const tabs = ['kvkk', 'privacy', 'terms'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('legalTab-' + t);
+        const sec = document.getElementById('legalSection-' + t);
+        if (t === tab) {
+          if (btn) {
+            btn.className = "flex-1 py-1.5 rounded-lg text-center transition bg-white text-gray-900 shadow-sm text-[11px] font-black";
+          }
+          if (sec) sec.classList.remove('hidden');
+        } else {
+          if (btn) {
+            btn.className = "flex-1 py-1.5 rounded-lg text-center transition text-gray-500 hover:text-gray-900 text-[11px] font-semibold";
+          }
+          if (sec) sec.classList.add('hidden');
+        }
+      });
+      const titleEl = document.getElementById('legalModalTitle');
+      if (titleEl) {
+        if (tab === 'kvkk') titleEl.innerText = "KVKK Aydınlatma Metni";
+        else if (tab === 'privacy') titleEl.innerText = "Gizlilik Politikası";
+        else titleEl.innerText = "Kullanıcı & Üyelik Sözleşmesi";
+      }
     }
 
     function renderProductsGrid(products) {
