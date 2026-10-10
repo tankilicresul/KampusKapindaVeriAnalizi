@@ -201,9 +201,9 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- APP COMPACT TOP HEADER                                   -->
+    <!-- APP COMPACT TOP HEADER (Girişte gizli, modüllerde aktif) -->
     <!-- ======================================================== -->
-    <header class="bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2 flex items-center justify-between z-40 shrink-0 shadow-sm">
+    <header id="globalTopHeader" class="hidden bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2 flex items-center justify-between z-40 shrink-0 shadow-sm transition-all">
       <!-- Brand Logo -->
       <div class="flex items-center gap-2 cursor-pointer tap-effect" onclick="navigateTo('home')">
         <div class="w-8 h-8 rounded-full bg-brand-red flex items-center justify-center text-white shadow-sm">
@@ -219,8 +219,8 @@
       <div class="flex items-center gap-2">
         <!-- University Badge Selector -->
         <button onclick="openUniversityModal()" class="tap-effect flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-brand-red px-2.5 py-1.5 rounded-xl text-xs font-extrabold text-gray-800 transition">
-          <img id="headerUniLogo" src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" alt="Uni Logo" class="w-4 h-4 object-contain">
-          <span id="headerUniShortName" class="max-w-[70px] truncate text-[11px]">Sabancı</span>
+          <img id="headerUniLogo" src="https://s3-ankara.yok.gov.tr/yokmedia/universiteler/163888.png" alt="Uni Logo" class="w-4 h-4 object-contain">
+          <span id="headerUniShortName" class="max-w-[70px] truncate text-[11px]">Medipol</span>
           <i class="fa-solid fa-chevron-down text-[8px] text-gray-400"></i>
         </button>
 
@@ -1155,6 +1155,16 @@
       if (target) {
         target.classList.add('active');
         document.getElementById('mainScrollArea').scrollTop = 0;
+      }
+
+      // Hide top header on home screen, show only inside modules
+      const topHeader = document.getElementById('globalTopHeader');
+      if (topHeader) {
+        if (screenName === 'home') {
+          topHeader.classList.add('hidden');
+        } else {
+          topHeader.classList.remove('hidden');
+        }
       }
 
       // Update bottom nav active style
