@@ -239,103 +239,95 @@
     <main class="flex-1 overflow-y-auto bg-gray-50/70 relative hide-scrollbar pb-6" id="mainScrollArea">
 
       <!-- ======================================================== -->
-      <!-- SCREEN 1: ANA SAYFA (HOME)                               -->
+      <!-- SCREEN 1: ANA SAYFA (HOME - MATCHING SCREENSHOT EXACTLY) -->
       <!-- ======================================================== -->
       <section id="screen-home" class="view-screen active p-4 space-y-4">
         
-        <!-- User Status & Location Bar -->
-        <div class="flex items-center justify-between bg-white p-3 rounded-2xl crisp-border shadow-sm">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-red-50 text-brand-red font-black flex items-center justify-center text-sm">
+        <!-- Header Location & User Profile Bar (Matching Screenshot) -->
+        <div class="flex items-center justify-between bg-white px-2 py-1 select-none">
+          <!-- Left: Location icon + University Name -->
+          <div class="flex items-center gap-2 cursor-pointer tap-effect" onclick="openUniversityModal()">
+            <div class="w-8 h-8 rounded-full bg-brand-red text-white flex items-center justify-center text-sm shadow-sm">
               <i class="fa-solid fa-location-dot"></i>
             </div>
             <div>
-              <span class="text-[9px] uppercase font-black text-gray-400 block tracking-wider">ÜNİVERSİTE</span>
-              <span id="homeUniFullName" class="text-xs font-extrabold text-gray-900 block leading-tight">Sabancı Üniversitesi</span>
+              <span class="text-[10px] text-gray-400 font-semibold block leading-none">Üniversite</span>
+              <span id="homeUniFullName" class="text-xs font-black text-gray-900 block leading-tight mt-0.5">Medipol Üniversitesi</span>
             </div>
           </div>
-          <div class="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer tap-effect" onclick="navigateTo('profile')">
+
+          <!-- Right: Hesabım + Avatar + Chevron -->
+          <div class="flex items-center gap-1.5 cursor-pointer tap-effect" onclick="navigateTo('profile')">
             <div class="text-right">
-              <span class="text-[9px] uppercase font-black text-gray-400 block tracking-wider">HESABIM</span>
-              <span id="homeUserName" class="text-xs font-extrabold text-gray-800 block">Asım Özgür</span>
+              <span class="text-[9px] uppercase font-black text-gray-400 block tracking-wider leading-none">HESABIM</span>
+              <span id="homeUserName" class="text-xs font-black text-gray-900 block leading-tight mt-0.5">Asım Özgür</span>
             </div>
-            <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red font-black text-xs flex items-center justify-center border border-red-200">
+            <div class="w-7 h-7 rounded-full bg-red-100 text-brand-red font-black text-xs flex items-center justify-center border border-red-200">
               A
             </div>
+            <i class="fa-solid fa-chevron-right text-gray-400 text-[10px] ml-0.5"></i>
           </div>
         </div>
 
-        <!-- Red Hero Announcement Card -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#D32F2F] via-[#C62828] to-[#B71C1C] p-4 text-white shadow-md">
-          <div class="absolute -right-3 -bottom-4 opacity-15 text-7xl font-black">🎓</div>
-          <div class="flex items-start gap-3 relative z-10">
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-xl shrink-0">
-              🎓
-            </div>
-            <div class="flex-1">
-              <h2 class="font-black text-sm sm:text-base leading-tight">Kampüs Kapında</h2>
-              <p class="text-xs text-red-100 mt-1 leading-snug">Üniversitelinin tüm ihtiyaçları tek platformda!</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2 Big Action Tiles: Yemek & Eğlence -->
+        <!-- 2 Big Action Tiles: Yemek & Eğlence (Exact Screenshot Styling) -->
         <div class="grid grid-cols-2 gap-3">
           <!-- Yemek Card -->
-          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-38 relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">SİPARİŞ</span>
-              <h3 class="font-black text-gray-900 text-base">Yemek</h3>
-              <p class="text-[11px] text-gray-500 leading-snug">Kampüsteki lezzetleri keşfet, sipariş ver</p>
+              <h3 class="font-black text-brand-red text-base">Yemek</h3>
+              <p class="text-[10px] text-gray-400 leading-tight">Kampüsteki lezzetleri keşfet, sipariş ver</p>
             </div>
             <div class="self-end mt-2">
-              <div class="w-13 h-13 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🍽️
+              <!-- Plate + Fork & Knife Graphic -->
+              <div class="relative w-16 h-16 flex items-center justify-center opacity-90 group-hover:scale-105 transition-transform">
+                <div class="w-12 h-12 rounded-full border-4 border-gray-100 bg-white shadow-inner flex items-center justify-center">
+                  <div class="w-8 h-8 rounded-full border border-gray-200"></div>
+                </div>
+                <div class="absolute left-0 text-gray-300 text-xs font-bold">🍴</div>
+                <div class="absolute right-0 text-gray-300 text-xs font-bold">🥄</div>
               </div>
             </div>
           </div>
 
           <!-- Eğlence Card -->
-          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-38 relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">ETKİNLİK</span>
-              <h3 class="font-black text-gray-900 text-base">Eğlence</h3>
-              <p class="text-[11px] text-gray-500 leading-snug">Kampüs partileri, konserler ve biletler</p>
+              <h3 class="font-black text-brand-red text-base">Eğlence</h3>
+              <p class="text-[10px] text-gray-400 leading-tight">Kampüs partileri, konserler ve etkinlikler</p>
             </div>
             <div class="self-end mt-2">
-              <div class="w-13 h-13 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🎟️
+              <!-- Ticket Graphic matching screenshot -->
+              <div class="w-16 h-11 bg-red-100 border border-red-300 rounded-lg flex items-center justify-center relative shadow-sm group-hover:scale-105 transition-transform">
+                <div class="w-7 h-4 border-2 border-red-400 rounded-sm flex items-center justify-center gap-0.5">
+                  <div class="w-1.5 h-1 bg-red-400 rounded-full"></div>
+                  <div class="w-1.5 h-1 bg-red-400 rounded-full"></div>
+                </div>
+                <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-r border-red-300"></div>
+                <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-l border-red-300"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Yeniden Sipariş Ver (Horizontal Scroll) -->
-        <div class="space-y-2">
+        <!-- Featured Banner: 17 EKİM SUDANS FESTİVALİ & RIDDIM (Exact Matching Screenshot) -->
+        <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group" onclick="openEventsModule()">
+          <img id="featuredEventBannerImg" src="assets/screenshots/sudans_festival_banner.png" onerror="this.src='https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'" alt="17 Ekim Sudans Festivali" class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex flex-col justify-end p-3.5 text-white">
+            <span class="text-[10px] font-bold text-white/90">Biletler sınırlı sayıda · İncele →</span>
+          </div>
+        </div>
+
+        <!-- Yeniden Sipariş Ver Section (Exact Matching Screenshot) -->
+        <div class="space-y-2 pt-1">
           <div class="flex items-center justify-between">
             <h3 class="font-black text-sm text-gray-900">Yeniden Sipariş Ver</h3>
             <button onclick="navigateTo('orders')" class="text-xs font-bold text-brand-red hover:underline">Tümünü Gör</button>
           </div>
           
           <div class="flex gap-3 overflow-x-auto pb-1 hide-scrollbar" id="recentOrdersCarousel">
-            <!-- Dynamic Recent Order Cards -->
-          </div>
-        </div>
-
-        <!-- Featured Party / Event Banner -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <h3 class="font-black text-sm text-gray-900">Öne Çıkan Etkinlikler</h3>
-            <button onclick="openEventsModule()" class="text-xs font-bold text-brand-red hover:underline">Tümü →</button>
-          </div>
-          
-          <div class="tap-effect relative rounded-2xl overflow-hidden shadow-sm crisp-border cursor-pointer group" onclick="openEventsModule()">
-            <img id="featuredEventBannerImg" src="https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp" alt="Welcome Party" class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-3.5 text-white">
-              <span class="bg-brand-red text-white text-[10px] font-black px-2 py-0.5 rounded-md inline-block w-fit mb-1">17 EKİM · WELCOME PARTY</span>
-              <h4 class="font-black text-sm text-white leading-tight">K. Kapında Welcome Party - RIDDIM</h4>
-              <p class="text-[11px] text-gray-200 mt-0.5">Biletler sınırlı sayıda! İncele ve bilet al →</p>
-            </div>
+            <!-- Dynamic Recent Order Cards (Piazza Cafe, Pizza Bulls, etc.) -->
           </div>
         </div>
 
@@ -1114,13 +1106,13 @@
       }
     ];
 
-    // RECENT ORDERS DEMO DATA
+    // RECENT ORDERS DEMO DATA (Matching exact user screenshots)
     const initialOrders = [
       {
         id: 'ord-101',
-        storeName: 'Çiğ Köfteci Ömer Usta',
-        date: '2 Ekim',
-        amount: 520,
+        storeName: 'Piazza Cafe (Sadece Yurtlara Teslimat)',
+        date: '9 Mayıs',
+        amount: 720,
         status: 'İPTAL',
         statusColor: 'text-red-500 bg-red-50 border-red-200'
       },
@@ -1134,18 +1126,18 @@
       },
       {
         id: 'ord-103',
-        storeName: 'Mezesell',
-        date: '15 Mayıs',
-        amount: 720,
-        status: 'TAMAMLANDI',
-        statusColor: 'text-emerald-600 bg-emerald-50 border-emerald-200'
+        storeName: 'Çiğ Köfteci Ömer Usta',
+        date: '2 Ekim',
+        amount: 520,
+        status: 'İPTAL',
+        statusColor: 'text-red-500 bg-red-50 border-red-200'
       }
     ];
 
     // ----------------------------------------------------
     // 2. STATE MANAGEMENT
     // ----------------------------------------------------
-    let currentUniversity = universitiesData[0]; // Default: Sabancı
+    let currentUniversity = universitiesData[1]; // Default: Medipol Üniversitesi (matching screenshots)
     let currentStoreScope = 'cevresi';           // 'ici' | 'cevresi'
     let currentActiveStore = null;
     let activeModule = 'Yemek';                  // 'Yemek' | 'Eğlence'
