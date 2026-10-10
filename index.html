@@ -2,13 +2,13 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Kampüs Kapında - Mobil Uygulama Prototipi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Kampüs Kapında - iOS Mobil Sanal Kopyası</title>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Plus Jakarta Sans & SF Pro style -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Font Awesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -25,11 +25,11 @@
               redHover: '#B71C1C',
               darkRed: '#991B1B',
               lightRed: '#FEE2E2',
-              bgGray: '#F8F9FA'
+              bgGray: '#F6F7F9'
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif']
           }
         }
       }
@@ -37,17 +37,18 @@
   </script>
 
   <style>
-    /* iOS Style Smooth Scrollbar */
+    /* Ultra Crisp Rendering (8K / HiDPI Optimization) */
+    html, body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    /* iOS Style Hidden Scrollbars */
     ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
+      width: 0px;
+      height: 0px;
     }
     .hide-scrollbar::-webkit-scrollbar {
       display: none;
@@ -57,24 +58,30 @@
       scrollbar-width: none;
     }
 
-    /* Device Mockup Shell */
-    .device-shell {
+    /* iPhone 16 Pro Frame Shell */
+    .iphone-shell {
       width: 100%;
-      max-width: 420px;
-      height: 880px;
-      max-height: 94vh;
-      border-radius: 46px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 0 10px #1e293b, 0 0 0 12px #475569;
+      max-width: 416px;
+      height: 890px;
+      max-height: 96vh;
+      border-radius: 54px;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      background: #ffffff;
-      transition: all 0.3s ease;
+      background: #FFFFFF;
+      /* Realistic Titanium Border & Glass Reflection Shadows */
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+        0 0 0 3px #1e293b,
+        0 0 0 9px #0f172a,
+        0 0 0 11px #334155,
+        0 35px 80px -15px rgba(0, 0, 0, 0.7);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Fullscreen mobile override */
-    body.is-fullscreen-mobile .device-shell {
+    /* Fullscreen Mode Override */
+    body.is-fullscreen-mobile .iphone-shell {
       max-width: 100% !important;
       height: 100vh !important;
       max-height: 100vh !important;
@@ -82,40 +89,46 @@
       box-shadow: none !important;
     }
 
-    /* Dynamic Island / Notch */
+    /* Realistic Apple Dynamic Island */
     .dynamic-island {
-      width: 110px;
-      height: 24px;
-      background: #0f172a;
+      width: 122px;
+      height: 30px;
+      background: #000000;
       border-radius: 20px;
       position: absolute;
-      top: 9px;
+      top: 11px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 50;
+      z-index: 60;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 8px;
+      padding: 0 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: width 0.3s ease;
     }
-    .dynamic-island .camera {
-      width: 10px;
-      height: 10px;
-      background: #1e293b;
+    .dynamic-island .camera-lens {
+      width: 11px;
+      height: 11px;
+      background: #111827;
       border-radius: 50%;
+      border: 1px solid #1f2937;
+      box-shadow: inset 0 0 2px #0284c7;
     }
-    .dynamic-island .sensor {
-      width: 6px;
-      height: 6px;
-      background: #0284c7;
-      opacity: 0.7;
+    .dynamic-island .face-sensor {
+      width: 8px;
+      height: 8px;
+      background: #0f172a;
       border-radius: 50%;
+      opacity: 0.6;
     }
 
-    /* App Screen Fade Animations */
+    /* Screen Transition Animation */
     .view-screen {
       display: none;
-      animation: fadeIn 0.22s ease-in-out;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
     .view-screen.active {
       display: flex;
@@ -123,173 +136,184 @@
       flex: 1;
       height: 100%;
       overflow: hidden;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Badge & Ripple Effects */
+    /* iOS Glass Tap Response */
+    .tap-effect {
+      transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.12s ease;
+    }
     .tap-effect:active {
-      transform: scale(0.97);
-      transition: transform 0.1s ease;
+      transform: scale(0.96);
+      opacity: 0.88;
+    }
+
+    /* Crisp Card Border */
+    .crisp-border {
+      border: 1px solid rgba(226, 232, 240, 0.85);
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none">
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none overflow-hidden">
 
-  <!-- Desktop Floating Toolbar -->
-  <aside class="hidden md:flex items-center gap-4 mb-4 text-xs font-semibold text-slate-300 bg-slate-800/90 px-5 py-2.5 rounded-full border border-slate-700/80 shadow-lg backdrop-blur">
+  <!-- Desktop Pro Top Controls (Mac / Desktop Toolbar) -->
+  <aside class="hidden md:flex items-center gap-4 mb-4 text-xs font-semibold text-slate-300 bg-slate-900/90 px-5 py-2 rounded-full border border-slate-700/80 shadow-2xl backdrop-blur-xl">
     <div class="flex items-center gap-2">
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="text-white">Kampüs Kapında Mobil Sanal Kopyası</span>
+      <span class="text-white font-bold tracking-wide">Kampüs Kapında · iPhone 16 Pro (8K Retina)</span>
     </div>
-    <span class="text-slate-500">|</span>
-    <button onclick="toggleMobileFullView()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-700/60 px-2.5 py-1 rounded-lg">
-      <i class="fa-solid fa-expand text-slate-400"></i>
-      <span id="fullscreenToggleText">Tam Ekran Yap</span>
+    <span class="text-slate-600">•</span>
+    <button onclick="toggleMobileFullView()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded-full text-slate-200">
+      <i class="fa-solid fa-expand text-slate-400 text-[11px]"></i>
+      <span id="fullscreenToggleText">Tam Ekran</span>
     </button>
-    <button onclick="resetDemoData()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-700/60 px-2.5 py-1 rounded-lg">
-      <i class="fa-solid fa-rotate-right text-slate-400"></i>
+    <button onclick="resetDemoData()" class="hover:text-white transition flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded-full text-slate-200">
+      <i class="fa-solid fa-arrow-rotate-right text-slate-400 text-[11px]"></i>
       <span>Sıfırla</span>
     </button>
   </aside>
 
   <!-- ======================================================== -->
-  <!-- PHONE SHELL (MOBILE CONTAINER)                           -->
+  <!-- iPHONE 16 PRO RETINA SHELL CONTAINER                     -->
   <!-- ======================================================== -->
-  <div class="device-shell" id="appShell">
+  <div class="iphone-shell" id="appShell">
     
-    <!-- iPhone Notch / Dynamic Island -->
-    <div class="dynamic-island">
-      <div class="sensor"></div>
-      <div class="camera"></div>
+    <!-- iPhone Dynamic Island -->
+    <div class="dynamic-island" id="dynamicIsland">
+      <div class="camera-lens"></div>
+      <div class="face-sensor"></div>
     </div>
 
-    <!-- Phone Status Bar -->
-    <div class="h-11 pt-2.5 px-6 flex items-center justify-between text-xs font-bold text-gray-900 z-40 bg-white/90 backdrop-blur sticky top-0">
-      <span id="statusClock">16:51</span>
-      <div class="flex items-center gap-1.5 text-[11px] text-gray-700">
-        <i class="fa-solid fa-signal"></i>
-        <i class="fa-solid fa-wifi"></i>
-        <span class="border border-gray-700 rounded-[3px] px-0.5 text-[9px] font-black">94%</span>
+    <!-- iOS Native Status Bar (Clean & Sharp) -->
+    <div class="h-12 pt-3 px-7 flex items-center justify-between text-xs font-black text-gray-900 z-50 bg-white/95 backdrop-blur-md sticky top-0 shrink-0 select-none">
+      <span id="statusClock" class="font-extrabold tracking-tight text-[13px]">16:51</span>
+      <div class="flex items-center gap-2 text-gray-900 text-[11px]">
+        <i class="fa-solid fa-signal text-[10px]"></i>
+        <i class="fa-solid fa-wifi text-[11px]"></i>
+        <!-- Battery Pill -->
+        <div class="flex items-center gap-0.5">
+          <div class="w-5 h-2.5 border border-gray-900 rounded-[4px] p-[1px] flex items-center">
+            <div class="w-full h-full bg-gray-900 rounded-[2px]"></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ======================================================== -->
-    <!-- APP GLOBAL TOP HEADER                                    -->
+    <!-- APP COMPACT TOP HEADER                                   -->
     <!-- ======================================================== -->
-    <header class="bg-white border-b border-gray-100 px-4 py-2 flex items-center justify-between z-30 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.04)]">
-      <!-- Logo -->
-      <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+    <header class="bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2 flex items-center justify-between z-40 shrink-0 shadow-sm">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-2 cursor-pointer tap-effect" onclick="navigateTo('home')">
         <div class="w-8 h-8 rounded-full bg-brand-red flex items-center justify-center text-white shadow-sm">
-          <i class="fa-solid fa-motorcycle text-sm"></i>
+          <i class="fa-solid fa-motorcycle text-xs"></i>
         </div>
-        <div>
-          <span class="font-extrabold text-sm text-gray-900 block leading-none">Kampüs</span>
-          <span class="font-extrabold text-xs text-brand-red block leading-tight">Kapında</span>
+        <div class="leading-none">
+          <span class="font-black text-xs text-gray-900 block leading-tight">Kampüs</span>
+          <span class="font-black text-[11px] text-brand-red block leading-none">Kapında</span>
         </div>
       </div>
 
-      <!-- Header Right: University & Module Selector -->
+      <!-- Header Action Items: University Selector & Module -->
       <div class="flex items-center gap-2">
         <!-- University Badge Selector -->
-        <button onclick="openUniversityModal()" class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-brand-red px-2.5 py-1 rounded-xl text-xs font-bold text-gray-800 transition">
+        <button onclick="openUniversityModal()" class="tap-effect flex items-center gap-1.5 bg-gray-50 border border-gray-200 hover:border-brand-red px-2.5 py-1.5 rounded-xl text-xs font-extrabold text-gray-800 transition">
           <img id="headerUniLogo" src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" alt="Uni Logo" class="w-4 h-4 object-contain">
-          <span id="headerUniShortName" class="max-w-[70px] truncate">Sabancı</span>
-          <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+          <span id="headerUniShortName" class="max-w-[70px] truncate text-[11px]">Sabancı</span>
+          <i class="fa-solid fa-chevron-down text-[8px] text-gray-400"></i>
         </button>
 
         <!-- Module Pill: Yemek / Eğlence -->
-        <button id="moduleSwitcherBtn" onclick="toggleActiveModule()" class="flex items-center gap-1.5 bg-red-50 text-brand-red border border-red-200 px-2.5 py-1 rounded-xl text-xs font-bold transition">
-          <i id="moduleIcon" class="fa-solid fa-utensils text-[11px]"></i>
-          <span id="moduleName">Yemek</span>
+        <button id="moduleSwitcherBtn" onclick="toggleActiveModule()" class="tap-effect flex items-center gap-1.5 bg-red-50 text-brand-red border border-red-200 px-2.5 py-1.5 rounded-xl text-xs font-extrabold transition">
+          <i id="moduleIcon" class="fa-solid fa-utensils text-[10px]"></i>
+          <span id="moduleName" class="text-[11px]">Yemek</span>
           <i class="fa-solid fa-chevron-down text-[8px] opacity-70"></i>
         </button>
       </div>
     </header>
 
     <!-- ======================================================== -->
-    <!-- SCREEN VIEWS SCROLLER CONTAINER                          -->
+    <!-- SCROLLABLE SCREEN CONTENTS (VIEWPORTS)                   -->
     <!-- ======================================================== -->
-    <main class="flex-1 overflow-y-auto bg-gray-50/60 relative hide-scrollbar" id="mainScrollArea">
+    <main class="flex-1 overflow-y-auto bg-gray-50/70 relative hide-scrollbar pb-6" id="mainScrollArea">
 
       <!-- ======================================================== -->
-      <!-- SCREEN 1: ANA SAYFA (HOME / DASHBOARD)                   -->
+      <!-- SCREEN 1: ANA SAYFA (HOME)                               -->
       <!-- ======================================================== -->
       <section id="screen-home" class="view-screen active p-4 space-y-4">
         
-        <!-- User Welcome & Active Campus Bar -->
-        <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-gray-100 shadow-sm">
+        <!-- User Status & Location Bar -->
+        <div class="flex items-center justify-between bg-white p-3 rounded-2xl crisp-border shadow-sm">
           <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-red-100 text-brand-red font-black flex items-center justify-center text-sm shadow-inner">
+            <div class="w-9 h-9 rounded-xl bg-red-50 text-brand-red font-black flex items-center justify-center text-sm">
               <i class="fa-solid fa-location-dot"></i>
             </div>
             <div>
-              <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Üniversite</span>
+              <span class="text-[9px] uppercase font-black text-gray-400 block tracking-wider">ÜNİVERSİTE</span>
               <span id="homeUniFullName" class="text-xs font-extrabold text-gray-900 block leading-tight">Sabancı Üniversitesi</span>
             </div>
           </div>
-          <div class="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer" onclick="navigateTo('profile')">
+          <div class="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer tap-effect" onclick="navigateTo('profile')">
             <div class="text-right">
-              <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">HESABIM</span>
+              <span class="text-[9px] uppercase font-black text-gray-400 block tracking-wider">HESABIM</span>
               <span id="homeUserName" class="text-xs font-extrabold text-gray-800 block">Asım Özgür</span>
             </div>
-            <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red font-bold text-xs flex items-center justify-center border border-red-200">
+            <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red font-black text-xs flex items-center justify-center border border-red-200">
               A
             </div>
           </div>
         </div>
 
-        <!-- Red Hero Announcement Banner -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#D32F2F] to-[#B71C1C] p-4 text-white shadow-md">
-          <div class="absolute -right-3 -bottom-5 opacity-15 text-7xl font-black">🎓</div>
+        <!-- Red Hero Announcement Card -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#D32F2F] via-[#C62828] to-[#B71C1C] p-4 text-white shadow-md">
+          <div class="absolute -right-3 -bottom-4 opacity-15 text-7xl font-black">🎓</div>
           <div class="flex items-start gap-3 relative z-10">
             <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-xl shrink-0">
               🎓
             </div>
             <div class="flex-1">
-              <h2 class="font-extrabold text-base leading-tight">Kampüs Kapında</h2>
+              <h2 class="font-black text-sm sm:text-base leading-tight">Kampüs Kapında</h2>
               <p class="text-xs text-red-100 mt-1 leading-snug">Üniversitelinin tüm ihtiyaçları tek platformda!</p>
             </div>
           </div>
         </div>
 
-        <!-- 2 Big Action Tiles: Yemek vs Eğlence -->
+        <!-- 2 Big Action Tiles: Yemek & Eğlence -->
         <div class="grid grid-cols-2 gap-3">
           <!-- Yemek Card -->
-          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+          <div onclick="openFoodModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">SİPARİŞ</span>
               <h3 class="font-black text-gray-900 text-base">Yemek</h3>
               <p class="text-[11px] text-gray-500 leading-snug">Kampüsteki lezzetleri keşfet, sipariş ver</p>
             </div>
             <div class="self-end mt-2">
-              <div class="w-14 h-14 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              <div class="w-13 h-13 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                 🍽️
               </div>
             </div>
           </div>
 
           <!-- Eğlence Card -->
-          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
+          <div onclick="openEventsModule()" class="tap-effect cursor-pointer bg-white rounded-2xl p-3.5 crisp-border shadow-sm hover:border-brand-red transition flex flex-col justify-between h-36 relative overflow-hidden group">
             <div class="space-y-0.5">
               <span class="text-[10px] font-black tracking-wider text-red-500 uppercase">ETKİNLİK</span>
               <h3 class="font-black text-gray-900 text-base">Eğlence</h3>
               <p class="text-[11px] text-gray-500 leading-snug">Kampüs partileri, konserler ve biletler</p>
             </div>
             <div class="self-end mt-2">
-              <div class="w-14 h-14 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              <div class="w-13 h-13 rounded-full bg-red-50 text-brand-red flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                 🎟️
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Yeniden Sipariş Ver (Quick Reorder Carousel) -->
+        <!-- Yeniden Sipariş Ver (Horizontal Scroll) -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <h3 class="font-extrabold text-sm text-gray-900">Yeniden Sipariş Ver</h3>
+            <h3 class="font-black text-sm text-gray-900">Yeniden Sipariş Ver</h3>
             <button onclick="navigateTo('orders')" class="text-xs font-bold text-brand-red hover:underline">Tümünü Gör</button>
           </div>
           
@@ -301,15 +325,15 @@
         <!-- Featured Party / Event Banner -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <h3 class="font-extrabold text-sm text-gray-900">Öne Çıkan Etkinlikler</h3>
+            <h3 class="font-black text-sm text-gray-900">Öne Çıkan Etkinlikler</h3>
             <button onclick="openEventsModule()" class="text-xs font-bold text-brand-red hover:underline">Tümü →</button>
           </div>
           
-          <div class="relative rounded-2xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer group" onclick="openEventsModule()">
+          <div class="tap-effect relative rounded-2xl overflow-hidden shadow-sm crisp-border cursor-pointer group" onclick="openEventsModule()">
             <img id="featuredEventBannerImg" src="https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp" alt="Welcome Party" class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3.5 text-white">
-              <span class="bg-brand-red text-white text-[10px] font-bold px-2 py-0.5 rounded-md inline-block w-fit mb-1">17 EKİM · WELCOME PARTY</span>
-              <h4 class="font-extrabold text-sm text-white leading-tight">K. Kapında Welcome Party - RIDDIM</h4>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-3.5 text-white">
+              <span class="bg-brand-red text-white text-[10px] font-black px-2 py-0.5 rounded-md inline-block w-fit mb-1">17 EKİM · WELCOME PARTY</span>
+              <h4 class="font-black text-sm text-white leading-tight">K. Kapında Welcome Party - RIDDIM</h4>
               <p class="text-[11px] text-gray-200 mt-0.5">Biletler sınırlı sayıda! İncele ve bilet al →</p>
             </div>
           </div>
@@ -318,43 +342,43 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- SCREEN 2: İŞLETMELER LİSTESİ (RESTAURANTS)               -->
+      <!-- SCREEN 2: İŞLETMELER (RESTAURANTS FEED)                  -->
       <!-- ======================================================== -->
       <section id="screen-stores" class="view-screen p-4 space-y-4">
         
-        <!-- Campus Selector Header -->
+        <!-- Screen Title Header -->
         <div class="flex items-center justify-between">
           <div>
-            <h2 id="storesScreenTitle" class="font-extrabold text-lg text-gray-900 leading-tight">Sabancı Üniversitesi</h2>
+            <h2 id="storesScreenTitle" class="font-black text-lg text-gray-900 leading-tight">Sabancı Üniversitesi</h2>
             <p class="text-xs text-gray-500 font-semibold">Kampüs İçi & Çevresi İşletmeler</p>
           </div>
-          <button onclick="openUniversityModal()" class="text-xs font-bold text-brand-red bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-xl">
+          <button onclick="openUniversityModal()" class="tap-effect text-xs font-extrabold text-brand-red bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-xl">
             <i class="fa-solid fa-arrows-rotate mr-1"></i>Değiştir
           </button>
         </div>
 
-        <!-- Filter Switch: Kampüs İçi vs Kampüs Çevresi -->
+        <!-- Scope Switcher: Kampüs İçi vs Kampüs Çevresi -->
         <div class="bg-gray-200/80 p-1 rounded-2xl flex shadow-inner">
-          <button id="tabKampusIci" onclick="switchStoreScope('ici')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900">
+          <button id="tabKampusIci" onclick="switchStoreScope('ici')" class="tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900">
             <span>🏫</span>
             <span>Kampüs İçi</span>
           </button>
-          <button id="tabKampusCevresi" onclick="switchStoreScope('cevresi')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm">
+          <button id="tabKampusCevresi" onclick="switchStoreScope('cevresi')" class="tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm">
             <span>🛵</span>
             <span>Kampüs Çevresi</span>
           </button>
         </div>
 
-        <!-- Sub Campus / Zone Indicator -->
-        <div class="flex items-center justify-between bg-white px-3.5 py-2 rounded-xl border border-gray-100 text-xs">
-          <div class="flex items-center gap-2 text-gray-800 font-bold">
+        <!-- Active Zone Tag -->
+        <div class="flex items-center justify-between bg-white px-3.5 py-2 rounded-xl crisp-border text-xs">
+          <div class="flex items-center gap-2 text-gray-800 font-extrabold">
             <i class="fa-solid fa-location-crosshairs text-brand-red"></i>
             <span id="activeZoneLabel">Ana Kampüs (Tuzla)</span>
           </div>
-          <span class="text-[10px] text-gray-400 font-semibold" id="storesCountBadge">4 İşletme</span>
+          <span class="text-[10px] text-gray-400 font-bold" id="storesCountBadge">4 İşletme</span>
         </div>
 
-        <!-- Restaurant Cards Feed -->
+        <!-- Stores Feed Cards -->
         <div id="storesFeed" class="space-y-3.5">
           <!-- Dynamic Restaurant Cards -->
         </div>
@@ -362,19 +386,19 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- SCREEN 3: İŞLETME & MENÜ DETAYI (STORE & MENU)           -->
+      <!-- SCREEN 3: MENÜ VE ÜRÜNLER (MENU VIEW)                    -->
       <!-- ======================================================== -->
       <section id="screen-menu" class="view-screen">
         
-        <!-- Sticky Top Back Bar inside menu -->
+        <!-- Sticky Sub-Nav Back Bar -->
         <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
-          <button onclick="navigateTo('stores')" class="flex items-center gap-2 text-xs font-bold text-gray-700 hover:text-brand-red transition">
+          <button onclick="navigateTo('stores')" class="tap-effect flex items-center gap-2 text-xs font-extrabold text-gray-700 hover:text-brand-red transition">
             <div class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center">
               <i class="fa-solid fa-chevron-left text-[11px]"></i>
             </div>
             <div>
-              <span class="text-[10px] text-gray-400 block leading-none">GERİ DÖN</span>
-              <span class="text-xs font-extrabold text-gray-900 leading-none">İŞLETME LİSTESİ</span>
+              <span class="text-[9px] text-gray-400 block leading-none font-bold">GERİ DÖN</span>
+              <span class="text-xs font-black text-gray-900 leading-none">İŞLETME LİSTESİ</span>
             </div>
           </button>
           <span class="text-xs font-black text-brand-red bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
@@ -385,21 +409,21 @@
         <!-- Store Cover & Details -->
         <div class="p-4 space-y-3">
           
-          <!-- Cover Photo with Status Pill -->
-          <div class="relative h-44 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+          <!-- Store Cover Image -->
+          <div class="relative h-44 rounded-2xl overflow-hidden crisp-border shadow-sm">
             <img id="menuStoreCover" src="assets/screenshots/pizzabulls_store.jpeg" alt="Restoran" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent"></div>
             
             <div class="absolute top-3 right-3">
-              <span id="menuStoreStatusBadge" class="bg-white/95 text-emerald-600 text-[11px] font-black px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="menuStoreStatusBadge" class="bg-white/95 text-emerald-600 text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>AÇIK</span>
               </span>
             </div>
           </div>
 
-          <!-- Store Title & Meta -->
-          <div class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm space-y-2.5">
+          <!-- Store Meta Box -->
+          <div class="bg-white p-3.5 rounded-2xl crisp-border shadow-sm space-y-2.5">
             <h1 id="menuStoreName" class="font-black text-xl text-gray-900">Pizza Bulls</h1>
             
             <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
@@ -416,9 +440,9 @@
               <span id="menuStoreHours">TESLİMAT SAATLERİ: 09:00 - 03:00</span>
             </div>
 
-            <!-- Campus Delivery Locations -->
+            <!-- Campus Locations -->
             <div class="pt-1">
-              <span class="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-1">TESLİMAT YAPILAN KAMPÜSLER</span>
+              <span class="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">TESLİMAT YAPILAN KAMPÜSLER</span>
               <div class="flex flex-wrap gap-1.5" id="menuStoreCampuses">
                 <span class="bg-gray-100 text-gray-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">Ana Kampüs (Tuzla)</span>
               </div>
@@ -426,7 +450,7 @@
           </div>
 
           <!-- Menu Categories Slider Tabs -->
-          <div class="sticky top-12 z-20 bg-gray-50/90 backdrop-blur py-1">
+          <div class="sticky top-12 z-20 bg-gray-50/95 backdrop-blur py-1">
             <div class="flex gap-2 overflow-x-auto pb-1 hide-scrollbar" id="menuCategoriesBar">
               <!-- Dynamic Category Buttons -->
             </div>
@@ -442,13 +466,13 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- SCREEN 4: ETKİNLİKLER (EVENTS & ENTERTAINMENT)           -->
+      <!-- SCREEN 4: ETKİNLİKLER (EVENTS)                           -->
       <!-- ======================================================== -->
       <section id="screen-events" class="view-screen p-4 space-y-4">
         
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="font-extrabold text-lg text-gray-900 leading-tight">Kampüs Etkinlikleri</h2>
+            <h2 class="font-black text-lg text-gray-900 leading-tight">Kampüs Etkinlikleri</h2>
             <p class="text-xs text-gray-500 font-semibold">Konserler, Partiler ve Biletler</p>
           </div>
           <span class="bg-red-50 text-brand-red font-black text-xs px-2.5 py-1 rounded-xl border border-red-200">
@@ -478,13 +502,13 @@
         
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="font-extrabold text-lg text-gray-900 leading-tight">Sipariş Geçmişim</h2>
+            <h2 class="font-black text-lg text-gray-900 leading-tight">Sipariş Geçmişim</h2>
             <p class="text-xs text-gray-500 font-semibold">Aktif ve Geçmiş Siparişlerin</p>
           </div>
           <span class="text-xs font-bold text-gray-400">3 Kayıt</span>
         </div>
 
-        <div class="space-y-3" id="ordersListContainer">
+        <div class="space-y-3 pb-20" id="ordersListContainer">
           <!-- Dynamic Orders -->
         </div>
 
@@ -495,7 +519,7 @@
       <!-- ======================================================== -->
       <section id="screen-profile" class="view-screen p-4 space-y-4">
         
-        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center gap-3.5">
+        <div class="bg-white rounded-2xl p-4 crisp-border shadow-sm flex items-center gap-3.5">
           <div class="w-14 h-14 rounded-full bg-brand-red text-white font-black text-xl flex items-center justify-center shadow-md">
             AÖ
           </div>
@@ -507,9 +531,9 @@
         </div>
 
         <!-- University Selector in Profile -->
-        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
-          <label class="text-xs font-extrabold text-gray-700 block">KAYITLI ÜNİVERSİTE VE KAMPÜSÜN</label>
-          <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-200 cursor-pointer" onclick="openUniversityModal()">
+        <div class="bg-white rounded-2xl p-4 crisp-border shadow-sm space-y-2">
+          <label class="text-[10px] font-black text-gray-500 uppercase tracking-wider block">KAYITLI ÜNİVERSİTE VE KAMPÜSÜN</label>
+          <div class="tap-effect flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-200 cursor-pointer" onclick="openUniversityModal()">
             <div class="flex items-center gap-2">
               <img id="profileUniLogo" src="https://kampuskapinda.s3.eu-central-1.amazonaws.com/Sabanci_University_logo.png" class="w-6 h-6 object-contain">
               <span id="profileUniName" class="text-xs font-bold text-gray-900">Sabancı Üniversitesi</span>
@@ -519,7 +543,7 @@
         </div>
 
         <!-- Menu items -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100 text-xs font-bold text-gray-800">
+        <div class="bg-white rounded-2xl crisp-border shadow-sm divide-y divide-gray-100 text-xs font-bold text-gray-800">
           <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50">
             <div class="flex items-center gap-3">
               <i class="fa-regular fa-bell text-gray-400 text-sm"></i>
@@ -534,13 +558,13 @@
             </div>
             <span id="profileCartCount" class="text-brand-red">0 Ürün</span>
           </div>
-          <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+          <a href="https://wa.me/905537305100" target="_blank" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50 text-gray-800">
             <div class="flex items-center gap-3">
-              <i class="fa-regular fa-circle-question text-gray-400 text-sm"></i>
+              <i class="fa-brands fa-whatsapp text-emerald-500 text-base"></i>
               <span>Yardım & Destek (WhatsApp)</span>
             </div>
             <i class="fa-solid fa-chevron-right text-gray-300 text-[10px]"></i>
-          </div>
+          </a>
           <div class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-gray-50 text-red-600">
             <div class="flex items-center gap-3">
               <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
@@ -554,17 +578,17 @@
     </main>
 
     <!-- ======================================================== -->
-    <!-- FLOATING FLOATING ACTION BUTTONS (SEPET & DESTEK)        -->
+    <!-- FLOATING ACTION BUTTONS (DOCK ÜSTÜNDE DÜZGÜN YERLEŞİM)   -->
     <!-- ======================================================== -->
-    <div class="absolute right-4 bottom-18 z-40 flex flex-col gap-2.5 items-end pointer-events-none">
+    <div class="absolute right-4 bottom-20 z-40 flex flex-col gap-3 items-end pointer-events-none">
       
-      <!-- Live Support / WhatsApp Pill (matches screenshot) -->
-      <a href="https://wa.me/905537305100" target="_blank" class="pointer-events-auto tap-effect w-11 h-11 rounded-full bg-white border border-red-200 text-brand-red flex items-center justify-center shadow-lg hover:bg-red-50 transition">
-        <i class="fa-solid fa-headset text-lg"></i>
+      <!-- Live Support / WhatsApp Pill (Fixed Bottom Right) -->
+      <a href="https://wa.me/905537305100" target="_blank" title="Müşteri Temsilcisi / WhatsApp" class="pointer-events-auto tap-effect w-11 h-11 rounded-full bg-white border border-red-200 text-brand-red flex items-center justify-center shadow-lg hover:bg-red-50 transition">
+        <i class="fa-solid fa-headset text-base"></i>
       </a>
 
       <!-- Floating Red Cart Button with Count Badge -->
-      <button onclick="openCartModal()" class="pointer-events-auto tap-effect w-13 h-13 rounded-full bg-brand-red text-white flex items-center justify-center shadow-xl hover:bg-brand-redHover transition relative p-3">
+      <button onclick="openCartModal()" title="Sepetim" class="pointer-events-auto tap-effect w-13 h-13 rounded-full bg-brand-red text-white flex items-center justify-center shadow-2xl hover:bg-brand-redHover transition relative p-3">
         <i class="fa-solid fa-cart-shopping text-lg"></i>
         <span id="floatingCartBadge" class="absolute -top-1 -right-1 bg-white text-brand-red font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-red shadow">0</span>
       </button>
@@ -572,29 +596,29 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- MOBILE BOTTOM NAVIGATION DOCK (BOTTOM BAR)               -->
+    <!-- iOS NATIVE BOTTOM NAVIGATION DOCK                        -->
     <!-- ======================================================== -->
-    <nav class="bg-white border-t border-gray-200 px-6 py-2.5 flex items-center justify-between z-40 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
+    <nav class="bg-white/95 backdrop-blur border-t border-gray-200 px-7 py-2.5 flex items-center justify-between z-40 shrink-0 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
       
       <button onclick="navigateTo('stores')" id="nav-btn-stores" class="flex flex-col items-center gap-0.5 text-brand-red transition tap-effect">
         <i class="fa-solid fa-store text-lg"></i>
-        <span class="text-[10px] font-extrabold">İşletmeler</span>
+        <span class="text-[10px] font-black tracking-tight">İşletmeler</span>
       </button>
 
       <button onclick="navigateTo('orders')" id="nav-btn-orders" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-700 transition tap-effect">
         <i class="fa-solid fa-receipt text-lg"></i>
-        <span class="text-[10px] font-extrabold">Siparişlerim</span>
+        <span class="text-[10px] font-black tracking-tight">Siparişlerim</span>
       </button>
 
       <button onclick="navigateTo('profile')" id="nav-btn-profile" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-700 transition tap-effect">
         <i class="fa-regular fa-user text-lg"></i>
-        <span class="text-[10px] font-extrabold">Profilim</span>
+        <span class="text-[10px] font-black tracking-tight">Profilim</span>
       </button>
 
     </nav>
 
-    <!-- iPhone Bottom Home Bar Indicator -->
-    <div class="h-4 bg-white flex items-center justify-center">
+    <!-- iOS Home Bar Indicator -->
+    <div class="h-4 bg-white flex items-center justify-center shrink-0">
       <div class="w-32 h-1 bg-gray-300 rounded-full"></div>
     </div>
 
@@ -649,14 +673,14 @@
           </div>
           <div class="flex justify-between text-xs text-gray-600 font-bold">
             <span>Kampüs Teslimat Ücreti</span>
-            <span class="text-emerald-600">Ücretsiz 🎁</span>
+            <span class="text-emerald-600 font-black">Ücretsiz 🎁</span>
           </div>
-          <div class="flex justify-between text-sm font-extrabold text-gray-900 pt-1 border-t border-dashed border-gray-200">
+          <div class="flex justify-between text-sm font-black text-gray-900 pt-1 border-t border-dashed border-gray-200">
             <span>Genel Toplam</span>
-            <span class="text-brand-red text-base" id="cartTotalText">0.00 ₺</span>
+            <span class="text-brand-red text-base font-black" id="cartTotalText">0.00 ₺</span>
           </div>
 
-          <button onclick="submitOrder()" id="btnCheckout" class="w-full py-3 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
+          <button onclick="submitOrder()" id="btnCheckout" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
             <span>Siparişi Onayla & Ver</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
@@ -665,7 +689,7 @@
       </div>
     </div>
 
-  </div> <!-- End .device-shell -->
+  </div> <!-- End .iphone-shell -->
 
   <!-- ======================================================== -->
   <!-- JAVASCRIPT APPLICATION CORE                              -->
@@ -1182,10 +1206,10 @@
       const icon = document.getElementById('moduleIcon');
       const text = document.getElementById('moduleName');
       if (activeModule === 'Yemek') {
-        icon.className = "fa-solid fa-utensils text-[11px]";
+        icon.className = "fa-solid fa-utensils text-[10px]";
         text.innerText = "Yemek";
       } else {
-        icon.className = "fa-solid fa-ticket text-[11px]";
+        icon.className = "fa-solid fa-ticket text-[10px]";
         text.innerText = "Eğlence";
       }
     }
@@ -1196,11 +1220,11 @@
     function openUniversityModal() {
       const container = document.getElementById('uniListContainer');
       container.innerHTML = universitiesData.map(uni => `
-        <div onclick="selectUniversity('${uni.id}')" class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between ${uni.id === currentUniversity.id ? 'border-brand-red bg-red-50/50' : 'border-gray-200 hover:border-gray-300 bg-white'}">
+        <div onclick="selectUniversity('${uni.id}')" class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between tap-effect ${uni.id === currentUniversity.id ? 'border-brand-red bg-red-50/50' : 'border-gray-200 hover:border-gray-300 bg-white'}">
           <div class="flex items-center gap-3">
             <img src="${uni.logo}" alt="${uni.name}" class="w-8 h-8 object-contain">
             <div>
-              <h4 class="font-bold text-xs text-gray-900">${uni.name}</h4>
+              <h4 class="font-black text-xs text-gray-900">${uni.name}</h4>
               <span class="text-[10px] text-gray-500 font-semibold">${uni.campusZone}</span>
             </div>
           </div>
@@ -1255,11 +1279,11 @@
       const tabCevresi = document.getElementById('tabKampusCevresi');
 
       if (scope === 'ici') {
-        tabIci.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
-        tabCevresi.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
+        tabIci.className = "tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
+        tabCevresi.className = "tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
       } else {
-        tabCevresi.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
-        tabIci.className = "flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
+        tabCevresi.className = "tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 bg-brand-red text-white shadow-sm";
+        tabIci.className = "tap-effect flex-1 py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900";
       }
 
       renderStoresFeed();
@@ -1275,7 +1299,7 @@
 
       if (list.length === 0) {
         feed.innerHTML = `
-          <div class="bg-white rounded-2xl p-8 text-center border border-gray-100 shadow-sm space-y-2">
+          <div class="bg-white rounded-2xl p-8 text-center crisp-border shadow-sm space-y-2">
             <span class="text-3xl">☕</span>
             <h4 class="font-bold text-gray-800 text-sm">Bu alanda henüz işletme bulunmuyor</h4>
             <p class="text-xs text-gray-400">Yakında kampüsüne yeni lezzetler eklenecek!</p>
@@ -1285,11 +1309,11 @@
       }
 
       feed.innerHTML = list.map(store => `
-        <div onclick="openStoreMenu('${store.id}')" class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition group">
+        <div onclick="openStoreMenu('${store.id}')" class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden crisp-border shadow-sm hover:shadow-md transition group">
           <!-- Cover Image with Status Pill -->
           <div class="relative h-40 overflow-hidden bg-slate-900">
             <img src="${store.cover}" alt="${store.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent"></div>
             
             <div class="absolute top-3 right-3">
               <span class="bg-white/95 text-emerald-600 text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
@@ -1301,7 +1325,7 @@
 
           <!-- Card Content -->
           <div class="p-3.5 space-y-2">
-            <h3 class="font-extrabold text-base text-gray-900 group-hover:text-brand-red transition-colors">${store.name}</h3>
+            <h3 class="font-black text-base text-gray-900 group-hover:text-brand-red transition-colors">${store.name}</h3>
 
             <div class="flex items-center gap-2 text-xs font-bold">
               <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md text-[11px]">Min. ${store.minOrder}</span>
@@ -1331,7 +1355,6 @@
     // 6. RESTAURANT MENU VIEW
     // ----------------------------------------------------
     function openStoreMenu(storeId) {
-      // Find store
       let found = null;
       Object.keys(storesData).forEach(uKey => {
         ['cevresi', 'ici'].forEach(sScope => {
@@ -1342,7 +1365,7 @@
       });
 
       if (!found) {
-        found = storesData.sabanci.cevresi[0]; // fallback
+        found = storesData.sabanci.cevresi[0];
       }
 
       currentActiveStore = found;
@@ -1369,7 +1392,7 @@
     function renderMenuCategories(categories) {
       const container = document.getElementById('menuCategoriesBar');
       container.innerHTML = categories.map(cat => `
-        <button onclick="filterMenuByCategory('${cat}')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition ${cat === selectedMenuCategory ? 'bg-red-100 text-brand-red border border-red-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200'}">
+        <button onclick="filterMenuByCategory('${cat}')" class="tap-effect px-3.5 py-1.5 rounded-xl text-xs font-black whitespace-nowrap transition ${cat === selectedMenuCategory ? 'bg-red-100 text-brand-red border border-red-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200'}">
           ${cat}
         </button>
       `).join('');
@@ -1390,13 +1413,13 @@
     function renderProductsGrid(products) {
       const grid = document.getElementById('menuProductsGrid');
       grid.innerHTML = products.map(prod => `
-        <div class="bg-white rounded-2xl p-2.5 border border-gray-100 shadow-sm flex flex-col justify-between group hover:border-gray-200 transition">
+        <div class="bg-white rounded-2xl p-2.5 crisp-border shadow-sm flex flex-col justify-between group hover:border-gray-300 transition">
           <div class="space-y-2">
             <!-- Product Thumbnail with Plus Button -->
             <div class="relative h-28 rounded-xl overflow-hidden bg-gray-100">
               <img src="${prod.image}" alt="${prod.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
               
-              <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" class="tap-effect absolute top-2 right-2 w-7 h-7 rounded-full bg-white text-brand-red font-black flex items-center justify-center shadow-md hover:bg-brand-red hover:text-white transition">
+              <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" title="Sepete Ekle" class="tap-effect absolute top-2 right-2 w-7 h-7 rounded-full bg-white text-brand-red font-black flex items-center justify-center shadow-md hover:bg-brand-red hover:text-white transition">
                 <i class="fa-solid fa-plus text-xs"></i>
               </button>
             </div>
@@ -1411,7 +1434,7 @@
           <!-- Price & Quick Add -->
           <div class="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between">
             <span class="font-black text-xs text-brand-red">₺${prod.price.toFixed(2)}</span>
-            <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" class="text-[10px] font-bold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-brand-red px-2 py-0.5 rounded-md transition">
+            <button onclick="addToCart('${prod.id}', '${prod.title}', ${prod.price})" class="tap-effect text-[10px] font-bold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-brand-red px-2 py-0.5 rounded-md transition">
               Ekle +
             </button>
           </div>
@@ -1425,7 +1448,7 @@
     function renderEventsFeed() {
       const container = document.getElementById('eventsListFeed');
       container.innerHTML = eventsData.map(ev => `
-        <div class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition group">
+        <div class="tap-effect cursor-pointer bg-white rounded-2xl overflow-hidden crisp-border shadow-sm hover:shadow-md transition group">
           <div class="relative h-44 overflow-hidden bg-slate-900">
             <img src="${ev.image}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -1439,7 +1462,7 @@
           </div>
 
           <div class="p-3.5 space-y-2">
-            <h3 class="font-extrabold text-sm text-gray-900 group-hover:text-brand-red transition-colors leading-snug">${ev.title}</h3>
+            <h3 class="font-black text-sm text-gray-900 group-hover:text-brand-red transition-colors leading-snug">${ev.title}</h3>
             <p class="text-xs text-gray-500 font-semibold flex items-center gap-1.5">
               <i class="fa-solid fa-location-dot text-brand-red text-[11px]"></i>
               <span>${ev.venue}</span>
@@ -1447,10 +1470,10 @@
 
             <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
               <div>
-                <span class="text-[10px] text-gray-400 block font-bold leading-none">BİLET</span>
+                <span class="text-[9px] text-gray-400 block font-bold leading-none">BİLET</span>
                 <span class="text-xs font-black text-gray-900">${ev.price}</span>
               </div>
-              <a href="https://kampuskapinda.com/eglence" target="_blank" class="bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-brand-redHover transition flex items-center gap-1">
+              <a href="https://kampuskapinda.com/eglence" target="_blank" class="tap-effect bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-brand-redHover transition flex items-center gap-1">
                 <span>İncele & Bilet Al</span>
                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </a>
@@ -1488,15 +1511,12 @@
       const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
       const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
 
-      // Floating Badge & Profile text
       document.getElementById('floatingCartBadge').innerText = totalCount;
       document.getElementById('profileCartCount').innerText = `${totalCount} Ürün`;
 
-      // Modal calculations
       document.getElementById('cartSubtotalText').innerText = `₺${subtotal.toFixed(2)}`;
       document.getElementById('cartTotalText').innerText = `₺${subtotal.toFixed(2)}`;
 
-      // Render Modal Items
       const list = document.getElementById('cartItemsList');
       if (cart.length === 0) {
         list.innerHTML = `
@@ -1520,7 +1540,7 @@
             </div>
             <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-lg border border-gray-200">
               <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">-</button>
-              <span class="font-extrabold text-xs w-4 text-center">${item.quantity}</span>
+              <span class="font-black text-xs w-4 text-center">${item.quantity}</span>
               <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">+</button>
             </div>
           </div>
@@ -1538,7 +1558,7 @@
     }
 
     function triggerCartBounce() {
-      const btn = document.querySelector('button[onclick="openCartModal()"]');
+      const btn = document.querySelector('button[title="Sepetim"]');
       if (btn) {
         btn.classList.add('scale-125');
         setTimeout(() => btn.classList.remove('scale-125'), 180);
@@ -1551,7 +1571,6 @@
       const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
       const storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
 
-      // Push to orders
       orders.unshift({
         id: 'ord-' + Math.floor(Math.random() * 900 + 100),
         storeName: storeName,
@@ -1561,12 +1580,10 @@
         statusColor: 'text-amber-600 bg-amber-50 border-amber-200'
       });
 
-      // Clear cart
       cart = [];
       updateCartUI();
       closeCartModal();
 
-      // Refresh Orders Screen & Navigate
       renderOrdersList();
       renderHomeRecentOrders();
       navigateTo('orders');
@@ -1580,10 +1597,10 @@
     function renderOrdersList() {
       const container = document.getElementById('ordersListContainer');
       container.innerHTML = orders.map(ord => `
-        <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm space-y-2">
+        <div class="bg-white rounded-2xl p-3.5 crisp-border shadow-sm space-y-2">
           <div class="flex items-center justify-between">
             <div>
-              <h4 class="font-extrabold text-xs text-gray-900">${ord.storeName}</h4>
+              <h4 class="font-black text-xs text-gray-900">${ord.storeName}</h4>
               <span class="text-[10px] text-gray-400 font-semibold">${ord.date}</span>
             </div>
             <span class="text-[10px] font-black px-2 py-0.5 rounded-md border ${ord.statusColor}">
@@ -1593,7 +1610,7 @@
 
           <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
             <span class="font-black text-sm text-gray-900">${ord.amount} ₺</span>
-            <button onclick="reorderStore('${ord.storeName}')" class="text-xs font-bold text-brand-red hover:underline flex items-center gap-1">
+            <button onclick="reorderStore('${ord.storeName}')" class="tap-effect text-xs font-bold text-brand-red hover:underline flex items-center gap-1">
               <span>Tekrarla</span>
               <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </button>
@@ -1605,9 +1622,9 @@
     function renderHomeRecentOrders() {
       const container = document.getElementById('recentOrdersCarousel');
       container.innerHTML = orders.slice(0, 3).map(ord => `
-        <div class="min-w-[210px] bg-white rounded-2xl p-3 border border-gray-100 shadow-sm space-y-2 shrink-0">
+        <div class="min-w-[210px] bg-white rounded-2xl p-3 crisp-border shadow-sm space-y-2 shrink-0">
           <div class="flex items-center justify-between">
-            <h4 class="font-extrabold text-xs text-gray-900 truncate max-w-[130px]">${ord.storeName}</h4>
+            <h4 class="font-black text-xs text-gray-900 truncate max-w-[130px]">${ord.storeName}</h4>
             <span class="text-[9px] font-black px-1.5 py-0.5 rounded border ${ord.statusColor}">
               ${ord.status}
             </span>
@@ -1615,7 +1632,7 @@
           <span class="text-[10px] text-gray-400 block">${ord.date}</span>
           <div class="flex items-center justify-between pt-1">
             <span class="font-black text-xs text-gray-900">${ord.amount} ₺</span>
-            <button onclick="reorderStore('${ord.storeName}')" class="text-[11px] font-bold text-brand-red hover:underline">
+            <button onclick="reorderStore('${ord.storeName}')" class="tap-effect text-[11px] font-bold text-brand-red hover:underline">
               Tekrarla →
             </button>
           </div>
@@ -1633,7 +1650,7 @@
     function toggleMobileFullView() {
       document.body.classList.toggle('is-fullscreen-mobile');
       const isFull = document.body.classList.contains('is-fullscreen-mobile');
-      document.getElementById('fullscreenToggleText').innerText = isFull ? 'Pencereye Dön' : 'Tam Ekran Yap';
+      document.getElementById('fullscreenToggleText').innerText = isFull ? 'Pencereye Dön' : 'Tam Ekran';
     }
 
     function resetDemoData() {
@@ -1647,7 +1664,6 @@
       navigateTo('home');
     }
 
-    // Update real time status clock
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
@@ -1656,9 +1672,7 @@
     }
     setInterval(updateClock, 10000);
 
-    // ----------------------------------------------------
     // INITIAL BOOTSTRAP
-    // ----------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
       updateClock();
       applyUniversityChange();
