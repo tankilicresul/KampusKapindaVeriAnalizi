@@ -289,6 +289,35 @@
           </div>
         </div>
 
+        <!-- Getir Modeli: Yeni Kullanıcı İlk Sipariş Banner'ı -->
+        <div onclick="claimNewUserDiscount()" class="tap-effect cursor-pointer bg-gradient-to-r from-brand-red via-red-600 to-rose-600 rounded-3xl p-3.5 text-white shadow-md relative overflow-hidden group">
+          <div class="absolute -right-3 -bottom-3 w-20 h-20 rounded-full bg-white/10 blur-lg pointer-events-none"></div>
+          <div class="flex items-center justify-between relative z-10">
+            <div class="space-y-1 pr-2">
+              <div class="flex items-center gap-1.5">
+                <span class="bg-white/20 backdrop-blur-xs text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  🎉 YENİ ÖĞRENCİ FIRSATI
+                </span>
+                <span class="text-amber-300 text-[10px] font-extrabold flex items-center gap-1">
+                  <i class="fa-solid fa-bolt text-[9px]"></i>
+                  <span>İlk Sipariş</span>
+                </span>
+              </div>
+              <h3 class="font-black text-sm md:text-base leading-tight">İlk Siparişine 80 ₺ İndirim!</h3>
+              <p class="text-[10px] text-white/90 leading-tight">Davet koduyla veya <b class="bg-white/20 px-1 py-0.2 rounded font-mono font-black">ILK80</b> ile anında 80 TL kazan.</p>
+            </div>
+            <div class="shrink-0 flex flex-col items-end gap-1">
+              <div class="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center text-xl shadow-inner border border-white/20 group-hover:scale-110 transition-transform">
+                🎁
+              </div>
+              <span class="text-[10px] font-black bg-white text-brand-red px-2.5 py-1 rounded-xl shadow-xs flex items-center gap-1">
+                <span>Kullan</span>
+                <i class="fa-solid fa-arrow-right text-[8px]"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
         <!-- 2 Big Action Tiles: Yemek & Eğlence (Kare / 1:1 Aspect Ratio) -->
         <div class="grid grid-cols-2 gap-3">
           <!-- Yemek Card (Square 1:1) -->
@@ -548,6 +577,53 @@
               <span id="profileUniName" class="text-xs font-bold text-gray-900">Sabancı Üniversitesi</span>
             </div>
             <span class="text-xs font-bold text-brand-red">Değiştir →</span>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ARKADAŞINI DAVET ET (GETİR REFERRAL SİSTEMİ) -->
+        <!-- ========================================== -->
+        <div class="bg-gradient-to-br from-red-50 via-white to-rose-50 rounded-2xl p-4 crisp-border shadow-sm space-y-3">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <div class="flex items-center gap-1.5 text-brand-red font-black text-xs">
+                <i class="fa-solid fa-gift text-sm text-brand-red animate-bounce"></i>
+                <span>Arkadaşını Davet Et, Birlikte Kazan!</span>
+              </div>
+              <p class="text-[11px] text-gray-600 leading-snug">
+                Arkadaşın ilk siparişinde <b class="text-emerald-600 font-extrabold">80 ₺</b>, o sipariş verince sen <b class="text-brand-red font-extrabold">40 ₺</b> indirim kazanırsın!
+              </p>
+            </div>
+          </div>
+
+          <!-- Kişisel Davet Kodu Kutusu -->
+          <div class="bg-white rounded-xl p-2.5 border-2 border-dashed border-red-200 flex items-center justify-between shadow-xs">
+            <div>
+              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider block">KİŞİSEL DAVET KODUN</span>
+              <span id="profileInviteCode" class="font-black text-base tracking-widest text-brand-red font-mono">ASIM80</span>
+            </div>
+            <button onclick="copyInviteCode()" class="tap-effect bg-red-50 hover:bg-brand-red hover:text-white text-brand-red text-xs font-black px-3 py-1.5 rounded-lg border border-red-200 transition flex items-center gap-1">
+              <i class="fa-regular fa-copy text-xs"></i>
+              <span id="copyCodeBtnText">Kodu Kopyala</span>
+            </button>
+          </div>
+
+          <!-- Linki Kopyala Butonu -->
+          <button onclick="copyInviteLink()" class="tap-effect w-full py-2.5 rounded-xl bg-brand-red hover:bg-brand-redHover text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-share-nodes text-xs"></i>
+            <span id="copyLinkBtnText">Davet Linkini Kopyala</span>
+          </button>
+
+          <!-- Davet İstatistikleri (Simülasyon) -->
+          <div class="grid grid-cols-2 gap-2 pt-1 border-t border-red-100/70 text-center">
+            <div class="bg-white/90 p-2 rounded-xl border border-red-100">
+              <span class="text-[9px] text-gray-400 font-bold block">Davet Ettiğin</span>
+              <span id="statFriendsCount" class="font-black text-xs text-gray-900">2 Arkadaş</span>
+            </div>
+            <div class="bg-white/90 p-2 rounded-xl border border-red-100">
+              <span class="text-[9px] text-gray-400 font-bold block">Kazanılan İndirim</span>
+              <span id="statTotalEarned" class="font-black text-xs text-emerald-600">80 ₺ (2 x 40₺)</span>
+            </div>
           </div>
         </div>
 
@@ -1283,18 +1359,10 @@
             </button>
           </div>
 
-          <!-- Hızlı Kupon Önerileri -->
-          <div class="flex items-center gap-1 pt-0.5 overflow-x-auto hide-scrollbar">
+          <!-- Hızlı Kupon Önerileri (Dinamik) -->
+          <div class="flex items-center gap-1 pt-0.5 overflow-x-auto hide-scrollbar" id="quickCouponsList">
             <span class="text-[10px] text-gray-400 font-bold shrink-0">Önerilen:</span>
-            <button onclick="quickApplyCoupon('KAMPUS30')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
-              KAMPUS30 (200₺+)
-            </button>
-            <button onclick="quickApplyCoupon('OGRENCI50')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
-              OGRENCI50 (300₺+)
-            </button>
-            <button onclick="quickApplyCoupon('HOSGELDIN25')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
-              HOSGELDIN25
-            </button>
+            <!-- Populated dynamically via renderQuickCoupons() -->
           </div>
         </div>
 
@@ -1606,9 +1674,19 @@
     let cart = [];
     let orders = [...initialOrders];
     let activeCoupon = null; // Tek kupon kuralı: aynı anda sadece 1 kupon aktif olabilir
+    let userInviteCode = 'ASIM80'; // Kullanıcının kişisel davet kodu
+    let inviteStats = {
+      friendsInvited: 2,
+      totalEarned: 80 // TL (2 x 40 TL)
+    };
+    let usedCoupons = []; // Tek kullanım kuralı: bir kod yalnızca bir kez kullanılabilir
 
-    // Öğrenci Dostu Kupon Veritabanı
+    // Öğrenci Dostu Kupon & Davet Veritabanı
     const promoCoupons = {
+      'ILK80': { code: 'ILK80', minOrder: 200, discount: 80, desc: 'Yeni Kullanıcı: İlk siparişine özel 80 TL indirim!', isOneTime: true },
+      'ASIM80': { code: 'ASIM80', minOrder: 200, discount: 80, desc: 'Arkadaş Daveti: İlk siparişine 80 TL indirim!', isOneTime: true, isInviteCode: true },
+      'DAVET80': { code: 'DAVET80', minOrder: 200, discount: 80, desc: 'Arkadaş Daveti: İlk siparişine 80 TL indirim!', isOneTime: true, isInviteCode: true },
+      'DAVET40': { code: 'DAVET40', minOrder: 150, discount: 40, desc: 'Arkadaşını Getirdin: 40 TL teşekkür indirimi!', isOneTime: true },
       'KAMPUS30': { code: 'KAMPUS30', minOrder: 200, discount: 30, desc: '200 TL ve üzerine 30 TL indirim' },
       'OGRENCI50': { code: 'OGRENCI50', minOrder: 300, discount: 50, desc: '300 TL ve üzerine 50 TL indirim' },
       'HOSGELDIN25': { code: 'HOSGELDIN25', minOrder: 150, discount: 25, desc: '150 TL ve üzerine 25 TL hoş geldin indirimi' },
@@ -2308,6 +2386,7 @@
           </div>
         `).join('');
       }
+      renderQuickCoupons();
     }
 
     // Kupon Yönetimi (Aynı anda tek kupon)
@@ -2331,7 +2410,13 @@
       const coupon = promoCoupons[code];
 
       if (!coupon) {
-        alert(`❌ "${code}" geçersiz bir kupon kodu.\nDeneyebileceğiniz kuponlar: KAMPUS30, OGRENCI50, HOSGELDIN25, VIZE20`);
+        alert(`❌ "${code}" geçersiz bir kupon kodu.\nDeneyebileceğiniz kuponlar: ILK80, ASIM80, KAMPUS30, OGRENCI50, HOSGELDIN25, VIZE20`);
+        return;
+      }
+
+      // TEK KULLANIMLIK KOD KONTROLÜ
+      if (coupon.isOneTime && usedCoupons.includes(code)) {
+        alert(`⚠️ "${code}" kodu daha önce kullanılmıştır!\nBu davet / ilk sipariş kodu tek kullanımlıktır ve her kullanıcı yalnızca 1 kez faydalanabilir.`);
         return;
       }
 
@@ -2352,6 +2437,76 @@
       } else {
         alert(`🎉 "${coupon.code}" kuponu başarıyla uygulandı! (${coupon.desc})`);
       }
+    }
+
+    function renderQuickCoupons() {
+      const container = document.getElementById('quickCouponsList');
+      if (!container) return;
+      const coupons = [
+        { code: 'ILK80', label: 'ILK80 (80₺ İlk Sipariş)' },
+        { code: 'ASIM80', label: 'ASIM80 (80₺ Davet)' },
+        { code: 'KAMPUS30', label: 'KAMPUS30 (200₺+)' },
+        { code: 'OGRENCI50', label: 'OGRENCI50 (300₺+)' },
+        { code: 'HOSGELDIN25', label: 'HOSGELDIN25' },
+        { code: 'VIZE20', label: 'VIZE20' }
+      ];
+      container.innerHTML = `
+        <span class="text-[10px] text-gray-400 font-bold shrink-0">Önerilen:</span>
+        ${coupons.map(c => {
+          const isUsed = usedCoupons.includes(c.code);
+          if (isUsed) {
+            return `<button disabled title="Bu tek kullanımlık kod daha önce kullanılmıştır" class="text-[10px] font-bold text-gray-400 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md transition shrink-0 line-through opacity-50 cursor-not-allowed">${c.code} (Kullanıldı)</button>`;
+          }
+          const isSelected = activeCoupon && activeCoupon.code === c.code;
+          return `<button onclick="quickApplyCoupon('${c.code}')" class="tap-effect text-[10px] font-extrabold ${isSelected ? 'bg-brand-red text-white border-brand-red' : 'text-brand-red bg-white border-red-200 hover:bg-red-50'} border px-2 py-0.5 rounded-md transition shrink-0">${c.label}</button>`;
+        }).join('')}
+      `;
+    }
+
+    // Arkadaşını Davet Et & Referral İşlemleri
+    function copyInviteCode() {
+      const code = userInviteCode || 'ASIM80';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).catch(() => {});
+      }
+      const btn = document.getElementById('copyCodeBtnText');
+      if (btn) {
+        btn.innerText = 'Kopyalandı! ✓';
+        setTimeout(() => { if (btn) btn.innerText = 'Kodu Kopyala'; }, 2000);
+      }
+      alert(`🎉 Davet kodunuz kopyalandı: ${code}\n\nArkadaşınız ilk siparişinde bu kodla 80 ₺ indirim kazanacak! Arkadaşınız sipariş verince size de 40 ₺ indirim tanımlanacak.`);
+    }
+
+    function copyInviteLink() {
+      const code = userInviteCode || 'ASIM80';
+      const link = `https://kampuskapinda.com/davet/${code}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).catch(() => {});
+      }
+      const btn = document.getElementById('copyLinkBtnText');
+      if (btn) {
+        btn.innerText = 'Link Kopyalandı! ✓';
+        setTimeout(() => { if (btn) btn.innerText = 'Davet Linkini Kopyala'; }, 2000);
+      }
+      alert(`🔗 Kişisel davet linkiniz kopyalandı!\n${link}\n\nArkadaşınız bu linkle gelip ilk siparişini verdiğinde o 80 ₺, siz de 40 ₺ indirim kazanacaksınız!`);
+    }
+
+    function claimNewUserDiscount() {
+      if (usedCoupons.includes('ILK80')) {
+        alert('⚠️ "ILK80" ilk sipariş indirimi daha önce kullanılmıştır.\nArkadaşlarınızın davet kodlarını veya diğer kuponları deneyebilirsiniz.');
+        return;
+      }
+      openFoodModule();
+      alert('🎉 80 ₺ İlk Sipariş Fırsatı Aktif!\n\nRestorandan 200 ₺ ve üzeri sepetinizi oluşturduktan sonra sepette "ILK80" kodunu uygulayarak anında 80 ₺ indirim kazanabilirsiniz.');
+    }
+
+    function updateInviteUI() {
+      const codeEl = document.getElementById('profileInviteCode');
+      const friendsEl = document.getElementById('statFriendsCount');
+      const earnedEl = document.getElementById('statTotalEarned');
+      if (codeEl) codeEl.innerText = userInviteCode;
+      if (friendsEl) friendsEl.innerText = `${inviteStats.friendsInvited} Arkadaş`;
+      if (earnedEl) earnedEl.innerText = `${inviteStats.totalEarned} ₺ (${inviteStats.friendsInvited} x 40₺)`;
     }
 
     function removeCoupon() {
@@ -2391,6 +2546,22 @@
       const finalTotal = Math.max(0, subtotal - totalDiscount);
       const storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
 
+      const appliedCoupon = activeCoupon;
+
+      // Tek kullanım kuralı: Tek seferlik kuponlar kullanıldı olarak kaydedilir
+      if (appliedCoupon && appliedCoupon.isOneTime) {
+        if (!usedCoupons.includes(appliedCoupon.code)) {
+          usedCoupons.push(appliedCoupon.code);
+        }
+      }
+
+      // Davet kodu simülasyonu: Davet eden kullanıcı 40 TL kazanır
+      if (appliedCoupon && appliedCoupon.isInviteCode) {
+        inviteStats.friendsInvited += 1;
+        inviteStats.totalEarned += 40;
+        updateInviteUI();
+      }
+
       orders.unshift({
         id: 'ord-' + Math.floor(Math.random() * 900 + 100),
         storeName: storeName,
@@ -2410,7 +2581,11 @@
       renderHomeRecentOrders();
       navigateTo('orders');
 
-      if (totalDiscount > 0) {
+      if (appliedCoupon && appliedCoupon.isInviteCode) {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎁 Davet kodu ile ilk siparişinizde 80 ₺ indirim uygulandı!\n👥 Davet eden arkadaşınıza da 40 ₺ teşekkür indirimi tanımlandı.`);
+      } else if (appliedCoupon && appliedCoupon.code === 'ILK80') {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎁 İlk siparişinize özel 80 ₺ indirim uygulandı!`);
+      } else if (totalDiscount > 0) {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n💰 Toplam Tutar: ₺${finalTotal.toFixed(2)} (₺${totalDiscount.toFixed(2)} indirim uygulandı!)`);
       } else {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı ve hazırlanıyor.`);
@@ -2485,9 +2660,12 @@
     function resetDemoData() {
       cart = [];
       activeCoupon = null;
+      usedCoupons = [];
+      inviteStats = { friendsInvited: 2, totalEarned: 80 };
       orders = [...initialOrders];
       currentUniversity = universitiesData[0];
       applyUniversityChange();
+      updateInviteUI();
       updateCartUI();
       renderOrdersList();
       renderHomeRecentOrders();
@@ -2506,6 +2684,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       updateClock();
       applyUniversityChange();
+      updateInviteUI();
       renderEventsFeed();
       renderOrdersList();
       renderHomeRecentOrders();
