@@ -360,6 +360,36 @@
           </div>
         </div>
 
+        <!-- ========================================== -->
+        <!-- FIRSAT ÇARKI KARTI (GÜNLÜK SPONSOR ÇARKI)   -->
+        <!-- ========================================== -->
+        <div onclick="openWheelModal()" class="tap-effect cursor-pointer bg-gradient-to-r from-amber-500 via-orange-500 to-brand-red rounded-3xl p-3.5 text-white shadow-md relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-white/15 blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between relative z-10">
+            <div class="space-y-1 pr-2">
+              <div class="flex items-center gap-1.5">
+                <span class="bg-white/20 backdrop-blur-xs text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  🎡 GÜNLÜK FIRSAT ÇARKI
+                </span>
+                <span id="homeWheelStatusBadge" class="bg-emerald-500/90 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs animate-pulse">
+                  1 Hakkın Var!
+                </span>
+              </div>
+              <h3 class="font-black text-sm md:text-base leading-tight">Çevir, Kampüs Lezzetleri Kazan!</h3>
+              <p class="text-[10px] text-white/90 leading-tight">Kuzey Döner, Mezesell ve esnaftan 60 TL'ye varan hediyeler.</p>
+            </div>
+            <div class="shrink-0 flex flex-col items-end gap-1">
+              <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30 group-hover:rotate-45 transition-transform duration-500">
+                🎡
+              </div>
+              <span class="text-[10px] font-black bg-white text-orange-600 px-2.5 py-1 rounded-xl shadow-xs flex items-center gap-1">
+                <span>Çevir</span>
+                <i class="fa-solid fa-arrow-right text-[8px]"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
         <!-- Featured Reklam Alanı: 3:5 Aspect Ratio (İstenen Özel Poster Boyutu) -->
         <div class="tap-effect relative rounded-3xl overflow-hidden shadow-sm crisp-border cursor-pointer group aspect-[3/5] w-full" onclick="openEventsModule()">
           <img id="featuredEventBannerImg" src="assets/screenshots/sudans_festival_banner.png" onerror="this.src='https://api.kampuskapinda.com/uploads/events/eadda1c-kk-muy2kkjg.webp'" alt="17 Ekim Sudans Festivali" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
@@ -1332,6 +1362,12 @@
 
         <!-- 2. KUPON KODU ALANI (Aynı Anda Tek Kupon Kuralı) -->
         <div class="bg-gray-50 p-2.5 rounded-2xl border border-gray-100 space-y-2 shrink-0">
+          
+          <!-- Çarkıfelek Sponsor Kuponu Alanı (Kazanılmışsa Görünür) -->
+          <div id="cartWheelSponsorBanner" class="hidden rounded-2xl p-2.5 border transition-all space-y-1.5">
+            <!-- Dynamic Sponsor Voucher Card via updateCartUI() -->
+          </div>
+
           <div class="flex items-center justify-between text-xs">
             <span class="font-extrabold text-gray-800 text-[11px] flex items-center gap-1.5">
               <i class="fa-solid fa-ticket text-brand-red"></i>
@@ -1391,6 +1427,12 @@
             <span id="couponDiscountText" class="font-black">-0.00 ₺</span>
           </div>
 
+          <!-- Sponsor Bilgilendirme Notu (Kupon bir işletme sponsorluğundaysa) -->
+          <div id="rowCouponSponsorNote" class="hidden text-[10px] text-amber-800 font-black bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-xl flex items-center gap-1.5">
+            <span class="text-xs">🤝</span>
+            <span id="couponSponsorNoteText">Bu kuponu Kuzey Döner sponsor oluyor</span>
+          </div>
+
           <div class="flex justify-between text-xs text-gray-600 font-bold">
             <span>Kampüs Teslimat Ücreti</span>
             <span class="text-emerald-600 font-black">Ücretsiz 🎁</span>
@@ -1416,6 +1458,86 @@
           <button onclick="submitOrder()" id="btnCheckout" class="tap-effect w-full py-2.5 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
             <span>Siparişi Onayla & Ver</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 4: GÜNLÜK FIRSAT ÇARKI (SPONSOR ÇARKIFELEK)        -->
+    <!-- ======================================================== -->
+    <div id="wheelModal" class="hidden absolute inset-0 z-50 bg-black/75 backdrop-blur-md flex flex-col justify-end transition-opacity">
+      <div class="bg-white rounded-t-[36px] p-5 space-y-3.5 max-h-[94%] flex flex-col shadow-2xl relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-gray-100 shrink-0">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg shadow-sm">
+              🎡
+            </div>
+            <div>
+              <h3 class="font-black text-base text-gray-900 leading-tight">Günlük Fırsat Çarkı</h3>
+              <p class="text-xs text-gray-500 font-semibold">Kampüs esnafından her gün 1 hediye!</p>
+            </div>
+          </div>
+          <button onclick="closeWheelModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <!-- Wheel Canvas Area -->
+        <div class="flex flex-col items-center justify-center py-2 relative">
+          
+          <!-- Top Needle Pointer -->
+          <div class="absolute -top-1 left-1/2 -translate-x-1/2 z-30 filter drop-shadow-md">
+            <div class="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-brand-red"></div>
+          </div>
+
+          <!-- Wheel Outer Ring -->
+          <div class="relative w-[280px] h-[280px] rounded-full p-2 bg-gradient-to-tr from-amber-400 via-rose-500 to-brand-red shadow-[0_10px_30px_rgba(214,40,40,0.35)] border-4 border-amber-300 flex items-center justify-center overflow-hidden">
+            <!-- Rotating Wheel Disc -->
+            <div id="wheelDisc" class="w-full h-full rounded-full relative transition-transform duration-[3500ms] ease-out" style="transform: rotate(0deg);">
+              <canvas id="wheelCanvas" width="280" height="280" class="w-full h-full rounded-full"></canvas>
+            </div>
+
+            <!-- Center Cap Button -->
+            <button id="wheelSpinBtn" onclick="spinTheWheel()" class="tap-effect absolute z-20 w-16 h-16 rounded-full bg-gradient-to-b from-yellow-300 via-amber-400 to-orange-500 border-4 border-white shadow-xl flex flex-col items-center justify-center text-slate-900 font-black cursor-pointer hover:scale-105 transition-transform">
+              <span class="text-[11px] uppercase tracking-wider font-extrabold leading-none">ÇEVİR</span>
+              <span class="text-[8px] font-bold text-amber-900">1 HAK</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Daily Limit & Status Notice -->
+        <div id="wheelStatusContainer" class="bg-gray-50 rounded-2xl p-3 border border-gray-100 text-center space-y-1 shrink-0">
+          <p id="wheelStatusTitle" class="text-xs font-black text-gray-800 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-clock text-amber-500"></i>
+            <span>Günde 1 kez çevirme hakkın var!</span>
+          </p>
+          <p id="wheelStatusDesc" class="text-[11px] text-gray-500">
+            Kazanılan indirim yalnızca o sponsor işletmede geçerlidir.
+          </p>
+          <!-- Demo Reset Button -->
+          <div class="pt-1">
+            <button onclick="resetWheelDailyLimit()" class="text-[10px] text-gray-400 hover:text-brand-red underline font-bold">
+              🔄 Demo: Çevirme Hakkını Yenile
+            </button>
+          </div>
+        </div>
+
+        <!-- Winning Announcement Banner (Hidden until won) -->
+        <div id="wheelWinnerCard" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-3 space-y-2 shrink-0 animate-fade-in">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🎉</span>
+            <div class="flex-1">
+              <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider block">TEBRİKLER KAZANDINIZ!</span>
+              <h4 id="wheelWonTitle" class="font-black text-xs text-gray-900">Kuzey Döner'de 50 ₺ İndirim</h4>
+              <p id="wheelWonSponsorText" class="text-[10px] font-extrabold text-brand-red flex items-center gap-1 mt-0.5">
+                <span>🤝 Bu kuponu Kuzey Döner sponsor oluyor</span>
+              </p>
+            </div>
+          </div>
+          <button onclick="useWonCouponNow()" class="tap-effect w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-sm transition flex items-center justify-center gap-1.5">
+            <span>Siparişte Kullan →</span>
           </button>
         </div>
 
@@ -2323,9 +2445,25 @@
         if (couponDiscount > 0) {
           rowCoupon.classList.remove('hidden');
           textCoupon.innerText = `-₺${couponDiscount.toFixed(2)}`;
-          labelCoupon.innerText = `Kupon İndirimi (${activeCoupon.code})`;
+          if (activeCoupon && activeCoupon.sponsor) {
+            labelCoupon.innerText = `Sponsor İndirimi (${activeCoupon.sponsor})`;
+          } else {
+            labelCoupon.innerText = `Kupon İndirimi (${activeCoupon.code})`;
+          }
         } else {
           rowCoupon.classList.add('hidden');
+        }
+      }
+
+      // Sponsor Bilgilendirme Notu
+      const rowSponsor = document.getElementById('rowCouponSponsorNote');
+      const textSponsor = document.getElementById('couponSponsorNoteText');
+      if (rowSponsor && textSponsor) {
+        if (couponDiscount > 0 && activeCoupon && activeCoupon.sponsor) {
+          rowSponsor.classList.remove('hidden');
+          textSponsor.innerHTML = `Bu kuponu <b>${activeCoupon.sponsor}</b> sponsor oluyor 🤝`;
+        } else {
+          rowSponsor.classList.add('hidden');
         }
       }
 
@@ -2386,6 +2524,7 @@
           </div>
         `).join('');
       }
+      renderWheelSponsorBannerInCart();
       renderQuickCoupons();
     }
 
@@ -2509,6 +2648,306 @@
       if (earnedEl) earnedEl.innerText = `${inviteStats.totalEarned} ₺ (${inviteStats.friendsInvited} x 40₺)`;
     }
 
+    // ----------------------------------------------------
+    // FIRSAT ÇARKI (WHEEL OF FORTUNE) & SPONSOR KUPONLARI
+    // ----------------------------------------------------
+    const wheelSlices = [
+      { id: 'w-1', label: "Kuzey Döner", reward: "50 ₺ İndirim", store: "Kuzey Döner", discount: 50, color: "#d62828" },
+      { id: 'w-2', label: "Mezesell", reward: "İçecek (30 ₺)", store: "Mezesell", discount: 30, color: "#f59e0b" },
+      { id: 'w-3', label: "Pizza Bulls", reward: "60 ₺ İndirim", store: "Pizza Bulls", discount: 60, color: "#e11d48" },
+      { id: 'w-4', label: "İfteri Bakery", reward: "Tatlı (40 ₺)", store: "İfteri Bakery", discount: 40, color: "#10b981" },
+      { id: 'w-5', label: "Azure", reward: "50 ₺ İndirim", store: "Azure", discount: 50, color: "#2563eb" },
+      { id: 'w-6', label: "Hardal Cafe", reward: "40 ₺ İndirim", store: "Hardal Cafe", discount: 40, color: "#7c3aed" },
+      { id: 'w-7', label: "Pişti Gurme", reward: "50 ₺ İndirim", store: "Pişti Gurme", discount: 50, color: "#ea580c" },
+      { id: 'w-8', label: "K. Kapında", reward: "30 ₺ Joker", store: "Tüm İşletmeler", discount: 30, color: "#0891b2" }
+    ];
+
+    let wheelState = {
+      hasSpunToday: false,
+      isSpinning: false,
+      wonCoupon: null,
+      currentRotation: 0
+    };
+
+    function initWheelCanvas() {
+      const canvas = document.getElementById('wheelCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const numSlices = wheelSlices.length;
+      const arc = (2 * Math.PI) / numSlices;
+      const radius = canvas.width / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      wheelSlices.forEach((slice, i) => {
+        const angle = i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = slice.color;
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius, angle, angle + arc);
+        ctx.lineTo(radius, radius);
+        ctx.fill();
+
+        // White Divider
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Slice Label Text
+        ctx.save();
+        ctx.translate(radius, radius);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 10px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillText(slice.label, radius - 20, -3);
+        ctx.font = "800 9px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#fef08a"; // yellow highlight
+        ctx.fillText(slice.reward, radius - 20, 11);
+        ctx.restore();
+      });
+    }
+
+    function openWheelModal() {
+      const modal = document.getElementById('wheelModal');
+      if (modal) modal.classList.remove('hidden');
+      setTimeout(initWheelCanvas, 50);
+    }
+
+    function closeWheelModal() {
+      const modal = document.getElementById('wheelModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function spinTheWheel() {
+      if (wheelState.isSpinning) return;
+      if (wheelState.hasSpunToday) {
+        alert(`⚠️ Bugünkü çevirme hakkınızı zaten kullandınız!\n\nKazanılan Kuponunuz:\n${wheelState.wonCoupon.store} - ${wheelState.wonCoupon.reward}\n(Bu kuponu ${wheelState.wonCoupon.store} sponsor oluyor 🤝)\n\nYarın yeni bir hediye için tekrar çevirebilirsiniz.`);
+        return;
+      }
+
+      wheelState.isSpinning = true;
+      const spinBtn = document.getElementById('wheelSpinBtn');
+      if (spinBtn) spinBtn.disabled = true;
+
+      // Pick winning slice
+      const winningIndex = Math.floor(Math.random() * wheelSlices.length);
+      const winningSlice = wheelSlices[winningIndex];
+
+      const sliceCenter = (winningIndex * 45) + 22.5;
+      const extraSpins = 5 * 360; // 5 full rotations
+      const targetDelta = ((270 - sliceCenter - (wheelState.currentRotation % 360) + 720) % 360);
+      wheelState.currentRotation += extraSpins + targetDelta;
+
+      const disc = document.getElementById('wheelDisc');
+      if (disc) {
+        disc.style.transition = 'transform 3.5s cubic-bezier(0.15, 0.9, 0.25, 1)';
+        disc.style.transform = `rotate(${wheelState.currentRotation}deg)`;
+      }
+
+      setTimeout(() => {
+        wheelState.isSpinning = false;
+        wheelState.hasSpunToday = true;
+        wheelState.wonCoupon = {
+          ...winningSlice,
+          code: 'CARK-' + winningSlice.store.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8),
+          used: false
+        };
+
+        // Update home badge
+        const homeBadge = document.getElementById('homeWheelStatusBadge');
+        if (homeBadge) {
+          homeBadge.innerText = 'Bugün Çevrildi ✓';
+          homeBadge.className = 'bg-gray-400 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs';
+        }
+
+        // Show winner card in modal
+        const winnerCard = document.getElementById('wheelWinnerCard');
+        const wonTitle = document.getElementById('wheelWonTitle');
+        const wonSponsor = document.getElementById('wheelWonSponsorText');
+        if (wonTitle) wonTitle.innerText = `${winningSlice.store} - ${winningSlice.reward}`;
+        if (wonSponsor) wonSponsor.innerHTML = `🤝 Bu kuponu <b>${winningSlice.store}</b> sponsor oluyor`;
+        if (winnerCard) winnerCard.classList.remove('hidden');
+
+        // Update wheel status title
+        const statusTitle = document.getElementById('wheelStatusTitle');
+        if (statusTitle) {
+          statusTitle.innerHTML = `<span class="text-emerald-600 font-black">✓ Bugünkü hakkını kullandın: ${winningSlice.store} kazandın!</span>`;
+        }
+
+        if (spinBtn) {
+          spinBtn.disabled = false;
+          spinBtn.innerHTML = `<span class="text-[9px] font-extrabold text-gray-400">YARIN</span><span class="text-[8px] font-bold text-gray-400">GEL</span>`;
+        }
+
+        updateCartUI();
+
+        alert(`🎉 TEBRİKLER!\n\n${winningSlice.store} - ${winningSlice.reward} kazandınız!\n\n🤝 Bu kuponu ${winningSlice.store} sponsor oluyor.\nKuponunuz sepet ekranında kullanıma hazır!`);
+      }, 3600);
+    }
+
+    function applyWheelCoupon() {
+      if (!wheelState.wonCoupon || wheelState.wonCoupon.used) {
+        alert('Kullanılabilir çark kuponunuz bulunmuyor.');
+        return;
+      }
+      const coupon = wheelState.wonCoupon;
+
+      // Restoran kontrolü
+      const currentStoreName = currentActiveStore ? currentActiveStore.name : '';
+      const isUniversal = coupon.store === 'Tüm İşletmeler';
+      const isStoreMatch = isUniversal || (currentStoreName && currentStoreName.toLowerCase().includes(coupon.store.toLowerCase()));
+
+      if (!isStoreMatch) {
+        alert(`⚠️ Bu kupon yalnızca "${coupon.store}" siparişlerinde geçerlidir!\n\nŞu anki restoran: ${currentStoreName || 'Seçilmedi'}\n\nLütfen "${coupon.store}" menüsünden sipariş veriniz.`);
+        return;
+      }
+
+      // Sepet kontrolü
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      if (subtotal < coupon.discount) {
+        alert(`⚠️ Sepet tutarınız en az ${coupon.discount} ₺ olmalıdır.`);
+        return;
+      }
+
+      // Kupon olarak uygula
+      activeCoupon = {
+        code: coupon.code,
+        discount: coupon.discount,
+        desc: `${coupon.store} Sponsor İndirimi (${coupon.reward})`,
+        minOrder: coupon.discount,
+        sponsor: coupon.store,
+        isWheelCoupon: true
+      };
+
+      updateCartUI();
+      alert(`🎉 "${coupon.store}" sponsor kuponu başarıyla uygulandı!\n💰 ${coupon.discount} ₺ indirim sepete yansıtıldı.\n🤝 Bu kuponu ${coupon.store} sponsor oluyor.`);
+    }
+
+    function useWonCouponNow() {
+      closeWheelModal();
+      if (!wheelState.wonCoupon) return;
+      const targetStore = wheelState.wonCoupon.store;
+      if (targetStore === 'Tüm İşletmeler') {
+        navigateTo('stores');
+        return;
+      }
+      // Find store by name
+      const allStores = [];
+      if (typeof storesData !== 'undefined') {
+        Object.values(storesData).forEach(u => {
+          if (u.ici) allStores.push(...u.ici);
+          if (u.cevresi) allStores.push(...u.cevresi);
+        });
+      }
+      const found = allStores.find(s => s.name.toLowerCase().includes(targetStore.toLowerCase()));
+      if (found) {
+        openStoreMenu(found.id);
+        alert(`🍽️ ${found.name} menüsüne yönlendirildiniz!\nSepetinize ürün ekleyip ₺${wheelState.wonCoupon.discount} sponsor indiriminizi kullanabilirsiniz.`);
+      } else {
+        navigateTo('stores');
+      }
+    }
+
+    function resetWheelDailyLimit(silent = false) {
+      wheelState.hasSpunToday = false;
+      wheelState.wonCoupon = null;
+      wheelState.isSpinning = false;
+      const homeBadge = document.getElementById('homeWheelStatusBadge');
+      if (homeBadge) {
+        homeBadge.innerText = '1 Hakkın Var!';
+        homeBadge.className = 'bg-emerald-500/90 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs animate-pulse';
+      }
+      const winnerCard = document.getElementById('wheelWinnerCard');
+      if (winnerCard) winnerCard.classList.add('hidden');
+      const statusTitle = document.getElementById('wheelStatusTitle');
+      if (statusTitle) {
+        statusTitle.innerHTML = `<i class="fa-solid fa-clock text-amber-500"></i> <span>Günde 1 kez çevirme hakkın var!</span>`;
+      }
+      const spinBtn = document.getElementById('wheelSpinBtn');
+      if (spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.innerHTML = `<span class="text-[11px] uppercase tracking-wider font-extrabold leading-none">ÇEVİR</span><span class="text-[8px] font-bold text-amber-900">1 HAK</span>`;
+      }
+      updateCartUI();
+      if (!silent) {
+        alert('🔄 Günlük çevirme hakkı sıfırlandı! Çarkı tekrar çevirebilirsiniz.');
+      }
+    }
+
+    function renderWheelSponsorBannerInCart() {
+      const banner = document.getElementById('cartWheelSponsorBanner');
+      if (!banner) return;
+      if (!wheelState.wonCoupon || wheelState.wonCoupon.used) {
+        banner.classList.add('hidden');
+        return;
+      }
+
+      banner.classList.remove('hidden');
+      const coupon = wheelState.wonCoupon;
+      const currentStoreName = currentActiveStore ? currentActiveStore.name : '';
+      const isUniversal = coupon.store === 'Tüm İşletmeler';
+      const isStoreMatch = isUniversal || (currentStoreName && currentStoreName.toLowerCase().includes(coupon.store.toLowerCase()));
+      const isApplied = activeCoupon && activeCoupon.isWheelCoupon;
+
+      if (isStoreMatch) {
+        banner.className = "rounded-2xl p-3 border bg-gradient-to-r from-amber-50 to-orange-50 border-amber-300 shadow-xs space-y-1.5";
+        banner.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-black text-amber-900 bg-amber-200/90 px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span>🎡 Fırsat Çarkı</span> · <span>${coupon.reward}</span>
+            </span>
+            <span class="text-[9px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">
+              ✓ Bu Restoranda Geçerli
+            </span>
+          </div>
+          <div class="flex items-center justify-between pt-0.5">
+            <div>
+              <h5 class="font-extrabold text-xs text-gray-900">${coupon.store} - ${coupon.reward}</h5>
+              <p class="text-[10px] font-extrabold text-brand-red flex items-center gap-1">
+                <span>🤝 Bu kuponu <b>${coupon.store}</b> sponsor oluyor</span>
+              </p>
+            </div>
+            <div>
+              ${isApplied ? `
+                <div class="flex items-center gap-1">
+                  <span class="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-lg border border-emerald-300">Uygulandı ✓</span>
+                  <button onclick="removeCoupon()" class="text-red-500 font-bold underline text-[9px]">Kaldır</button>
+                </div>
+              ` : `
+                <button onclick="applyWheelCoupon()" class="tap-effect bg-brand-red hover:bg-brand-redHover text-white font-extrabold text-[11px] px-3 py-1.5 rounded-xl shadow-xs transition">
+                  Kullan (-${coupon.discount} ₺)
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      } else {
+        banner.className = "rounded-2xl p-3 border bg-gray-50 border-gray-200 opacity-90 space-y-1.5";
+        banner.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-black text-gray-600 bg-gray-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+              🎡 Çark Kuponu
+            </span>
+            <span class="text-[9px] font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+              ⚠️ Yalnızca ${coupon.store}'de Geçerlidir
+            </span>
+          </div>
+          <div class="flex items-center justify-between pt-0.5">
+            <div>
+              <h5 class="font-bold text-xs text-gray-700">${coupon.store} - ${coupon.reward}</h5>
+              <p class="text-[10px] text-gray-500">
+                🤝 Bu kuponu <b>${coupon.store}</b> sponsor oluyor
+              </p>
+            </div>
+            <button onclick="alert('⚠️ Bu kuponu ${coupon.store} sponsor olmaktadır!\\n\\nŞu anki sepet: ${currentStoreName || 'Farklı restoran'}\\nBu kupon yalnızca ${coupon.store} menüsünden verilen siparişlerde geçerlidir.')" class="text-[10px] font-bold text-gray-400 bg-gray-200 px-2.5 py-1 rounded-xl cursor-not-allowed">
+              Burada Geçersiz
+            </button>
+          </div>
+        `;
+      }
+    }
+
     function removeCoupon() {
       activeCoupon = null;
       updateCartUI();
@@ -2555,6 +2994,13 @@
         }
       }
 
+      // Çark kuponu kullanıldıysa işaretle (tekrar kullanılamaz)
+      if (appliedCoupon && appliedCoupon.isWheelCoupon) {
+        if (wheelState.wonCoupon) {
+          wheelState.wonCoupon.used = true;
+        }
+      }
+
       // Davet kodu simülasyonu: Davet eden kullanıcı 40 TL kazanır
       if (appliedCoupon && appliedCoupon.isInviteCode) {
         inviteStats.friendsInvited += 1;
@@ -2581,7 +3027,9 @@
       renderHomeRecentOrders();
       navigateTo('orders');
 
-      if (appliedCoupon && appliedCoupon.isInviteCode) {
+      if (appliedCoupon && appliedCoupon.isWheelCoupon) {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎡 Çark kuponu indirimi (-₺${appliedCoupon.discount}) uygulandı!\n🤝 Bu kuponu ${appliedCoupon.sponsor} sponsor oldu. Afiyet olsun!`);
+      } else if (appliedCoupon && appliedCoupon.isInviteCode) {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎁 Davet kodu ile ilk siparişinizde 80 ₺ indirim uygulandı!\n👥 Davet eden arkadaşınıza da 40 ₺ teşekkür indirimi tanımlandı.`);
       } else if (appliedCoupon && appliedCoupon.code === 'ILK80') {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎁 İlk siparişinize özel 80 ₺ indirim uygulandı!`);
@@ -2664,6 +3112,7 @@
       inviteStats = { friendsInvited: 2, totalEarned: 80 };
       orders = [...initialOrders];
       currentUniversity = universitiesData[0];
+      resetWheelDailyLimit(true);
       applyUniversityChange();
       updateInviteUI();
       updateCartUI();
@@ -2688,6 +3137,7 @@
       renderEventsFeed();
       renderOrdersList();
       renderHomeRecentOrders();
+      initWheelCanvas();
       updateCartUI();
     });
   </script>
