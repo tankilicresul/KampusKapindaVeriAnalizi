@@ -1423,6 +1423,68 @@
           <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
         </div>
 
+        <!-- GRUP SİPARİŞİ KONTROL ÇUBUĞU & DAVET ALANI -->
+        <div id="groupOrderContainer" class="rounded-2xl border border-red-100 transition-all overflow-hidden shrink-0 bg-white shadow-2xs">
+          <!-- Toggle Bar -->
+          <div class="p-2.5 bg-gradient-to-r from-red-50 via-rose-50 to-orange-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-xl bg-brand-red text-white flex items-center justify-center text-xs font-black shadow-xs">
+                👥
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <h4 class="font-black text-xs text-gray-900 leading-tight">Grup Siparişi</h4>
+                  <span id="groupOrderActivePill" class="hidden text-[8px] font-black uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-full border border-emerald-200">AKTİF</span>
+                </div>
+                <p class="text-[10px] text-gray-500 font-semibold" id="groupOrderSubStatus">Arkadaşlarını davet et, sepeti ve teslimatı bölüş</p>
+              </div>
+            </div>
+            <button id="btnToggleGroupOrder" onclick="toggleGroupOrderMode()" class="tap-effect text-xs font-black px-3 py-1.5 rounded-xl border transition shadow-xs flex items-center gap-1.5 bg-brand-red text-white hover:bg-brand-redHover">
+              <i class="fa-solid fa-users text-[10px]"></i>
+              <span id="btnToggleGroupOrderText">Birlikte Sipariş Ver</span>
+            </button>
+          </div>
+
+          <!-- Active Group Panel (Hidden when inactive) -->
+          <div id="groupOrderActivePanel" class="hidden p-2.5 space-y-2 border-t border-red-100 bg-white">
+            <!-- Davet Linki Alanı -->
+            <div class="bg-gray-50 rounded-xl p-2 border border-gray-200/80 space-y-1.5">
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="font-extrabold text-gray-700 flex items-center gap-1">
+                  <i class="fa-solid fa-link text-brand-red"></i>
+                  <span>Grup Davet Bağlantısı</span>
+                </span>
+                <span class="text-[9px] font-bold text-gray-400 font-mono" id="groupCodeBadge">KOD: KK-8492</span>
+              </div>
+              <div class="flex gap-1.5">
+                <input type="text" readonly id="groupInviteLinkInput" value="https://kampuskapinda.com/grup/KK-8492" class="flex-1 bg-white border border-gray-200 rounded-lg px-2.5 py-1 text-[11px] font-mono text-gray-700 select-all focus:outline-none">
+                <button onclick="copyGroupInviteLink()" class="tap-effect bg-gray-900 hover:bg-black text-white px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 flex items-center gap-1 transition">
+                  <i class="fa-regular fa-copy text-[10px]"></i>
+                  <span id="copyGroupLinkBtnText">Kopyala</span>
+                </button>
+                <button onclick="shareGroupViaWhatsApp()" title="WhatsApp ile Arkadaşlarına Gönder" class="tap-effect bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs font-black shrink-0 transition flex items-center gap-1">
+                  <i class="fa-brands fa-whatsapp text-sm"></i>
+                  <span class="text-[10px]">Paylaş</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sahte Arkadaş Ekleme Simülasyonu -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="font-black text-gray-700 flex items-center gap-1">
+                  <i class="fa-solid fa-user-plus text-amber-500"></i>
+                  <span>Simülasyon: Sahte Arkadaş Ekle</span>
+                </span>
+                <span class="text-[9px] text-brand-red font-black" id="groupMembersCountBadge">3 Kişi Katıldı</span>
+              </div>
+              <div class="flex gap-1.5 overflow-x-auto hide-scrollbar pt-0.5" id="simFriendsActionButtons">
+                <!-- Dynamic Quick Add Friend Buttons -->
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 1. KAMPANYA EŞİK İLERLEME ÇUBUĞU (Öğrenciye Uygun Düşük Eşikler) -->
         <div id="cartThresholdBanner" class="bg-red-50/80 border border-red-100 rounded-2xl p-2.5 space-y-1.5 shrink-0 transition-all">
           <div class="flex items-center justify-between text-xs">
@@ -1529,9 +1591,10 @@
             <span id="couponSponsorNoteText">Bu kuponu Kuzey Döner sponsor oluyor</span>
           </div>
 
-          <div class="flex justify-between text-xs text-gray-600 font-bold">
-            <span>Kampüs Teslimat Ücreti</span>
-            <span class="text-emerald-600 font-black">Ücretsiz 🎁</span>
+          <!-- Teslimat Ücreti Satırı -->
+          <div class="flex justify-between text-xs text-gray-600 font-bold" id="rowDeliveryFee">
+            <span id="labelDeliveryFee">Kampüs Teslimat Ücreti</span>
+            <span id="textDeliveryFee" class="text-emerald-600 font-black">Ücretsiz 🎁</span>
           </div>
 
           <!-- Toplam Tasarruf Rozeti -->
@@ -1540,10 +1603,20 @@
             <span id="totalSavingsText">0.00 ₺</span>
           </div>
 
+          <!-- Grup Siparişi Kişi Başı Hesap Paylaşımı (Split Bill) -->
+          <div id="rowGroupSplitBill" class="hidden bg-gradient-to-br from-amber-50/90 to-orange-50/70 border border-amber-200/90 rounded-2xl p-2.5 space-y-2">
+            <!-- Dynamic split breakdown populated in updateCartUI() -->
+          </div>
+
+          <!-- Minimum Sepet Tutarı Durumu (Grup Ortak Toplamı) -->
+          <div id="groupMinOrderNotice" class="hidden p-2.5 rounded-xl text-[10px] font-extrabold flex items-center justify-between">
+            <!-- Dynamic text e.g. "Ortak sepetle min. 250 TL aşıldı! ✓" -->
+          </div>
+
           <div class="flex justify-between items-center text-sm font-black text-gray-900 pt-1 border-t border-dashed border-gray-200">
             <div>
-              <span class="block text-xs font-black text-gray-900">Ödenecek Tutar</span>
-              <span class="text-[9px] text-gray-400 font-normal">Şeffaf fiyatlandırma, ek ücret yok</span>
+              <span class="block text-xs font-black text-gray-900" id="cartTotalHeading">Ödenecek Tutar</span>
+              <span class="text-[9px] text-gray-400 font-normal" id="cartTotalSubheading">Şeffaf fiyatlandırma, ek ücret yok</span>
             </div>
             <div class="text-right">
               <span id="cartOldTotalText" class="hidden text-xs text-gray-400 line-through mr-1 font-bold">0.00 ₺</span>
@@ -1552,7 +1625,7 @@
           </div>
 
           <button onclick="submitOrder()" id="btnCheckout" class="tap-effect w-full py-2.5 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
-            <span>Siparişi Onayla & Ver</span>
+            <span id="btnCheckoutText">Siparişi Onayla & Ver</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
@@ -1910,6 +1983,56 @@
       rewardCode: 'VIZE50',
       rewardDiscount: 50,
       minOrder: 150
+    };
+
+    // Grup Siparişi (Group Order) State
+    let groupOrderState = {
+      isActive: false,
+      code: 'KK-8492',
+      inviteLink: 'https://kampuskapinda.com/grup/KK-8492',
+      deliveryFee: 30, // 30 TL grup teslimat ücreti kişilere eşit bölünür
+      members: [
+        {
+          id: 'me',
+          name: 'Sen (Asım)',
+          isHost: true,
+          avatar: 'A',
+          avatarBg: 'bg-brand-red text-white',
+          items: []
+        }
+      ],
+      // Sahte arkadaşlar simülasyon şablonları
+      simFriendsTemplates: [
+        {
+          id: 'friend-berke',
+          name: 'Berke',
+          avatar: 'B',
+          avatarBg: 'bg-blue-600 text-white',
+          items: [
+            { id: 'f-1', title: 'Tombik Tavuk Döner', price: 150, quantity: 1 },
+            { id: 'f-2', title: 'Kutu Coca-Cola', price: 40, quantity: 1 }
+          ]
+        },
+        {
+          id: 'friend-zeynep',
+          name: 'Zeynep',
+          avatar: 'Z',
+          avatarBg: 'bg-emerald-600 text-white',
+          items: [
+            { id: 'f-3', title: 'Tavuklu Nohutlu Pilav', price: 130, quantity: 1 },
+            { id: 'f-4', title: 'Büyük Ayran', price: 25, quantity: 1 }
+          ]
+        },
+        {
+          id: 'friend-can',
+          name: 'Can',
+          avatar: 'C',
+          avatarBg: 'bg-purple-600 text-white',
+          items: [
+            { id: 'f-5', title: 'Kaşarlı Bazlama Tost & Çay', price: 110, quantity: 1 }
+          ]
+        }
+      ]
     };
 
     // Öğrenci Dostu Kupon & Davet Veritabanı
@@ -2440,17 +2563,36 @@
     }
 
     function updateCartUI() {
-      const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
-      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      // Grup siparişi aktifse kendi sepetimizi üye 0 (Sen) ile eşitle
+      if (groupOrderState.isActive) {
+        const myMember = groupOrderState.members.find(m => m.id === 'me');
+        if (myMember) {
+          myMember.items = cart.map(i => ({ ...i }));
+        }
+      }
 
-      // 1. EŞİK İNDİRİMİ HESAPLAMA (Getir Modeli Öğrenci Eşikleri)
-      // Eşik 1: 200 TL'ye 30 TL indirim | Eşik 2: 300 TL'ye 50 TL indirim
+      // Sepet sayı ve tutar hesaplamaları
+      let totalCount = 0;
+      let subtotal = 0;
+
+      if (groupOrderState.isActive) {
+        groupOrderState.members.forEach(m => {
+          m.items.forEach(i => {
+            totalCount += i.quantity;
+            subtotal += (i.price * i.quantity);
+          });
+        });
+      } else {
+        totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+        subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      }
+
+      // 1. EŞİK İNDİRİMİ HESAPLAMA (Ortak veya bireysel subtotal üzerinden)
       let thresholdDiscount = 0;
       const banner = document.getElementById('cartThresholdBanner');
       const msgText = document.getElementById('thresholdMessageText');
       const badge = document.getElementById('thresholdBadge');
       const progressBar = document.getElementById('thresholdProgressBar');
-      const icon = document.getElementById('thresholdIcon');
       const step1 = document.getElementById('stepMarker1');
       const step2 = document.getElementById('stepMarker2');
 
@@ -2468,7 +2610,7 @@
         const remaining = 200 - subtotal;
         const pct = Math.max(4, Math.min(66, Math.round((subtotal / 300) * 100)));
         if (banner) banner.classList.remove('opacity-60');
-        if (msgText) msgText.innerHTML = `Eşiğe <b>${remaining.toFixed(0)} TL</b> kaldı, <b>30 TL</b> indirim kazan! 🔥`;
+        if (msgText) msgText.innerHTML = `${groupOrderState.isActive ? 'Ortak eşiğe' : 'Eşiğe'} <b>${remaining.toFixed(0)} TL</b> kaldı, <b>30 TL</b> indirim kazan! 🔥`;
         if (badge) badge.innerText = `Eşik 1: 200 ₺`;
         if (progressBar) {
           progressBar.style.width = `${pct}%`;
@@ -2525,9 +2667,26 @@
         if (couponInputContainer) couponInputContainer.classList.remove('hidden');
       }
 
-      // 3. TOPLAMLAR VE ŞEFFAF İNDİRİM HESABI
+      // 3. TESLİMAT ÜCRETİ VE DAĞILIMI
+      const labelDelivery = document.getElementById('labelDeliveryFee');
+      const textDelivery = document.getElementById('textDeliveryFee');
+      let currentDeliveryFee = 0;
+
+      if (groupOrderState.isActive) {
+        const numMembers = groupOrderState.members.length;
+        currentDeliveryFee = groupOrderState.deliveryFee;
+        const deliveryPerPerson = currentDeliveryFee / numMembers;
+        if (labelDelivery) labelDelivery.innerHTML = `Ortak Teslimat (Kişi Başı ₺${deliveryPerPerson.toFixed(2)})`;
+        if (textDelivery) textDelivery.innerHTML = `<span class="text-gray-900 font-black">₺${currentDeliveryFee.toFixed(2)}</span>`;
+      } else {
+        currentDeliveryFee = 0;
+        if (labelDelivery) labelDelivery.innerText = "Kampüs Teslimat Ücreti";
+        if (textDelivery) textDelivery.innerHTML = `<span class="text-emerald-600 font-black">Ücretsiz 🎁</span>`;
+      }
+
+      // 4. TOPLAMLAR VE ŞEFFAF İNDİRİM HESABI
       const totalDiscount = thresholdDiscount + couponDiscount;
-      const finalTotal = Math.max(0, subtotal - totalDiscount);
+      const finalTotal = Math.max(0, subtotal + currentDeliveryFee - totalDiscount);
 
       document.getElementById('floatingCartBadge').innerText = totalCount;
       document.getElementById('profileCartCount').innerText = `${totalCount} Ürün`;
@@ -2595,7 +2754,7 @@
       if (oldTotalEl) {
         if (totalDiscount > 0) {
           oldTotalEl.classList.remove('hidden');
-          oldTotalEl.innerText = `₺${subtotal.toFixed(2)}`;
+          oldTotalEl.innerText = `₺${(subtotal + currentDeliveryFee).toFixed(2)}`;
         } else {
           oldTotalEl.classList.add('hidden');
         }
@@ -2604,36 +2763,191 @@
         totalEl.innerText = `₺${finalTotal.toFixed(2)}`;
       }
 
-      // Sepet Ürün Listesi
-      const list = document.getElementById('cartItemsList');
-      if (cart.length === 0) {
-        list.innerHTML = `
-          <div class="py-6 text-center space-y-1.5">
-            <span class="text-3xl">🛒</span>
-            <p class="font-bold text-gray-600 text-xs">Sepetin henüz boş</p>
-            <p class="text-[11px] text-gray-400">Restorandan lezzetli ürünler ekleyebilirsin.</p>
-          </div>
-        `;
-        document.getElementById('btnCheckout').disabled = true;
-        document.getElementById('btnCheckout').classList.add('opacity-50');
-      } else {
-        document.getElementById('btnCheckout').disabled = false;
-        document.getElementById('btnCheckout').classList.remove('opacity-50');
+      // 5. KİŞİ BAŞI HESAP PAYLAŞIMI (SPLIT BILL)
+      const splitBillContainer = document.getElementById('rowGroupSplitBill');
+      if (splitBillContainer) {
+        if (groupOrderState.isActive && groupOrderState.members.length > 0) {
+          splitBillContainer.classList.remove('hidden');
+          const numMembers = groupOrderState.members.length;
+          const deliveryPerPerson = currentDeliveryFee / numMembers;
+          const discountPerPerson = totalDiscount / numMembers;
 
-        list.innerHTML = cart.map(item => `
-          <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-100 text-xs">
-            <div class="flex-1 pr-2">
-              <h5 class="font-bold text-gray-900 truncate max-w-[170px]">${item.title}</h5>
-              <span class="text-brand-red font-black text-[11px]">₺${(item.price * item.quantity).toFixed(2)}</span>
+          splitBillContainer.innerHTML = `
+            <div class="flex items-center justify-between text-xs pb-1 border-b border-amber-200/60">
+              <span class="font-black text-amber-950 flex items-center gap-1.5">
+                <i class="fa-solid fa-calculator text-amber-600"></i>
+                <span>Kişi Başı Hesap Paylaşımı (Alman Usulü)</span>
+              </span>
+              <span class="text-[9px] font-black bg-white px-2 py-0.5 rounded-full text-amber-900 border border-amber-300">
+                ${numMembers} Kişi
+              </span>
             </div>
-            <div class="flex items-center gap-1.5 bg-white px-2 py-1 rounded-lg border border-gray-200 shrink-0">
-              <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">-</button>
-              <span class="font-black text-xs w-4 text-center">${item.quantity}</span>
-              <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">+</button>
+            <div class="space-y-1.5 pt-0.5">
+              ${groupOrderState.members.map(m => {
+                const mSubtotal = m.items.reduce((s, i) => s + (i.price * i.quantity), 0);
+                const mPay = Math.max(0, mSubtotal + deliveryPerPerson - discountPerPerson);
+                return `
+                  <div class="bg-white/95 p-2 rounded-xl border border-amber-200/80 flex items-center justify-between shadow-2xs">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full ${m.avatarBg} text-[10px] font-black flex items-center justify-center shrink-0">
+                        ${m.avatar}
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-1">
+                          <span class="font-extrabold text-gray-900 text-xs">${m.name}</span>
+                          ${m.isHost ? '<span class="text-[8px] bg-red-100 text-brand-red font-black px-1 rounded">Yönetici</span>' : ''}
+                        </div>
+                        <span class="text-[9px] text-gray-500 font-medium block">
+                          Ürün: ₺${mSubtotal.toFixed(0)} · Teslimat: +₺${deliveryPerPerson.toFixed(0)}${discountPerPerson > 0 ? ` · İndirim: -₺${discountPerPerson.toFixed(1)}` : ''}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <span class="font-black text-xs text-brand-red">₺${mPay.toFixed(2)}</span>
+                      <span class="text-[8px] text-gray-400 block font-normal leading-tight">Kişi Payı</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
             </div>
-          </div>
-        `).join('');
+          `;
+        } else {
+          splitBillContainer.classList.add('hidden');
+        }
       }
+
+      // 6. MİNİMUM SEPET TUTARI KONTROLÜ
+      const minOrderNotice = document.getElementById('groupMinOrderNotice');
+      const storeMinOrder = currentActiveStore && currentActiveStore.minOrder ? (parseInt(currentActiveStore.minOrder.replace(/[^0-9]/g, '')) || 200) : 200;
+
+      if (groupOrderState.isActive) {
+        if (minOrderNotice) {
+          minOrderNotice.classList.remove('hidden');
+          if (subtotal >= storeMinOrder) {
+            minOrderNotice.className = "bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-[10px] text-emerald-800 font-extrabold flex items-center justify-between";
+            minOrderNotice.innerHTML = `
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
+                <span>Restoran minimum sipariş tutarı (₺${storeMinOrder}) ortak sepetle aşıldı!</span>
+              </div>
+              <span class="text-[9px] bg-emerald-200/80 px-2 py-0.5 rounded-full text-emerald-900 font-black">Sepet: ₺${subtotal.toFixed(0)}</span>
+            `;
+          } else {
+            const missing = storeMinOrder - subtotal;
+            minOrderNotice.className = "bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-[10px] text-amber-800 font-extrabold flex items-center justify-between";
+            minOrderNotice.innerHTML = `
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-exclamation text-amber-600 text-xs"></i>
+                <span>Ortak sepet ₺${subtotal.toFixed(0)}. Minimum ₺${storeMinOrder} için arkadaşlarınla ₺${missing.toFixed(0)} daha ekleyin.</span>
+              </div>
+            `;
+          }
+        }
+      } else {
+        if (minOrderNotice) minOrderNotice.classList.add('hidden');
+      }
+
+      // 7. SEPET ÜRÜNLERİ LİSTESİ (Bireysel veya Grup Kırılımı)
+      const list = document.getElementById('cartItemsList');
+      const btnCheckout = document.getElementById('btnCheckout');
+      const btnCheckoutText = document.getElementById('btnCheckoutText');
+
+      if (!groupOrderState.isActive) {
+        // Standart Tekil Sepet
+        if (cart.length === 0) {
+          list.innerHTML = `
+            <div class="py-6 text-center space-y-1.5">
+              <span class="text-3xl">🛒</span>
+              <p class="font-bold text-gray-600 text-xs">Sepetin henüz boş</p>
+              <p class="text-[11px] text-gray-400">Restorandan lezzetli ürünler ekleyebilirsin.</p>
+            </div>
+          `;
+          btnCheckout.disabled = true;
+          btnCheckout.classList.add('opacity-50');
+        } else {
+          btnCheckout.disabled = false;
+          btnCheckout.classList.remove('opacity-50');
+          if (btnCheckoutText) btnCheckoutText.innerText = "Siparişi Onayla & Ver";
+
+          list.innerHTML = cart.map(item => `
+            <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-100 text-xs">
+              <div class="flex-1 pr-2">
+                <h5 class="font-bold text-gray-900 truncate max-w-[170px]">${item.title}</h5>
+                <span class="text-brand-red font-black text-[11px]">₺${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 bg-white px-2 py-1 rounded-lg border border-gray-200 shrink-0">
+                <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">-</button>
+                <span class="font-black text-xs w-4 text-center">${item.quantity}</span>
+                <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">+</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      } else {
+        // Grup Siparişi Modu: Kişilere göre gruplanmış ürünler
+        if (totalCount === 0) {
+          list.innerHTML = `
+            <div class="py-6 text-center space-y-1.5">
+              <span class="text-3xl">👥</span>
+              <p class="font-bold text-gray-600 text-xs">Grupta henüz ürün yok</p>
+              <p class="text-[11px] text-gray-400">Menüden ürün ekleyebilir veya sahte arkadaş ekleyerek deneyebilirsiniz.</p>
+            </div>
+          `;
+          btnCheckout.disabled = true;
+          btnCheckout.classList.add('opacity-50');
+        } else {
+          btnCheckout.disabled = false;
+          btnCheckout.classList.remove('opacity-50');
+          if (btnCheckoutText) {
+            btnCheckoutText.innerText = `Grup Siparişini Ver (${groupOrderState.members.length} Kişi · ₺${finalTotal.toFixed(2)})`;
+          }
+
+          list.innerHTML = groupOrderState.members.map(m => {
+            const mSubtotal = m.items.reduce((s, i) => s + (i.price * i.quantity), 0);
+            return `
+              <div class="bg-gray-50/90 rounded-2xl p-2.5 border border-gray-200 space-y-1.5 mb-2">
+                <div class="flex items-center justify-between pb-1 border-b border-gray-200">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full ${m.avatarBg} text-[9px] font-black flex items-center justify-center">
+                      ${m.avatar}
+                    </span>
+                    <span class="font-black text-xs text-gray-900">${m.name}</span>
+                    <span class="text-[9px] font-black text-brand-red bg-red-50 px-1.5 py-0.2 rounded border border-red-100">₺${mSubtotal.toFixed(0)}</span>
+                  </div>
+                  ${!m.isHost ? `
+                    <button onclick="removeSimFriend('${m.id}')" class="text-red-500 hover:text-red-700 text-[9px] font-extrabold underline">
+                      ✕ Çıkar
+                    </button>
+                  ` : `
+                    <span class="text-[9px] text-gray-400 font-bold">Senin Sepetin</span>
+                  `}
+                </div>
+
+                <div class="space-y-1">
+                  ${m.items.length === 0 ? `
+                    <p class="text-[10px] text-gray-400 italic py-1 text-center">Henüz ürün eklenmedi</p>
+                  ` : m.items.map(i => `
+                    <div class="flex items-center justify-between text-xs py-0.5">
+                      <span class="text-gray-800 font-bold truncate max-w-[160px] text-[11px]">${i.title} x${i.quantity}</span>
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-black text-gray-900 text-[11px]">₺${(i.price * i.quantity).toFixed(0)}</span>
+                        ${m.isHost ? `
+                          <div class="flex items-center gap-1 bg-white px-1.5 py-0.5 rounded border border-gray-200">
+                            <button onclick="changeCartQuantity('${i.id}', -1)" class="w-3.5 h-3.5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-[10px]">-</button>
+                            <span class="font-bold text-[10px] w-3 text-center">${i.quantity}</span>
+                            <button onclick="changeCartQuantity('${i.id}', 1)" class="w-3.5 h-3.5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-[10px]">+</button>
+                          </div>
+                        ` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
       renderWheelSponsorBannerInCart();
       renderQuickCoupons();
     }
@@ -2987,6 +3301,117 @@
     }
 
     // ----------------------------------------------------
+    // GRUP SİPARİŞİ (GROUP ORDER) SİSTEMİ
+    // ----------------------------------------------------
+    function toggleGroupOrderMode() {
+      groupOrderState.isActive = !groupOrderState.isActive;
+      
+      if (groupOrderState.isActive) {
+        // İlk açılışta üye listesinde sadece 'me' varsa, hızlı simülasyon için Berke ve Zeynep'i sepete ekle
+        if (groupOrderState.members.length <= 1) {
+          const berke = groupOrderState.simFriendsTemplates.find(f => f.id === 'friend-berke');
+          const zeynep = groupOrderState.simFriendsTemplates.find(f => f.id === 'friend-zeynep');
+          if (berke) groupOrderState.members.push(JSON.parse(JSON.stringify(berke)));
+          if (zeynep) groupOrderState.members.push(JSON.parse(JSON.stringify(zeynep)));
+        }
+        alert('👥 Grup Siparişi Modu Başlatıldı!\n\n🔗 Davet linkiniz hazırlandı.\n🤝 Arkadaşlarınız (Berke & Zeynep) ortak sepete eklendi.\n💰 Ortak sepet tutarı ile minimum tutar kolayca aşıldı, teslimat ücreti ve indirimler kişi başı bölündü!');
+      } else {
+        alert('👤 Bireysel sepet moduna dönüldü.');
+      }
+
+      updateGroupOrderUI();
+      updateCartUI();
+    }
+
+    function updateGroupOrderUI() {
+      const panel = document.getElementById('groupOrderActivePanel');
+      const pill = document.getElementById('groupOrderActivePill');
+      const btnText = document.getElementById('btnToggleGroupOrderText');
+      const btnToggle = document.getElementById('btnToggleGroupOrder');
+      const statusText = document.getElementById('groupOrderSubStatus');
+      const countBadge = document.getElementById('groupMembersCountBadge');
+      const buttonsContainer = document.getElementById('simFriendsActionButtons');
+
+      if (!panel) return;
+
+      const numMembers = groupOrderState.members.length;
+
+      if (groupOrderState.isActive) {
+        panel.classList.remove('hidden');
+        if (pill) pill.classList.remove('hidden');
+        if (btnText) btnText.innerText = 'Grubu Kapat ✕';
+        if (btnToggle) btnToggle.className = 'tap-effect text-xs font-black px-3 py-1.5 rounded-xl border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition shadow-xs flex items-center gap-1.5';
+        if (statusText) statusText.innerText = `${numMembers} Kişi Birlikte Sipariş Veriyor 👥`;
+        if (countBadge) countBadge.innerText = `${numMembers} Kişi Katıldı`;
+      } else {
+        panel.classList.add('hidden');
+        if (pill) pill.classList.add('hidden');
+        if (btnText) btnText.innerText = 'Birlikte Sipariş Ver';
+        if (btnToggle) btnToggle.className = 'tap-effect text-xs font-black px-3 py-1.5 rounded-xl border transition shadow-xs flex items-center gap-1.5 bg-brand-red text-white hover:bg-brand-redHover';
+        if (statusText) statusText.innerText = 'Arkadaşlarını davet et, sepeti ve teslimatı bölüş';
+      }
+
+      // Render Sim Friends Buttons
+      if (buttonsContainer) {
+        const currentMemberIds = groupOrderState.members.map(m => m.id);
+        const availableToAdd = groupOrderState.simFriendsTemplates.filter(t => !currentMemberIds.includes(t.id));
+
+        if (availableToAdd.length === 0) {
+          buttonsContainer.innerHTML = `
+            <span class="text-[9px] text-emerald-700 font-extrabold bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200">
+              ✓ Tüm arkadaşlar sepette (${numMembers} Kişi)
+            </span>
+          `;
+        } else {
+          buttonsContainer.innerHTML = availableToAdd.map(t => {
+            const tTotal = t.items.reduce((s, i) => s + (i.price * i.quantity), 0);
+            return `
+              <button onclick="addSimFriend('${t.id}')" class="tap-effect text-[10px] font-black text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-xl transition shrink-0 flex items-center gap-1 shadow-2xs">
+                <span>+</span>
+                <span>${t.name} (${tTotal} ₺)</span>
+              </button>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    function addSimFriend(friendId) {
+      const template = groupOrderState.simFriendsTemplates.find(t => t.id === friendId);
+      if (!template) return;
+      if (groupOrderState.members.some(m => m.id === friendId)) return;
+
+      groupOrderState.members.push(JSON.parse(JSON.stringify(template)));
+      updateGroupOrderUI();
+      updateCartUI();
+      alert(`🎉 ${template.name} ortak sepete katıldı ve ${template.items.length} ürün ekledi!\nOrtak sepet tutarı arttı ve kişi başı teslimat ücreti düştü.`);
+    }
+
+    function removeSimFriend(friendId) {
+      groupOrderState.members = groupOrderState.members.filter(m => m.id !== friendId);
+      updateGroupOrderUI();
+      updateCartUI();
+    }
+
+    function copyGroupInviteLink() {
+      const link = groupOrderState.inviteLink;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).catch(() => {});
+      }
+      const btn = document.getElementById('copyGroupLinkBtnText');
+      if (btn) {
+        btn.innerText = 'Kopyalandı! ✓';
+        setTimeout(() => { if (btn) btn.innerText = 'Kopyala'; }, 2000);
+      }
+      alert(`🔗 Grup davet bağlantısı kopyalandı!\n${link}\n\nArkadaşlarınız bu bağlantıyla ortak sepete ürün ekleyebilir.`);
+    }
+
+    function shareGroupViaWhatsApp() {
+      const text = encodeURIComponent(`Selam! Kampüs Kapında üzerinden ortak yemek siparişi veriyoruz. Menüden istediklerini sepete ekle, teslimatı ve indirimi bölüşelim:\n${groupOrderState.inviteLink}`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    // ----------------------------------------------------
     // FIRSAT ÇARKI (WHEEL OF FORTUNE) & SPONSOR KUPONLARI
     // ----------------------------------------------------
     const wheelSlices = [
@@ -3309,9 +3734,22 @@
     }
 
     function submitOrder() {
-      if (cart.length === 0) return;
+      let totalItemCount = 0;
+      let subtotal = 0;
 
-      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      if (groupOrderState.isActive) {
+        groupOrderState.members.forEach(m => {
+          m.items.forEach(i => {
+            totalItemCount += i.quantity;
+            subtotal += (i.price * i.quantity);
+          });
+        });
+        if (totalItemCount === 0) return;
+      } else {
+        if (cart.length === 0) return;
+        subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      }
+
       let thresholdDiscount = 0;
       if (subtotal >= 300) {
         thresholdDiscount = 50;
@@ -3320,8 +3758,15 @@
       }
       const couponDiscount = (activeCoupon && subtotal >= activeCoupon.minOrder) ? activeCoupon.discount : 0;
       const totalDiscount = thresholdDiscount + couponDiscount;
-      const finalTotal = Math.max(0, subtotal - totalDiscount);
-      const storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
+      const currentDeliveryFee = groupOrderState.isActive ? groupOrderState.deliveryFee : 0;
+      const finalTotal = Math.max(0, subtotal + currentDeliveryFee - totalDiscount);
+      let storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
+
+      const isGroup = groupOrderState.isActive;
+      const groupCount = groupOrderState.members.length;
+      if (isGroup) {
+        storeName += ` (Grup Siparişi - ${groupCount} Kişi)`;
+      }
 
       const appliedCoupon = activeCoupon;
 
@@ -3378,6 +3823,10 @@
 
       cart = [];
       activeCoupon = null;
+      if (groupOrderState.isActive) {
+        const myMember = groupOrderState.members.find(m => m.id === 'me');
+        if (myMember) myMember.items = [];
+      }
       updateCartUI();
       closeCartModal();
 
@@ -3393,7 +3842,9 @@
         missionAlertNote = `\n\n🎯 Vize Haftası görevi için +1 Damga Kazandınız! (${missionsState.currentStamps}/3 Damga)\n50 ₺ kupon kazanmaya ${missionsState.targetStamps - missionsState.currentStamps} sipariş kaldı.`;
       }
 
-      if (appliedCoupon && (appliedCoupon.code === 'VIZE50' || appliedCoupon.isMissionCoupon)) {
+      if (isGroup) {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n👥 Ortak teslimat ücreti (30 ₺) ve indirimler (${totalDiscount.toFixed(2)} ₺) ${groupCount} arkadaş arasında paylaşıldı!\n💰 Toplam Tutar: ₺${finalTotal.toFixed(2)}${missionAlertNote}`);
+      } else if (appliedCoupon && (appliedCoupon.code === 'VIZE50' || appliedCoupon.isMissionCoupon)) {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎯 Vize Haftası görev ödülü kuponunuz (-₺${appliedCoupon.discount}) uygulandı!\n💰 Toplam Tutar: ₺${finalTotal.toFixed(2)}${missionAlertNote}`);
       } else if (appliedCoupon && appliedCoupon.isWheelCoupon) {
         alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n🎡 Çark kuponu indirimi (-₺${appliedCoupon.discount}) uygulandı!\n🤝 Bu kuponu ${appliedCoupon.sponsor} sponsor oldu. Afiyet olsun!${missionAlertNote}`);
@@ -3482,8 +3933,20 @@
       currentUniversity = universitiesData[0];
       resetWheelDailyLimit(true);
       resetMissionsDemo();
+      groupOrderState.isActive = false;
+      groupOrderState.members = [
+        {
+          id: 'me',
+          name: 'Sen (Asım)',
+          isHost: true,
+          avatar: 'A',
+          avatarBg: 'bg-brand-red text-white',
+          items: []
+        }
+      ];
       applyUniversityChange();
       updateInviteUI();
+      updateGroupOrderUI();
       updateCartUI();
       renderOrdersList();
       renderHomeRecentOrders();
@@ -3504,6 +3967,7 @@
       applyUniversityChange();
       updateInviteUI();
       updateMissionsUI();
+      updateGroupOrderUI();
       renderEventsFeed();
       renderOrdersList();
       renderHomeRecentOrders();
