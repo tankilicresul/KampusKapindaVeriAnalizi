@@ -155,9 +155,14 @@
     .crisp-border {
       border: 1px solid rgba(226, 232, 240, 0.85);
     }
+
+    /* Fallback to ensure hidden modals are never displayed on load */
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none overflow-hidden">
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-slate-800 antialiased font-sans min-h-screen flex flex-col items-center justify-center p-0 md:p-6 select-none overflow-y-auto">
 
   <!-- Desktop Pro Top Controls (Mac / Desktop Toolbar) -->
   <aside class="hidden md:flex flex-wrap items-center justify-center gap-2 mb-4 text-xs font-semibold text-slate-300 bg-slate-900/90 px-5 py-2.5 rounded-full border border-slate-700/80 shadow-2xl backdrop-blur-xl">
@@ -1201,9 +1206,9 @@
     <!-- MODAL 2: SEPET VE SİPARİŞ VER MODALI                     -->
     <!-- ======================================================== -->
     <div id="cartModal" class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end">
-      <div class="bg-white rounded-t-3xl p-5 space-y-4 max-h-[88%] flex flex-col shadow-2xl">
+      <div class="bg-white rounded-t-3xl p-4 space-y-3 max-h-[92%] flex flex-col shadow-2xl">
         
-        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+        <div class="flex items-center justify-between pb-2 border-b border-gray-100 shrink-0">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-red-100 text-brand-red flex items-center justify-center">
               <i class="fa-solid fa-bag-shopping"></i>
@@ -1216,31 +1221,138 @@
           <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold">✕</button>
         </div>
 
-        <!-- Cart Items List -->
-        <div class="flex-1 overflow-y-auto space-y-3 hide-scrollbar min-h-[140px] max-h-[300px]" id="cartItemsList">
+        <!-- 1. KAMPANYA EŞİK İLERLEME ÇUBUĞU (Öğrenciye Uygun Düşük Eşikler) -->
+        <div id="cartThresholdBanner" class="bg-red-50/80 border border-red-100 rounded-2xl p-2.5 space-y-1.5 shrink-0 transition-all">
+          <div class="flex items-center justify-between text-xs">
+            <span id="thresholdMessage" class="font-extrabold text-brand-red text-[11px] flex items-center gap-1.5">
+              <i id="thresholdIcon" class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+              <span id="thresholdMessageText">Eşiğe 15 TL kaldı, 30 TL indirim kazan!</span>
+            </span>
+            <span id="thresholdBadge" class="text-[9px] font-black bg-white text-brand-red px-2 py-0.5 rounded-full border border-red-200 shadow-xs">
+              Eşik: 200 ₺
+            </span>
+          </div>
+          <!-- İlerleme Çubuğu -->
+          <div class="w-full bg-red-100/80 h-2 rounded-full overflow-hidden">
+            <div id="thresholdProgressBar" class="bg-gradient-to-r from-brand-red to-rose-500 h-full rounded-full transition-all duration-300" style="width: 0%;"></div>
+          </div>
+          <!-- Eşik Kademeleri Göstergesi -->
+          <div class="flex justify-between items-center text-[9px] font-extrabold text-gray-400 px-0.5">
+            <span id="stepMarker1" class="flex items-center gap-1 transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-current inline-block"></span>
+              200 ₺ (-30 ₺)
+            </span>
+            <span id="stepMarker2" class="flex items-center gap-1 transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-current inline-block"></span>
+              300 ₺ (-50 ₺)
+            </span>
+          </div>
+        </div>
+
+        <!-- Sepet Ürünleri Listesi (Scrollable) -->
+        <div class="flex-1 overflow-y-auto space-y-2 hide-scrollbar min-h-[90px] max-h-[190px]" id="cartItemsList">
           <!-- Dynamic Cart Items -->
         </div>
 
-        <!-- Totals & Checkout -->
-        <div class="pt-3 border-t border-gray-100 space-y-2.5">
+        <!-- 2. KUPON KODU ALANI (Aynı Anda Tek Kupon Kuralı) -->
+        <div class="bg-gray-50 p-2.5 rounded-2xl border border-gray-100 space-y-2 shrink-0">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-extrabold text-gray-800 text-[11px] flex items-center gap-1.5">
+              <i class="fa-solid fa-ticket text-brand-red"></i>
+              <span>İndirim Kuponu</span>
+            </span>
+            <span class="text-[9px] font-bold text-gray-400">Tek kupon geçerlidir</span>
+          </div>
+          
+          <!-- Kupon Giriş Formu -->
+          <div id="couponInputContainer" class="flex gap-1.5">
+            <input type="text" id="couponCodeInput" onkeydown="if(event.key === 'Enter') { applyCoupon(); event.preventDefault(); }" placeholder="Kupon kodu girin" class="flex-1 bg-white border border-gray-200 rounded-xl px-3 py-1 text-xs font-bold text-gray-800 placeholder-gray-400 uppercase tracking-wide focus:outline-none focus:border-brand-red">
+            <button onclick="applyCoupon()" class="tap-effect bg-gray-900 hover:bg-black text-white px-3 py-1 rounded-xl text-xs font-black shadow-xs transition">
+              Uygula
+            </button>
+          </div>
+          
+          <!-- Aktif Kupon Rozeti (Uygulanınca görünür) -->
+          <div id="activeCouponBadge" class="hidden flex items-center justify-between bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs">
+            <div class="flex items-center gap-1.5 text-emerald-800 font-extrabold text-[11px]">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i>
+              <span id="activeCouponText">KAMPUS30 uygulandı</span>
+            </div>
+            <button onclick="removeCoupon()" class="tap-effect text-red-500 hover:text-red-700 text-[10px] font-black underline">
+              ✕ Kaldır
+            </button>
+          </div>
+
+          <!-- Hızlı Kupon Önerileri -->
+          <div class="flex items-center gap-1 pt-0.5 overflow-x-auto hide-scrollbar">
+            <span class="text-[10px] text-gray-400 font-bold shrink-0">Önerilen:</span>
+            <button onclick="quickApplyCoupon('KAMPUS30')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
+              KAMPUS30 (200₺+)
+            </button>
+            <button onclick="quickApplyCoupon('OGRENCI50')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
+              OGRENCI50 (300₺+)
+            </button>
+            <button onclick="quickApplyCoupon('HOSGELDIN25')" class="tap-effect text-[10px] font-extrabold text-brand-red bg-white border border-red-200 hover:bg-red-50 px-2 py-0.5 rounded-md transition shrink-0">
+              HOSGELDIN25
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. SEPET ÖZETİ VE SİPARİŞİ TAMAMLA -->
+        <div class="pt-2 border-t border-gray-100 space-y-1.5 shrink-0">
           <div class="flex justify-between text-xs text-gray-600 font-bold">
             <span>Ara Toplam</span>
             <span id="cartSubtotalText">0.00 ₺</span>
           </div>
+
+          <!-- Eşik İndirimi Satırı -->
+          <div id="rowThresholdDiscount" class="hidden flex justify-between text-xs font-bold text-emerald-600">
+            <span class="flex items-center gap-1">
+              <i class="fa-solid fa-tags text-[10px]"></i>
+              <span id="thresholdDiscountLabel">Eşik Kampanyası İndirimi</span>
+            </span>
+            <span id="thresholdDiscountText" class="font-black">-0.00 ₺</span>
+          </div>
+
+          <!-- Kupon İndirimi Satırı -->
+          <div id="rowCouponDiscount" class="hidden flex justify-between text-xs font-bold text-emerald-600">
+            <span class="flex items-center gap-1">
+              <i class="fa-solid fa-ticket text-[10px]"></i>
+              <span id="couponDiscountLabel">Kupon İndirimi</span>
+            </span>
+            <span id="couponDiscountText" class="font-black">-0.00 ₺</span>
+          </div>
+
           <div class="flex justify-between text-xs text-gray-600 font-bold">
             <span>Kampüs Teslimat Ücreti</span>
             <span class="text-emerald-600 font-black">Ücretsiz 🎁</span>
           </div>
-          <div class="flex justify-between text-sm font-black text-gray-900 pt-1 border-t border-dashed border-gray-200">
-            <span>Genel Toplam</span>
-            <span class="text-brand-red text-base font-black" id="cartTotalText">0.00 ₺</span>
+
+          <!-- Toplam Tasarruf Rozeti -->
+          <div id="rowTotalSavings" class="hidden flex justify-between items-center text-[11px] bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg text-emerald-800 font-extrabold">
+            <span>🎉 Toplam Kampanya Kazancın</span>
+            <span id="totalSavingsText">0.00 ₺</span>
           </div>
 
-          <button onclick="submitOrder()" id="btnCheckout" class="tap-effect w-full py-3 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
+          <div class="flex justify-between items-center text-sm font-black text-gray-900 pt-1 border-t border-dashed border-gray-200">
+            <div>
+              <span class="block text-xs font-black text-gray-900">Ödenecek Tutar</span>
+              <span class="text-[9px] text-gray-400 font-normal">Şeffaf fiyatlandırma, ek ücret yok</span>
+            </div>
+            <div class="text-right">
+              <span id="cartOldTotalText" class="hidden text-xs text-gray-400 line-through mr-1 font-bold">0.00 ₺</span>
+              <span class="text-brand-red text-base font-black" id="cartTotalText">0.00 ₺</span>
+            </div>
+          </div>
+
+          <button onclick="submitOrder()" id="btnCheckout" class="tap-effect w-full py-2.5 rounded-2xl bg-brand-red text-white font-extrabold text-sm shadow-md hover:bg-brand-redHover transition flex items-center justify-center gap-2">
             <span>Siparişi Onayla & Ver</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
+
+      </div>
+    </div>
 
     <!-- ======================================================== -->
     <!-- MODAL 3: HUKUKİ BELGELER (KVKK, GİZLİLİK, SÖZLEŞME)       -->
@@ -1493,6 +1605,15 @@
     let selectedMenuCategory = 'TÜMÜ';
     let cart = [];
     let orders = [...initialOrders];
+    let activeCoupon = null; // Tek kupon kuralı: aynı anda sadece 1 kupon aktif olabilir
+
+    // Öğrenci Dostu Kupon Veritabanı
+    const promoCoupons = {
+      'KAMPUS30': { code: 'KAMPUS30', minOrder: 200, discount: 30, desc: '200 TL ve üzerine 30 TL indirim' },
+      'OGRENCI50': { code: 'OGRENCI50', minOrder: 300, discount: 50, desc: '300 TL ve üzerine 50 TL indirim' },
+      'HOSGELDIN25': { code: 'HOSGELDIN25', minOrder: 150, discount: 25, desc: '150 TL ve üzerine 25 TL hoş geldin indirimi' },
+      'VIZE20': { code: 'VIZE20', minOrder: 100, discount: 20, desc: '100 TL ve üzerine 20 TL vize indirimi' }
+    };
 
     // ----------------------------------------------------
     // 3. NAVIGATION & VIEW SWITCHING
@@ -1658,7 +1779,8 @@
     function renderStoresFeed() {
       const feed = document.getElementById('storesFeed');
       const countBadge = document.getElementById('storesCountBadge');
-      const uniStores = storesData[currentUniversity.id] || storesData.sabanci;
+      const safeStoresData = (typeof storesData !== 'undefined') ? storesData : {};
+      const uniStores = safeStoresData[currentUniversity.id] || safeStoresData.sabanci || { ici: [], cevresi: [] };
       const list = uniStores[currentStoreScope] || [];
 
       countBadge.innerText = `${list.length} İşletme`;
@@ -2011,17 +2133,157 @@
       const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
       const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
 
+      // 1. EŞİK İNDİRİMİ HESAPLAMA (Getir Modeli Öğrenci Eşikleri)
+      // Eşik 1: 200 TL'ye 30 TL indirim | Eşik 2: 300 TL'ye 50 TL indirim
+      let thresholdDiscount = 0;
+      const banner = document.getElementById('cartThresholdBanner');
+      const msgText = document.getElementById('thresholdMessageText');
+      const badge = document.getElementById('thresholdBadge');
+      const progressBar = document.getElementById('thresholdProgressBar');
+      const icon = document.getElementById('thresholdIcon');
+      const step1 = document.getElementById('stepMarker1');
+      const step2 = document.getElementById('stepMarker2');
+
+      if (subtotal === 0) {
+        if (banner) banner.classList.add('opacity-60');
+        if (msgText) msgText.innerHTML = "200 TL'ye <b>30 TL</b>, 300 TL'ye <b>50 TL</b> indirim!";
+        if (badge) badge.innerText = "Eşikler: 200₺ / 300₺";
+        if (progressBar) {
+          progressBar.style.width = '0%';
+          progressBar.className = "bg-gradient-to-r from-brand-red to-rose-500 h-full rounded-full transition-all duration-300";
+        }
+        if (step1) step1.className = "flex items-center gap-1 text-gray-400";
+        if (step2) step2.className = "flex items-center gap-1 text-gray-400";
+      } else if (subtotal < 200) {
+        const remaining = 200 - subtotal;
+        const pct = Math.max(4, Math.min(66, Math.round((subtotal / 300) * 100)));
+        if (banner) banner.classList.remove('opacity-60');
+        if (msgText) msgText.innerHTML = `Eşiğe <b>${remaining.toFixed(0)} TL</b> kaldı, <b>30 TL</b> indirim kazan! 🔥`;
+        if (badge) badge.innerText = `Eşik 1: 200 ₺`;
+        if (progressBar) {
+          progressBar.style.width = `${pct}%`;
+          progressBar.className = "bg-gradient-to-r from-brand-red to-rose-500 h-full rounded-full transition-all duration-300";
+        }
+        if (step1) step1.className = "flex items-center gap-1 text-brand-red font-black";
+        if (step2) step2.className = "flex items-center gap-1 text-gray-400";
+      } else if (subtotal < 300) {
+        thresholdDiscount = 30;
+        const remaining = 300 - subtotal;
+        const pct = Math.max(66, Math.min(99, Math.round((subtotal / 300) * 100)));
+        if (banner) banner.classList.remove('opacity-60');
+        if (msgText) msgText.innerHTML = `🎉 <b>30 TL</b> indirim uygulandı! <b>50 TL</b> indirim için eşiğe <b>${remaining.toFixed(0)} TL</b> kaldı 🔥`;
+        if (badge) badge.innerText = "30 ₺ İndirim Aktif";
+        if (progressBar) {
+          progressBar.style.width = `${pct}%`;
+          progressBar.className = "bg-gradient-to-r from-amber-500 to-emerald-500 h-full rounded-full transition-all duration-300";
+        }
+        if (step1) step1.className = "flex items-center gap-1 text-emerald-600 font-black";
+        if (step2) step2.className = "flex items-center gap-1 text-brand-red font-black";
+      } else {
+        thresholdDiscount = 50;
+        if (banner) banner.classList.remove('opacity-60');
+        if (msgText) msgText.innerHTML = `🚀 Harika! <b>50 TL</b> maksimum eşik indirimini kazandın!`;
+        if (badge) badge.innerText = "50 ₺ İndirim (Maksimum)";
+        if (progressBar) {
+          progressBar.style.width = '100%';
+          progressBar.className = "bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-300";
+        }
+        if (step1) step1.className = "flex items-center gap-1 text-emerald-600 font-black";
+        if (step2) step2.className = "flex items-center gap-1 text-emerald-600 font-black";
+      }
+
+      // 2. KUPON İNDİRİMİ HESAPLAMA (Tek kupon kuralı)
+      let couponDiscount = 0;
+      const couponBadge = document.getElementById('activeCouponBadge');
+      const couponInputContainer = document.getElementById('couponInputContainer');
+      const activeCouponText = document.getElementById('activeCouponText');
+
+      if (activeCoupon) {
+        if (subtotal >= activeCoupon.minOrder) {
+          couponDiscount = activeCoupon.discount;
+          if (couponBadge) couponBadge.classList.remove('hidden');
+          if (couponInputContainer) couponInputContainer.classList.add('hidden');
+          if (activeCouponText) activeCouponText.innerHTML = `<b>${activeCoupon.code}</b> (${activeCoupon.discount} ₺ indirim)`;
+        } else {
+          couponDiscount = 0;
+          if (couponBadge) couponBadge.classList.remove('hidden');
+          if (couponInputContainer) couponInputContainer.classList.add('hidden');
+          if (activeCouponText) activeCouponText.innerHTML = `<span class="text-amber-800 text-[10px]"><b>${activeCoupon.code}</b> için min. ${activeCoupon.minOrder} ₺ gerekli (${(activeCoupon.minOrder - subtotal).toFixed(0)} ₺ eksik)</span>`;
+        }
+      } else {
+        if (couponBadge) couponBadge.classList.add('hidden');
+        if (couponInputContainer) couponInputContainer.classList.remove('hidden');
+      }
+
+      // 3. TOPLAMLAR VE ŞEFFAF İNDİRİM HESABI
+      const totalDiscount = thresholdDiscount + couponDiscount;
+      const finalTotal = Math.max(0, subtotal - totalDiscount);
+
       document.getElementById('floatingCartBadge').innerText = totalCount;
       document.getElementById('profileCartCount').innerText = `${totalCount} Ürün`;
-
       document.getElementById('cartSubtotalText').innerText = `₺${subtotal.toFixed(2)}`;
-      document.getElementById('cartTotalText').innerText = `₺${subtotal.toFixed(2)}`;
 
+      // Eşik İndirimi Satırı
+      const rowThresh = document.getElementById('rowThresholdDiscount');
+      const textThresh = document.getElementById('thresholdDiscountText');
+      const labelThresh = document.getElementById('thresholdDiscountLabel');
+      if (rowThresh && textThresh) {
+        if (thresholdDiscount > 0) {
+          rowThresh.classList.remove('hidden');
+          textThresh.innerText = `-₺${thresholdDiscount.toFixed(2)}`;
+          labelThresh.innerText = subtotal >= 300 ? "Eşik İndirimi (300₺ üzerine)" : "Eşik İndirimi (200₺ üzerine)";
+        } else {
+          rowThresh.classList.add('hidden');
+        }
+      }
+
+      // Kupon İndirimi Satırı
+      const rowCoupon = document.getElementById('rowCouponDiscount');
+      const textCoupon = document.getElementById('couponDiscountText');
+      const labelCoupon = document.getElementById('couponDiscountLabel');
+      if (rowCoupon && textCoupon) {
+        if (couponDiscount > 0) {
+          rowCoupon.classList.remove('hidden');
+          textCoupon.innerText = `-₺${couponDiscount.toFixed(2)}`;
+          labelCoupon.innerText = `Kupon İndirimi (${activeCoupon.code})`;
+        } else {
+          rowCoupon.classList.add('hidden');
+        }
+      }
+
+      // Toplam Tasarruf Rozeti
+      const rowSavings = document.getElementById('rowTotalSavings');
+      const textSavings = document.getElementById('totalSavingsText');
+      if (rowSavings && textSavings) {
+        if (totalDiscount > 0) {
+          rowSavings.classList.remove('hidden');
+          textSavings.innerText = `₺${totalDiscount.toFixed(2)} Tasarruf`;
+        } else {
+          rowSavings.classList.add('hidden');
+        }
+      }
+
+      // Eski ve Yeni Toplam Fiyat Gösterimi
+      const oldTotalEl = document.getElementById('cartOldTotalText');
+      const totalEl = document.getElementById('cartTotalText');
+      if (oldTotalEl) {
+        if (totalDiscount > 0) {
+          oldTotalEl.classList.remove('hidden');
+          oldTotalEl.innerText = `₺${subtotal.toFixed(2)}`;
+        } else {
+          oldTotalEl.classList.add('hidden');
+        }
+      }
+      if (totalEl) {
+        totalEl.innerText = `₺${finalTotal.toFixed(2)}`;
+      }
+
+      // Sepet Ürün Listesi
       const list = document.getElementById('cartItemsList');
       if (cart.length === 0) {
         list.innerHTML = `
-          <div class="py-8 text-center space-y-2">
-            <span class="text-4xl">🛒</span>
+          <div class="py-6 text-center space-y-1.5">
+            <span class="text-3xl">🛒</span>
             <p class="font-bold text-gray-600 text-xs">Sepetin henüz boş</p>
             <p class="text-[11px] text-gray-400">Restorandan lezzetli ürünler ekleyebilirsin.</p>
           </div>
@@ -2033,19 +2295,68 @@
         document.getElementById('btnCheckout').classList.remove('opacity-50');
 
         list.innerHTML = cart.map(item => `
-          <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl border border-gray-100 text-xs">
+          <div class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-100 text-xs">
             <div class="flex-1 pr-2">
-              <h5 class="font-bold text-gray-900">${item.title}</h5>
+              <h5 class="font-bold text-gray-900 truncate max-w-[170px]">${item.title}</h5>
               <span class="text-brand-red font-black text-[11px]">₺${(item.price * item.quantity).toFixed(2)}</span>
             </div>
-            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-lg border border-gray-200">
-              <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">-</button>
+            <div class="flex items-center gap-1.5 bg-white px-2 py-1 rounded-lg border border-gray-200 shrink-0">
+              <button onclick="changeCartQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">-</button>
               <span class="font-black text-xs w-4 text-center">${item.quantity}</span>
-              <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs">+</button>
+              <button onclick="changeCartQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs hover:bg-gray-200 transition">+</button>
             </div>
           </div>
         `).join('');
       }
+    }
+
+    // Kupon Yönetimi (Aynı anda tek kupon)
+    function applyCoupon() {
+      const input = document.getElementById('couponCodeInput');
+      if (!input) return;
+      const code = input.value.trim().toUpperCase();
+      if (!code) {
+        alert('Lütfen bir kupon kodu giriniz.');
+        return;
+      }
+      executeApplyCoupon(code);
+    }
+
+    function quickApplyCoupon(code) {
+      executeApplyCoupon(code);
+    }
+
+    function executeApplyCoupon(code) {
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      const coupon = promoCoupons[code];
+
+      if (!coupon) {
+        alert(`❌ "${code}" geçersiz bir kupon kodu.\nDeneyebileceğiniz kuponlar: KAMPUS30, OGRENCI50, HOSGELDIN25, VIZE20`);
+        return;
+      }
+
+      if (subtotal < coupon.minOrder) {
+        alert(`⚠️ "${coupon.code}" kuponu en az ${coupon.minOrder} ₺ sepet tutarında geçerlidir.\nŞu anki sepet tutarınız: ₺${subtotal.toFixed(2)} (${(coupon.minOrder - subtotal).toFixed(0)} ₺ daha ürün ekleyiniz)`);
+        return;
+      }
+
+      // Tek kupon kuralı: yeni kupon aktif olur
+      const prevCoupon = activeCoupon;
+      activeCoupon = coupon;
+      const input = document.getElementById('couponCodeInput');
+      if (input) input.value = '';
+      updateCartUI();
+
+      if (prevCoupon && prevCoupon.code !== coupon.code) {
+        alert(`🎉 "${coupon.code}" kuponu uygulandı!\n(Aynı anda tek kupon kuralı: Önceki kupon "${prevCoupon.code}" değiştirildi)`);
+      } else {
+        alert(`🎉 "${coupon.code}" kuponu başarıyla uygulandı! (${coupon.desc})`);
+      }
+    }
+
+    function removeCoupon() {
+      activeCoupon = null;
+      updateCartUI();
     }
 
     function openCartModal() {
@@ -2069,18 +2380,29 @@
       if (cart.length === 0) return;
 
       const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      let thresholdDiscount = 0;
+      if (subtotal >= 300) {
+        thresholdDiscount = 50;
+      } else if (subtotal >= 200) {
+        thresholdDiscount = 30;
+      }
+      const couponDiscount = (activeCoupon && subtotal >= activeCoupon.minOrder) ? activeCoupon.discount : 0;
+      const totalDiscount = thresholdDiscount + couponDiscount;
+      const finalTotal = Math.max(0, subtotal - totalDiscount);
       const storeName = currentActiveStore ? currentActiveStore.name : 'Kampüs Restoranı';
 
       orders.unshift({
         id: 'ord-' + Math.floor(Math.random() * 900 + 100),
         storeName: storeName,
         date: 'Bugün',
-        amount: Math.round(subtotal),
+        amount: Math.round(finalTotal),
+        discount: Math.round(totalDiscount),
         status: 'HAZIRLANIYOR',
         statusColor: 'text-amber-600 bg-amber-50 border-amber-200'
       });
 
       cart = [];
+      activeCoupon = null;
       updateCartUI();
       closeCartModal();
 
@@ -2088,7 +2410,11 @@
       renderHomeRecentOrders();
       navigateTo('orders');
 
-      alert(`🎉 Harika! ${storeName} siparişiniz alındı ve hazırlanıyor.`);
+      if (totalDiscount > 0) {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı.\n💰 Toplam Tutar: ₺${finalTotal.toFixed(2)} (₺${totalDiscount.toFixed(2)} indirim uygulandı!)`);
+      } else {
+        alert(`🎉 Harika! ${storeName} siparişiniz alındı ve hazırlanıyor.`);
+      }
     }
 
     // ----------------------------------------------------
@@ -2109,7 +2435,10 @@
           </div>
 
           <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
-            <span class="font-black text-sm text-gray-900">${ord.amount} ₺</span>
+            <div class="flex items-center gap-1.5">
+              <span class="font-black text-sm text-gray-900">${ord.amount} ₺</span>
+              ${ord.discount ? `<span class="text-[9px] text-emerald-700 font-extrabold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">₺${ord.discount} Tasarruf</span>` : ''}
+            </div>
             <button onclick="reorderStore('${ord.storeName}')" class="tap-effect text-xs font-bold text-brand-red hover:underline flex items-center gap-1">
               <span>Tekrarla</span>
               <i class="fa-solid fa-arrow-right text-[10px]"></i>
@@ -2155,6 +2484,7 @@
 
     function resetDemoData() {
       cart = [];
+      activeCoupon = null;
       orders = [...initialOrders];
       currentUniversity = universitiesData[0];
       applyUniversityChange();
